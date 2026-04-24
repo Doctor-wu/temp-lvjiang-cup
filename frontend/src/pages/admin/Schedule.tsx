@@ -108,6 +108,12 @@ const AdminSchedule: React.FC = () => {
 
       setMatches(mappedMatches);
       setTeams(mappedTeams as Team[]);
+
+      const swissMatches = mappedMatches.filter(m => m.stage === 'swiss');
+      if (swissMatches.length > 0) {
+        const calculated = calculateAdvancement(swissMatches, mappedTeams as Team[]);
+        setAdvancement(calculated);
+      }
     } catch (error) {
       console.error('Failed to load data:', error);
       toast.error('数据加载失败');
@@ -175,14 +181,6 @@ const AdminSchedule: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  // 自动计算晋级名单
-  const handleAutoCalculateAdvancement = async () => {
-    const swissMatches = matches.filter(m => m.stage === 'swiss');
-    const calculated = calculateAdvancement(swissMatches, teams);
-    setAdvancement(calculated);
-    toast.success('已根据比赛结果自动计算晋级名单');
   };
 
   // 初始化比赛槽位
@@ -309,20 +307,9 @@ const AdminSchedule: React.FC = () => {
                   </div>
                 ) : (
                   <>
-                    <div className="mb-4 flex justify-between items-center">
-                      <div data-testid="advancement-status" className="text-sm text-gray-400">
-                        晋级状态：前8名晋级淘汰赛 · {advancement.top8.length} 队已晋级 ·{' '}
-                        {advancement.eliminated.length} 队已淘汰
-                      </div>
-                      <Button
-                        data-testid="auto-calculate-advancement-button"
-                        variant="outline"
-                        size="sm"
-                        onClick={handleAutoCalculateAdvancement}
-                        className="border-blue-500 text-blue-400 hover:bg-blue-500/10"
-                      >
-                        自动计算晋级
-                      </Button>
+                    <div className="mb-4 text-sm text-gray-400" data-testid="advancement-status">
+                      晋级状态：前8名晋级淘汰赛 · {advancement?.top8?.length ?? 0} 队已晋级 ·{' '}
+                      {advancement?.eliminated?.length ?? 0} 队已淘汰
                     </div>
                     <SwissStageVisualEditor
                       matches={swissMatches}

@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Loader2, AlertCircle } from 'lucide-react';
-import { matchService, teamService, advancementService } from '@/services';
+import { matchService, teamService } from '@/services';
 import type { Match as ApiMatch, Team as ApiTeam } from '@/api/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import SwissStage from './SwissStageResponsive';
 import EliminationStage from './EliminationStage';
-import { useAdvancementStore } from '@/store/advancementStore';
+import { useAdvancementStore, calculateAdvancement } from '@/store/advancementStore';
 import { PositionType } from '@/types/position';
 import { getUploadUrl } from '@/utils/upload';
 import SwissEmptyState from './swiss/SwissEmptyState';
@@ -143,14 +143,9 @@ const ScheduleSection: React.FC = () => {
         setLoading(true);
         setError(null);
 
-        if (forceRefresh) {
-          advancementService.resetState();
-        }
-
-        const [matchesResponse, teamsResponse, advancementData] = await Promise.all([
+        const [matchesResponse, teamsResponse] = await Promise.all([
           matchService.getAll(),
           teamService.getAll(),
-          advancementService.get(),
         ]);
 
         const convertedTeams = teamsResponse.map(convertApiTeamToLocal);
@@ -161,11 +156,11 @@ const ScheduleSection: React.FC = () => {
         setTeams(convertedTeams);
         setMatches(convertedMatches);
 
-        if (advancementData) {
-          setAdvancement({
-            top8: advancementData.top8 || [],
-            eliminated: advancementData.eliminated || [],
-          });
+        // 自动计算晋级名单
+        const swissMatches = convertedMatches.filter(m => m.stage === 'swiss');
+        if (swissMatches.length > 0) {
+          const calculated = calculateAdvancement(swissMatches, convertedTeams);
+          setAdvancement(calculated);
         }
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : '获取赛程数据失败';

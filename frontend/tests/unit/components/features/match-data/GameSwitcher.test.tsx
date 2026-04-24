@@ -14,13 +14,13 @@ const createMockGameSummary = (
 });
 
 describe('GameSwitcher', () => {
-  describe('BO1不显示切换器', () => {
-    it('BO1赛制不应该显示切换器', () => {
+  describe('BO1显示单场标签', () => {
+    it('BO1赛制应该显示"第一场"标签', () => {
       const games: GameSummary[] = [createMockGameSummary({ gameNumber: 1 })];
 
-      render(<GameSwitcher games={games} currentGame={1} onChange={vi.fn()} isBO1={true} />);
+      render(<GameSwitcher games={games} currentGame={1} onChange={vi.fn()} format="BO1" />);
 
-      expect(screen.queryByText('第 1 局')).not.toBeInTheDocument();
+      expect(screen.getByText('第一场')).toBeInTheDocument();
     });
   });
 
@@ -32,11 +32,11 @@ describe('GameSwitcher', () => {
         createMockGameSummary({ gameNumber: 3 }),
       ];
 
-      render(<GameSwitcher games={games} currentGame={1} onChange={vi.fn()} isBO1={false} />);
+      render(<GameSwitcher games={games} currentGame={1} onChange={vi.fn()} format="BO3" />);
 
-      expect(screen.getByText('第 1 局')).toBeInTheDocument();
-      expect(screen.getByText('第 2 局')).toBeInTheDocument();
-      expect(screen.getByText('第 3 局')).toBeInTheDocument();
+      expect(screen.getByText('第一场')).toBeInTheDocument();
+      expect(screen.getByText('第二场')).toBeInTheDocument();
+      expect(screen.getByText('第三场')).toBeInTheDocument();
     });
   });
 
@@ -50,13 +50,13 @@ describe('GameSwitcher', () => {
         createMockGameSummary({ gameNumber: 5 }),
       ];
 
-      render(<GameSwitcher games={games} currentGame={1} onChange={vi.fn()} isBO1={false} />);
+      render(<GameSwitcher games={games} currentGame={1} onChange={vi.fn()} format="BO5" />);
 
-      expect(screen.getByText('第 1 局')).toBeInTheDocument();
-      expect(screen.getByText('第 2 局')).toBeInTheDocument();
-      expect(screen.getByText('第 3 局')).toBeInTheDocument();
-      expect(screen.getByText('第 4 局')).toBeInTheDocument();
-      expect(screen.getByText('第 5 局')).toBeInTheDocument();
+      expect(screen.getByText('第一场')).toBeInTheDocument();
+      expect(screen.getByText('第二场')).toBeInTheDocument();
+      expect(screen.getByText('第三场')).toBeInTheDocument();
+      expect(screen.getByText('第四场')).toBeInTheDocument();
+      expect(screen.getByText('第五场')).toBeInTheDocument();
     });
   });
 
@@ -68,25 +68,26 @@ describe('GameSwitcher', () => {
       ];
 
       const { container } = render(
-        <GameSwitcher games={games} currentGame={2} onChange={vi.fn()} isBO1={false} />
+        <GameSwitcher games={games} currentGame={2} onChange={vi.fn()} format="BO3" />
       );
 
       const activeButton = container.querySelector('.text-\\[\\#c49f58\\]');
       expect(activeButton).toBeInTheDocument();
     });
 
-    it('当前局按钮应该有激活样式', () => {
+    it('当前局按钮应该有顶部高亮条', () => {
       const games: GameSummary[] = [
         createMockGameSummary({ gameNumber: 1 }),
         createMockGameSummary({ gameNumber: 2 }),
       ];
 
       const { container } = render(
-        <GameSwitcher games={games} currentGame={2} onChange={vi.fn()} isBO1={false} />
+        <GameSwitcher games={games} currentGame={2} onChange={vi.fn()} format="BO3" />
       );
 
-      const activeButton = container.querySelector('.border-\\[\\#c49f58\\]');
-      expect(activeButton).toBeInTheDocument();
+      // 检查是否有顶部边框元素
+      const activeIndicator = container.querySelector('.bg-\\[\\#c49f58\\]');
+      expect(activeIndicator).toBeInTheDocument();
     });
   });
 
@@ -98,10 +99,10 @@ describe('GameSwitcher', () => {
       ];
 
       const { container } = render(
-        <GameSwitcher games={games} currentGame={1} onChange={vi.fn()} isBO1={false} />
+        <GameSwitcher games={games} currentGame={1} onChange={vi.fn()} format="BO3" />
       );
 
-      const disabledButton = container.querySelector('.opacity-50');
+      const disabledButton = container.querySelector('.opacity-40');
       expect(disabledButton).toBeInTheDocument();
     });
   });
@@ -114,9 +115,9 @@ describe('GameSwitcher', () => {
         createMockGameSummary({ gameNumber: 2, hasData: true }),
       ];
 
-      render(<GameSwitcher games={games} currentGame={1} onChange={handleChange} isBO1={false} />);
+      render(<GameSwitcher games={games} currentGame={1} onChange={handleChange} format="BO3" />);
 
-      fireEvent.click(screen.getByText('第 2 局'));
+      fireEvent.click(screen.getByText('第二场'));
       expect(handleChange).toHaveBeenCalledWith(2);
     });
   });

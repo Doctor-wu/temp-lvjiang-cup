@@ -3,7 +3,6 @@ import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { Loader2, AlertCircle } from 'lucide-react';
 import MatchDataHeader from './MatchDataHeader';
 import MatchSeriesHeader from './MatchSeriesHeader';
-import MatchInfoCard from './MatchInfoCard';
 import GameSwitcher from './GameSwitcher';
 import TeamStatsBar from './TeamStatsBar';
 import PlayerStatsList from './PlayerStatsList';
@@ -282,22 +281,20 @@ const MatchDataPage: React.FC = () => {
         {/* 系列赛头部：展示总比分和比赛状态 */}
         <MatchSeriesHeader seriesInfo={seriesInfo} gameData={gameData} />
 
-        {/* 场次切换器 */}
+        {/* 对局切换器 - 位于对战基本信息卡片下方，符合UI设计文档 */}
         <GameSwitcher
           games={seriesInfo?.games || []}
           currentGame={currentGameNumber}
           onChange={handleGameChange}
-          isBO1={seriesInfo?.format === 'BO1'}
+          format={seriesInfo?.format}
         />
 
-        {/* 对局信息卡片 */}
-        <MatchInfoCard gameData={gameData} />
-
-        {/* 队伍数据统计栏 */}
+        {/* 队伍数据统计栏 - 包含对局信息（游戏时长、大龙、小龙、防御塔、金币、人头比、ban/pick） */}
         <TeamStatsBar
           blueTeam={gameData.blueTeam}
           redTeam={gameData.redTeam}
           bans={gameData.bans}
+          gameDuration={gameData.gameDuration}
         />
 
         {/* 选手数据列表 */}

@@ -1,6 +1,7 @@
 import React from 'react';
 import type { PlayerStat, PositionType } from '@/types/matchData';
 import PlayerStatsRow from './PlayerStatsRow';
+import PlayerStatsHeader from './PlayerStatsHeader';
 
 interface PlayerStatsListProps {
   bluePlayers: PlayerStat[];
@@ -30,22 +31,28 @@ const PlayerStatsList: React.FC<PlayerStatsListProps> = ({
 
   return (
     <div className="max-w-5xl mx-auto mt-4">
-      {POSITION_ORDER.map(position => {
-        const bluePlayer = getPlayerByPosition(bluePlayers, position);
-        const redPlayer = getPlayerByPosition(redPlayers, position);
+      {/* 表头 */}
+      <PlayerStatsHeader />
 
-        if (!bluePlayer || !redPlayer) return null;
+      {/* 选手数据行 */}
+      <div className="rounded-b-lg overflow-hidden bg-[#2d2d2d]">
+        {POSITION_ORDER.map(position => {
+          const bluePlayer = getPlayerByPosition(bluePlayers, position);
+          const redPlayer = getPlayerByPosition(redPlayers, position);
 
-        return (
-          <PlayerStatsRow
-            key={position}
-            bluePlayer={bluePlayer}
-            redPlayer={redPlayer}
-            isExpanded={expandedPosition === position}
-            onToggle={() => handleToggle(position)}
-          />
-        );
-      })}
+          if (!bluePlayer || !redPlayer) return null;
+
+          return (
+            <PlayerStatsRow
+              key={position}
+              bluePlayer={bluePlayer}
+              redPlayer={redPlayer}
+              isExpanded={expandedPosition === position}
+              onToggle={() => handleToggle(position)}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 };

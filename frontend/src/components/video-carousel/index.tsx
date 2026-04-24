@@ -3,7 +3,6 @@ import { VideoPlayer, type VideoItem } from './VideoPlayer';
 import { VideoThumbnail } from './VideoThumbnail';
 import { ControlArrows } from './ControlArrows';
 import { Indicator } from './Indicator';
-import { useAutoplay } from './hooks/useAutoplay';
 import { useSwipe } from './hooks/useSwipe';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import './styles.css';
@@ -25,21 +24,6 @@ export const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos }) => {
   const goToPrev = useCallback(() => {
     setCurrentIndex(prev => (prev - 1 + videos.length) % videos.length);
   }, [videos.length]);
-
-  const [isCarouselVisible, setIsCarouselVisible] = useState(true);
-
-  // 自动切换功能已禁用
-  const { pause: pauseAutoplay } = useAutoplay({
-    enabled: false,
-    onAutoplay: goToNext,
-    videoCount: videos.length,
-    isMobile,
-    onVisibilityChange: setIsCarouselVisible,
-  });
-
-  const handleUserInteraction = useCallback(() => {
-    pauseAutoplay();
-  }, [pauseAutoplay]);
 
   const { onTouchStart, onTouchEnd } = useSwipe({
     onSwipeLeft: goToNext,
@@ -85,14 +69,13 @@ export const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos }) => {
     <div
       className="video-carousel w-full h-full flex flex-col"
       data-testid="video-carousel"
-      onMouseDown={handleUserInteraction}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
       {isMobile ? (
         <div className="flex-1 flex flex-col">
           <div className="flex-1 bg-gray-900 min-h-0">
-            <VideoPlayer video={currentVideo} autoplay={false} />
+            <VideoPlayer video={currentVideo} autoplay />
           </div>
           {showControls && (
             <Indicator videos={videos} currentIndex={currentIndex} onSelect={setCurrentIndex} />
@@ -119,7 +102,7 @@ export const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos }) => {
             <div
               className={`w-full bg-gray-900 mx-auto ${isSmallVideoCount ? 'max-h-[70vh] aspect-video' : 'aspect-video'}`}
             >
-              <VideoPlayer video={currentVideo} autoplay={false} isVisible={isCarouselVisible} />
+              <VideoPlayer video={currentVideo} autoplay />
             </div>
             {showControls && (
               <ControlArrows

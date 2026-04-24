@@ -15,6 +15,7 @@ const createMockTeamData = (
   dragons: 3,
   barons: 1,
   isWinner: true,
+  logoUrl: 'https://example.com/logo.png',
   ...overrides,
 });
 
@@ -24,6 +25,36 @@ const createMockBans = (): BanData => ({
 });
 
 describe('TeamStatsBar', () => {
+  describe('队标队名显示', () => {
+    it('应该显示双方队伍名称', () => {
+      const blueTeam = createMockTeamData({ teamName: 'BLG', side: 'blue' });
+      const redTeam = createMockTeamData({ teamName: 'WBG', side: 'red' });
+      render(<TeamStatsBar blueTeam={blueTeam} redTeam={redTeam} />);
+
+      expect(screen.getByText('BLG')).toBeInTheDocument();
+      expect(screen.getByText('WBG')).toBeInTheDocument();
+    });
+
+    it('应该显示队伍Logo', () => {
+      const blueTeam = createMockTeamData({ teamName: 'BLG', side: 'blue', logoUrl: 'https://example.com/blg.png' });
+      const redTeam = createMockTeamData({ teamName: 'WBG', side: 'red', logoUrl: 'https://example.com/wbg.png' });
+      const { container } = render(<TeamStatsBar blueTeam={blueTeam} redTeam={redTeam} />);
+
+      const logos = container.querySelectorAll('img[alt="BLG"], img[alt="WBG"]');
+      expect(logos.length).toBe(2);
+    });
+
+    it('没有Logo时应该显示队名前两个字', () => {
+      const blueTeam = createMockTeamData({ teamName: 'BLG', side: 'blue', logoUrl: undefined });
+      const redTeam = createMockTeamData({ teamName: 'WBG', side: 'red', logoUrl: undefined });
+      render(<TeamStatsBar blueTeam={blueTeam} redTeam={redTeam} />);
+
+      // 队名前两个字应该作为fallback显示
+      expect(screen.getByText('BLG')).toBeInTheDocument();
+      expect(screen.getByText('WBG')).toBeInTheDocument();
+    });
+  });
+
   describe('击杀对比显示', () => {
     it('应该正确显示击杀对比', () => {
       const blueTeam = createMockTeamData({ teamName: 'BLG', side: 'blue', kills: 25 });
@@ -52,14 +83,6 @@ describe('TeamStatsBar', () => {
       const swordsIcon = container.querySelector('.lucide-swords');
       expect(swordsIcon).toBeInTheDocument();
     });
-
-    it('应该显示击杀数标签', () => {
-      const blueTeam = createMockTeamData({ teamName: 'BLG', side: 'blue', kills: 25 });
-      const redTeam = createMockTeamData({ teamName: 'WBG', side: 'red', kills: 18 });
-      render(<TeamStatsBar blueTeam={blueTeam} redTeam={redTeam} />);
-
-      expect(screen.getByText('击杀数')).toBeInTheDocument();
-    });
   });
 
   describe('经济对比显示', () => {
@@ -72,14 +95,12 @@ describe('TeamStatsBar', () => {
       expect(screen.getByText('58.0k')).toBeInTheDocument();
     });
 
-    it('应该显示经济标签', () => {
+    it('应该显示金币数标签', () => {
       const blueTeam = createMockTeamData({ teamName: 'BLG', side: 'blue', gold: 65000 });
       const redTeam = createMockTeamData({ teamName: 'WBG', side: 'red', gold: 58000 });
       render(<TeamStatsBar blueTeam={blueTeam} redTeam={redTeam} />);
 
-      // 现在两侧都有金币标签，使用 getAllByText
-      const goldLabels = screen.getAllByText('金币');
-      expect(goldLabels.length).toBeGreaterThanOrEqual(2);
+      expect(screen.getByText('金币数')).toBeInTheDocument();
     });
   });
 
@@ -91,9 +112,7 @@ describe('TeamStatsBar', () => {
 
       expect(screen.getByText('11')).toBeInTheDocument();
       expect(screen.getByText('5')).toBeInTheDocument();
-      // 现在两侧都有防御塔标签，使用 getAllByText
-      const towerLabels = screen.getAllByText('防御塔');
-      expect(towerLabels.length).toBeGreaterThanOrEqual(2);
+      expect(screen.getByText('防御塔')).toBeInTheDocument();
     });
   });
 
@@ -105,9 +124,7 @@ describe('TeamStatsBar', () => {
 
       expect(screen.getByText('4')).toBeInTheDocument();
       expect(screen.getByText('2')).toBeInTheDocument();
-      // 现在显示为"小龙"而不是"龙"
-      const dragonLabels = screen.getAllByText('小龙');
-      expect(dragonLabels.length).toBeGreaterThanOrEqual(2);
+      expect(screen.getByText('小龙数')).toBeInTheDocument();
     });
   });
 
@@ -119,9 +136,7 @@ describe('TeamStatsBar', () => {
 
       expect(screen.getByText('1')).toBeInTheDocument();
       expect(screen.getByText('0')).toBeInTheDocument();
-      // 现在两侧都有男爵标签，使用 getAllByText
-      const baronLabels = screen.getAllByText('男爵');
-      expect(baronLabels.length).toBeGreaterThanOrEqual(2);
+      expect(screen.getByText('大龙数')).toBeInTheDocument();
     });
   });
 
@@ -132,8 +147,9 @@ describe('TeamStatsBar', () => {
       const bans = createMockBans();
       render(<TeamStatsBar blueTeam={blueTeam} redTeam={redTeam} bans={bans} />);
 
-      // 检查BAN/PICK标签
-      expect(screen.getByText('BAN / PICK')).toBeInTheDocument();
+      // 检查BAN标签（现在是"BAN"而不是"BAN / PICK"）
+      const banLabels = screen.getAllByText('BAN');
+      expect(banLabels.length).toBeGreaterThanOrEqual(1);
     });
 
     it('没有BAN数据时不显示BAN区域', () => {
@@ -141,8 +157,8 @@ describe('TeamStatsBar', () => {
       const redTeam = createMockTeamData({ teamName: 'WBG', side: 'red' });
       render(<TeamStatsBar blueTeam={blueTeam} redTeam={redTeam} />);
 
-      // BAN/PICK标签不应该出现
-      expect(screen.queryByText('BAN / PICK')).not.toBeInTheDocument();
+      // BAN标签不应该出现
+      expect(screen.queryByText('BAN')).not.toBeInTheDocument();
     });
   });
 
@@ -178,6 +194,63 @@ describe('TeamStatsBar', () => {
       expect(container.querySelector('.lucide-castle')).toBeInTheDocument();
       expect(container.querySelector('.lucide-flame')).toBeInTheDocument();
       expect(container.querySelector('.lucide-crown')).toBeInTheDocument();
+    });
+  });
+
+  describe('胜利标识显示', () => {
+    it('应该为获胜方显示胜利标识', () => {
+      const blueTeam = createMockTeamData({ teamName: 'BLG', side: 'blue', isWinner: true });
+      const redTeam = createMockTeamData({ teamName: 'WBG', side: 'red', isWinner: false });
+      const { container } = render(<TeamStatsBar blueTeam={blueTeam} redTeam={redTeam} />);
+
+      // 检查胜利图标是否存在
+      const victoryIcon = container.querySelector('img[alt="胜利"]');
+      expect(victoryIcon).toBeInTheDocument();
+      expect(victoryIcon).toHaveAttribute('src', 'https://game.gtimg.cn/images/lpl/es/web201612/victory_ico.png');
+    });
+
+    it('红色方获胜时应该显示胜利标识', () => {
+      const blueTeam = createMockTeamData({ teamName: 'BLG', side: 'blue', isWinner: false });
+      const redTeam = createMockTeamData({ teamName: 'WBG', side: 'red', isWinner: true });
+      const { container } = render(<TeamStatsBar blueTeam={blueTeam} redTeam={redTeam} />);
+
+      const victoryIcon = container.querySelector('img[alt="胜利"]');
+      expect(victoryIcon).toBeInTheDocument();
+    });
+
+    it('失败方不应该显示胜利标识', () => {
+      const blueTeam = createMockTeamData({ teamName: 'BLG', side: 'blue', isWinner: false });
+      const redTeam = createMockTeamData({ teamName: 'WBG', side: 'red', isWinner: false });
+      const { container } = render(<TeamStatsBar blueTeam={blueTeam} redTeam={redTeam} />);
+
+      const victoryIcon = container.querySelector('img[alt="胜利"]');
+      expect(victoryIcon).not.toBeInTheDocument();
+    });
+  });
+
+  describe('一血标识显示', () => {
+    it('应该为获得一血的队伍显示一血标识', () => {
+      const blueTeam = createMockTeamData({ teamName: 'BLG', side: 'blue', isWinner: true });
+      const redTeam = createMockTeamData({ teamName: 'WBG', side: 'red', isWinner: false });
+      render(<TeamStatsBar blueTeam={blueTeam} redTeam={redTeam} firstBloodTeam="blue" />);
+
+      expect(screen.getByText('一血')).toBeInTheDocument();
+    });
+
+    it('红色方获得一血时应该显示一血标识', () => {
+      const blueTeam = createMockTeamData({ teamName: 'BLG', side: 'blue', isWinner: false });
+      const redTeam = createMockTeamData({ teamName: 'WBG', side: 'red', isWinner: true });
+      render(<TeamStatsBar blueTeam={blueTeam} redTeam={redTeam} firstBloodTeam="red" />);
+
+      expect(screen.getByText('一血')).toBeInTheDocument();
+    });
+
+    it('没有一血数据时不应该显示一血标识', () => {
+      const blueTeam = createMockTeamData({ teamName: 'BLG', side: 'blue' });
+      const redTeam = createMockTeamData({ teamName: 'WBG', side: 'red' });
+      render(<TeamStatsBar blueTeam={blueTeam} redTeam={redTeam} firstBloodTeam={null} />);
+
+      expect(screen.queryByText('一血')).not.toBeInTheDocument();
     });
   });
 });

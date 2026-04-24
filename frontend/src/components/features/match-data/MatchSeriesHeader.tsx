@@ -73,7 +73,10 @@ const getMatchStatus = (gameData: MatchGameData | null): string => {
  * 系列赛头部组件
  * 展示双方队伍Logo、总比分、比赛日期和状态
  */
-const MatchSeriesHeader: React.FC<MatchSeriesHeaderProps> = ({ seriesInfo, gameData }) => {
+const MatchSeriesHeader: React.FC<MatchSeriesHeaderProps> = ({ 
+  seriesInfo, 
+  gameData 
+}) => {
   const [redScore, blueScore] = calculateSeriesScore(seriesInfo, gameData);
   const { date, time } = formatMatchDateTime(gameData?.gameStartTime || null);
   const status = getMatchStatus(gameData);
@@ -92,18 +95,19 @@ const MatchSeriesHeader: React.FC<MatchSeriesHeaderProps> = ({ seriesInfo, gameD
 
   return (
     <div className="bg-[rgba(255,255,255,0.05)] border border-white/10 rounded-xl p-8 max-w-5xl mx-auto">
-      {/* 主内容区域 */}
-      <div className="flex items-center justify-between">
-        {/* 左侧：红色方 */}
-        <div className="flex flex-col items-center gap-4 min-w-[140px]">
-          <div className="w-24 h-24 rounded-full border-3 border-[#f44336] bg-[#1a1a2e] flex items-center justify-center overflow-hidden shadow-lg shadow-[#f44336]/20">
+      {/* 主内容区域 - 参考LPL官方布局：三栏布局，中间比分区域占主导 */}
+      <div className="flex items-center justify-between px-12">
+        {/* 左侧：红色方 - 固定宽度，与中间保持适当间距 */}
+        <div className="flex flex-col items-center gap-4 w-[160px]">
+          {/* 移除圆框裁剪，使用方形 */}
+          <div className="w-24 h-24 bg-[#1a1a2e] flex items-center justify-center overflow-hidden">
             <img
               src={
                 getUploadUrl(redTeam.logoUrl) ||
                 `https://api.dicebear.com/7.x/identicon/svg?seed=${redTeam.teamId}`
               }
               alt={redTeam.teamName}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
               onError={e => {
                 (e.target as HTMLImageElement).style.display = 'none';
                 (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
@@ -116,53 +120,57 @@ const MatchSeriesHeader: React.FC<MatchSeriesHeaderProps> = ({ seriesInfo, gameD
           <span className="text-2xl font-bold text-white">{redTeam.teamName}</span>
         </div>
 
-        {/* 中间：比分和比赛信息 */}
-        <div className="flex flex-col items-center gap-3">
-          {/* 总比分 */}
-          <div className="flex items-center gap-4">
-            <span className="text-6xl font-bold text-[#f44336] font-mono">{redScore}</span>
-            <span className="text-4xl text-gray-500 font-light">:</span>
-            <span className="text-6xl font-bold text-[#00bcd4] font-mono">{blueScore}</span>
+        {/* 中间：比分和比赛信息 - 添加背景色卡片，占据主要空间 */}
+        <div className="flex flex-col items-center gap-4 bg-[#2a2a3e] rounded-xl px-16 py-6 min-w-[320px]">
+          {/* 总比分 - 放大字体 */}
+          <div className="flex items-center gap-8">
+            <span className="text-8xl font-bold text-white font-mono">{redScore}</span>
+            <span className="text-5xl text-gray-500 font-light">:</span>
+            <span className="text-8xl font-bold text-[#0febc1] font-mono">{blueScore}</span>
           </div>
 
           {/* 日期和状态 */}
-          <div className="flex flex-col items-center gap-1">
-            <span className="text-sm text-gray-400">
-              {date} {time}
+          <div className="flex items-center gap-4">
+            <span className="text-lg text-gray-400">
+              {date}
             </span>
-            <span
-              className={`text-sm px-3 py-1 rounded-full ${
-                isFinished ? 'bg-gray-700 text-gray-300' : 'bg-[#c49f58]/20 text-[#c49f58]'
-              }`}
-            >
-              {status}
+            <span className="text-lg text-[#c49f58]">
+              {time}
             </span>
           </div>
+          <span
+            className={`text-base px-4 py-1.5 rounded-full ${
+              isFinished ? 'bg-gray-700 text-gray-300' : 'bg-[#c49f58]/20 text-[#c49f58]'
+            }`}
+          >
+            {status}
+          </span>
 
           {/* 视频回顾按钮 */}
           {isFinished && (
             <button
-              className="flex items-center gap-2 px-6 py-2.5 bg-[#c49f58] hover:bg-[#b08d4a] text-[#1a1a2e] font-bold rounded-lg transition-all duration-200 mt-2 group"
+              className="flex items-center gap-2 px-8 py-3 bg-[#c49f58] hover:bg-[#b08d4a] text-[#1a1a2e] font-bold rounded-lg transition-all duration-200 mt-2 group"
               onClick={() => {
                 // TODO: 实现视频回顾功能
               }}
             >
-              <Play className="w-4 h-4 group-hover:scale-110 transition-transform" />
+              <Play className="w-5 h-5 group-hover:scale-110 transition-transform" />
               视频回顾
             </button>
           )}
         </div>
 
-        {/* 右侧：蓝色方 */}
-        <div className="flex flex-col items-center gap-4 min-w-[140px]">
-          <div className="w-24 h-24 rounded-full border-3 border-[#00bcd4] bg-[#1a1a2e] flex items-center justify-center overflow-hidden shadow-lg shadow-[#00bcd4]/20">
+        {/* 右侧：蓝色方 - 固定宽度，与中间保持适当间距 */}
+        <div className="flex flex-col items-center gap-4 w-[160px]">
+          {/* 移除圆框裁剪，使用方形 */}
+          <div className="w-24 h-24 bg-[#1a1a2e] flex items-center justify-center overflow-hidden">
             <img
               src={
                 getUploadUrl(blueTeam.logoUrl) ||
                 `https://api.dicebear.com/7.x/identicon/svg?seed=${blueTeam.teamId}`
               }
               alt={blueTeam.teamName}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
               onError={e => {
                 (e.target as HTMLImageElement).style.display = 'none';
                 (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');

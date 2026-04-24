@@ -4,10 +4,25 @@ import { Button } from '../ui/button';
 import { streamService } from '../../services';
 import type { Stream } from '../../api/types';
 
+const DEFAULT_GITHUB_CDN_BASE = 'https://cdn.jsdmirror.com/gh/forzenfox/lvjiang-cup@main';
+const GITHUB_CDN_BASE = window.APP_CONFIG?.GITHUB_CDN_BASE || DEFAULT_GITHUB_CDN_BASE;
+
+const HERO_IMAGE = {
+  cdn: `${GITHUB_CDN_BASE}/frontend/public/assets/hero-bg.webp`,
+  local: '/assets/hero-bg.webp',
+};
+
 const HeroSection: React.FC = () => {
   const [streamInfo, setStreamInfo] = useState<Stream | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [heroImgSrc, setHeroImgSrc] = useState<string>(HERO_IMAGE.cdn);
+
+  // 处理图片加载错误，降级到本地路径
+  const handleHeroImageError = () => {
+    console.warn('[HeroSection] CDN图片加载失败，降级到本地路径');
+    setHeroImgSrc(HERO_IMAGE.local);
+  };
 
   // 获取直播信息
   const fetchStreamInfo = async () => {
@@ -45,9 +60,10 @@ const HeroSection: React.FC = () => {
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
           <img
-            src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=league+of+legends+champions+battle+epic+scene+blue+and+gold+theme&image_size=landscape_16_9"
+            src={heroImgSrc}
             alt="Hero Background"
             className="w-full h-full object-cover"
+            onError={handleHeroImageError}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background"></div>
         </div>
@@ -73,9 +89,10 @@ const HeroSection: React.FC = () => {
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
           <img
-            src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=league+of+legends+champions+battle+epic+scene+blue+and+gold+theme&image_size=landscape_16_9"
+            src={heroImgSrc}
             alt="Hero Background"
             className="w-full h-full object-cover"
+            onError={handleHeroImageError}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background"></div>
         </div>
@@ -106,9 +123,10 @@ const HeroSection: React.FC = () => {
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <img
-          src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=league+of+legends+champions+battle+epic+scene+blue+and+gold+theme&image_size=landscape_16_9"
+          src={heroImgSrc}
           alt="Hero Background"
           className="w-full h-full object-cover"
+          onError={handleHeroImageError}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background"></div>
       </div>

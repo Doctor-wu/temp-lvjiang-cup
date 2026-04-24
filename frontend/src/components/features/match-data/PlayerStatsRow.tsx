@@ -1,6 +1,5 @@
 import React from 'react';
 import type { PlayerStat, PositionType } from '@/types/matchData';
-import { ChevronDown, Swords, Shield, Coins, Target, Trophy, Droplets } from 'lucide-react';
 import {
   TopIcon,
   JungleIcon,
@@ -10,21 +9,18 @@ import {
 } from '@/components/icons/PositionIcons';
 import { getChampionIconUrl } from '@/utils/championUtils';
 
-const PositionIcon: React.FC<{ position: PositionType; size?: number }> = ({
-  position,
-  size = 16,
-}) => {
+const PositionIcon: React.FC<{ position: PositionType }> = ({ position }) => {
   switch (position) {
     case 'TOP':
-      return <TopIcon style={{ width: size, height: size * 0.75 }} />;
+      return <TopIcon />;
     case 'JUNGLE':
-      return <JungleIcon style={{ width: size, height: size * 0.75 }} />;
+      return <JungleIcon />;
     case 'MID':
-      return <MidIcon style={{ width: size, height: size * 0.75 }} />;
+      return <MidIcon />;
     case 'ADC':
-      return <AdcIcon style={{ width: size, height: size * 0.75 }} />;
+      return <AdcIcon />;
     case 'SUPPORT':
-      return <SupportIcon style={{ width: size, height: size * 0.75 }} />;
+      return <SupportIcon />;
     default:
       return null;
   }
@@ -47,157 +43,136 @@ const PlayerStatsRow: React.FC<PlayerStatsRowProps> = ({
     return `${(gold / 1000).toFixed(1)}k`;
   };
 
-  const formatNumber = (num: number): string => {
-    if (num >= 1000) {
-      return `${(num / 1000).toFixed(1)}k`;
-    }
-    return num.toString();
-  };
-
   const handleRowClick = () => {
     onToggle();
   };
 
+  const getPlayerAvatar = (player: PlayerStat): string | null => {
+    return null;
+  };
+
   return (
     <div
-      className="bg-[rgba(255,255,255,0.03)] hover:bg-[rgba(255,255,255,0.08)] hover:translate-y-[-2px]
-                 rounded-lg py-3 px-4 mb-1 cursor-pointer transition-all duration-200 border-b border-white/5"
+      className="bg-[#2d2d2d] hover:bg-[#27252c]
+                 py-5 px-4 cursor-pointer transition-all duration-200 border-b border-white/10"
       onClick={handleRowClick}
     >
       <div className="flex items-center justify-between">
-        {/* 左侧：红色方选手 */}
-        <div className="flex items-center gap-3 flex-1 min-w-0">
-          <div
-            className="w-14 h-14 rounded-full border-2 border-[#f44336]/50 bg-[#1a1a2e] flex items-center justify-center overflow-hidden flex-shrink-0
-                       shadow-[0_0_8px_rgba(244,67,54,0.3)]"
-            title={redPlayer.championName}
-          >
-            <img
-              src={getChampionIconUrl(redPlayer.championName)}
-              alt={redPlayer.championName}
-              className="w-full h-full object-cover"
-              onError={e => {
-                (e.target as HTMLImageElement).style.display = 'none';
-                (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
-              }}
-            />
-            <span className="hidden">{redPlayer.championName.charAt(0)}</span>
+        {/* 左侧：红色方 - 列宽与表头完全一致 */}
+        <div className="flex items-center gap-2" style={{ width: 532 }}>
+          {/* 选手头像和昵称 - 上下布局 */}
+          <div className="flex flex-col items-center gap-1" style={{ width: 100 }}>
+            <div className="w-16 h-16 rounded bg-gray-700 flex items-center justify-center flex-shrink-0 overflow-hidden">
+              {getPlayerAvatar(redPlayer) ? (
+                <img
+                  src={getPlayerAvatar(redPlayer)!}
+                  alt={redPlayer.playerName}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-lg font-bold text-gray-400">
+                  {redPlayer.playerName.slice(0, 1)}
+                </span>
+              )}
+            </div>
+            <span className="text-sm font-bold text-white truncate" style={{ maxWidth: 100 }}>{redPlayer.playerName}</span>
           </div>
-          <div className="flex flex-col min-w-0">
-            <div className="flex items-center gap-2">
-              <PositionIcon position={redPlayer.position} size={16} />
-              <span className="text-sm font-bold text-white truncate">{redPlayer.playerName}</span>
+
+          {/* 英雄图标 - 调大到56px */}
+          <div className="w-[100px] text-center">
+            <div
+              className="w-14 h-14 rounded border border-[#f44336]/50 bg-[#1a1a2e] flex items-center justify-center overflow-hidden mx-auto"
+              title={redPlayer.championName}
+            >
+              <img
+                src={getChampionIconUrl(redPlayer.championName)}
+                alt={redPlayer.championName}
+                className="w-full h-full object-cover"
+                onError={e => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                  (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                }}
+              />
+              <span className="hidden text-xs">{redPlayer.championName.charAt(0)}</span>
             </div>
-            <div className="flex items-center gap-2 mt-1 flex-wrap">
-              <span className="text-base text-[#f44336] font-mono font-bold">{redPlayer.kda}</span>
-              <div className="flex items-center gap-1 text-xs text-[#c49f58]">
-                <Coins className="w-3 h-3" />
-                <span className="font-mono">{formatGold(redPlayer.gold)}</span>
-              </div>
-              <div className="flex items-center gap-1 text-xs text-gray-400">
-                <Target className="w-3 h-3" />
-                <span className="font-mono">{redPlayer.cs}</span>
-              </div>
-              <div className="hidden md:flex items-center gap-1 text-xs">
-                <Swords className="w-3 h-3 text-[#f59e0b]" />
-                <span className="text-[#f59e0b] font-mono">
-                  {formatNumber(redPlayer.damageDealt || 0)}
-                </span>
-              </div>
-              <div className="hidden md:flex items-center gap-1 text-xs">
-                <Shield className="w-3 h-3 text-[#94a3b8]" />
-                <span className="text-[#94a3b8] font-mono">
-                  {formatNumber(redPlayer.damageTaken || 0)}
-                </span>
-              </div>
-            </div>
+          </div>
+
+          {/* KDA */}
+          <div className="w-[100px] text-center">
+            <span className="text-base text-[#f44336] font-mono font-bold">{redPlayer.kda}</span>
+          </div>
+
+          {/* 金币 */}
+          <div className="w-[60px] text-center">
+            <span className="text-base text-[#c49f58] font-mono">{formatGold(redPlayer.gold)}</span>
+          </div>
+
+          {/* 补刀 */}
+          <div className="w-[50px] text-center">
+            <span className="text-base text-gray-400 font-mono">{redPlayer.cs}</span>
           </div>
         </div>
 
-        {/* 中间：标识区域 */}
-        <div className="flex flex-col items-center gap-1 px-2 sm:px-4 flex-shrink-0">
-          <div className="flex items-center gap-1 sm:gap-2">
-            {redPlayer.mvp && (
-              <span className="text-xs text-[#c49f58] font-bold bg-[#c49f58]/20 px-1.5 py-0.5 rounded flex items-center gap-1">
-                <Trophy className="w-3 h-3" />
-                MVP
-              </span>
-            )}
-            {redPlayer.firstBlood && (
-              <span className="text-xs text-red-400 font-bold flex items-center gap-1">
-                <Droplets className="w-3 h-3" />
-                一血
-              </span>
-            )}
-            {bluePlayer.mvp && (
-              <span className="text-xs text-[#c49f58] font-bold bg-[#c49f58]/20 px-1.5 py-0.5 rounded flex items-center gap-1">
-                <Trophy className="w-3 h-3" />
-                MVP
-              </span>
-            )}
-            {bluePlayer.firstBlood && (
-              <span className="text-xs text-red-400 font-bold flex items-center gap-1">
-                <Droplets className="w-3 h-3" />
-                一血
-              </span>
-            )}
+        {/* 中间：位置图标 - 固定宽度64px */}
+        <div className="flex items-center justify-center" style={{ width: 64 }}>
+          <div className="flex items-center justify-center">
+            <PositionIcon position={redPlayer.position} />
           </div>
         </div>
 
-        {/* 右侧：蓝色方选手 */}
-        <div className="flex items-center gap-3 flex-1 justify-end min-w-0">
-          <div className="flex flex-col items-end min-w-0">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-bold text-white truncate">{bluePlayer.playerName}</span>
-              <PositionIcon position={bluePlayer.position} size={16} />
-            </div>
-            <div className="flex items-center gap-2 mt-1 flex-wrap justify-end">
-              <div className="hidden md:flex items-center gap-1 text-xs">
-                <span className="text-[#94a3b8] font-mono">
-                  {formatNumber(bluePlayer.damageTaken || 0)}
-                </span>
-                <Shield className="w-3 h-3 text-[#94a3b8]" />
-              </div>
-              <div className="hidden md:flex items-center gap-1 text-xs">
-                <span className="text-[#f59e0b] font-mono">
-                  {formatNumber(bluePlayer.damageDealt || 0)}
-                </span>
-                <Swords className="w-3 h-3 text-[#f59e0b]" />
-              </div>
-              <div className="flex items-center gap-1 text-xs text-gray-400">
-                <span className="font-mono">{bluePlayer.cs}</span>
-                <Target className="w-3 h-3" />
-              </div>
-              <div className="flex items-center gap-1 text-xs text-[#c49f58]">
-                <span className="font-mono">{formatGold(bluePlayer.gold)}</span>
-                <Coins className="w-3 h-3" />
-              </div>
-              <span className="text-base text-[#00bcd4] font-mono font-bold">{bluePlayer.kda}</span>
-            </div>
+        {/* 右侧：蓝色方 - 列宽与表头完全一致 */}
+        <div className="flex items-center gap-2 justify-end" style={{ width: 532 }}>
+          {/* 补刀 */}
+          <div className="w-[50px] text-center">
+            <span className="text-base text-gray-400 font-mono">{bluePlayer.cs}</span>
           </div>
-          <div
-            className="w-14 h-14 rounded-full border-2 border-[#00bcd4]/50 bg-[#1a1a2e] flex items-center justify-center overflow-hidden flex-shrink-0
-                       shadow-[0_0_8px_rgba(0,188,212,0.3)]"
-            title={bluePlayer.championName}
-          >
-            <img
-              src={getChampionIconUrl(bluePlayer.championName)}
-              alt={bluePlayer.championName}
-              className="w-full h-full object-cover"
-              onError={e => {
-                (e.target as HTMLImageElement).style.display = 'none';
-                (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
-              }}
-            />
-            <span className="hidden">{bluePlayer.championName.charAt(0)}</span>
-          </div>
-        </div>
 
-        {/* 展开箭头 - 行最右侧 */}
-        <div className="flex-shrink-0 ml-2">
-          <ChevronDown
-            className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
-          />
+          {/* 金币 */}
+          <div className="w-[60px] text-center">
+            <span className="text-base text-[#c49f58] font-mono">{formatGold(bluePlayer.gold)}</span>
+          </div>
+
+          {/* KDA */}
+          <div className="w-[100px] text-center">
+            <span className="text-base text-[#00bcd4] font-mono font-bold">{bluePlayer.kda}</span>
+          </div>
+
+          {/* 英雄图标 - 调大到56px */}
+          <div className="w-[100px] text-center">
+            <div
+              className="w-14 h-14 rounded border border-[#00bcd4]/50 bg-[#1a1a2e] flex items-center justify-center overflow-hidden mx-auto"
+              title={bluePlayer.championName}
+            >
+              <img
+                src={getChampionIconUrl(bluePlayer.championName)}
+                alt={bluePlayer.championName}
+                className="w-full h-full object-cover"
+                onError={e => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                  (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                }}
+              />
+              <span className="hidden text-xs">{bluePlayer.championName.charAt(0)}</span>
+            </div>
+          </div>
+
+          {/* 选手头像和昵称 - 上下布局 */}
+          <div className="flex flex-col items-center gap-1" style={{ width: 100 }}>
+            <div className="w-16 h-16 rounded bg-gray-700 flex items-center justify-center flex-shrink-0 overflow-hidden">
+              {getPlayerAvatar(bluePlayer) ? (
+                <img
+                  src={getPlayerAvatar(bluePlayer)!}
+                  alt={bluePlayer.playerName}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-lg font-bold text-gray-400">
+                  {bluePlayer.playerName.slice(0, 1)}
+                </span>
+              )}
+            </div>
+            <span className="text-sm font-bold text-white truncate" style={{ maxWidth: 100 }}>{bluePlayer.playerName}</span>
+          </div>
         </div>
       </div>
     </div>

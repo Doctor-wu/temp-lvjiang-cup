@@ -8,7 +8,7 @@ import TeamSection from '../components/features/TeamSection';
 import StreamerSection from '../components/features/StreamerSection';
 import { ThanksSection } from '../components/features/ThanksSection';
 import { VideoCarousel, VideoItem } from '../components/video-carousel';
-import { streamService, teamService, matchService, advancementService } from '../services';
+import { streamService, teamService, matchService } from '../services';
 import * as videoApi from '../api/videos';
 import { ZIndexLayers } from '../constants/zIndex';
 
@@ -144,13 +144,7 @@ const Home: React.FC = () => {
               updateLoadingState('matches', false);
             }
           })(),
-          // 晋级名单数据
-          (async () => {
-            if (isBackground) {
-              advancementService.resetState();
-            }
-            await advancementService.get();
-          })(),
+
           // 视频数据
           (async () => {
             updateLoadingState('videos', true);

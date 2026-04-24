@@ -14,7 +14,7 @@ describe('VideoPlayer', () => {
     vi.clearAllMocks();
   });
 
-  it('renders iframe with correct src after loading', async () => {
+  it('renders iframe with autoplay when autoplay is true', async () => {
     render(<VideoPlayer video={mockVideo} autoplay muted />);
 
     await waitFor(() => {
@@ -27,7 +27,19 @@ describe('VideoPlayer', () => {
     expect(iframe.src).toContain('muted=1');
   });
 
-  it('renders iframe without autoplay when not specified', async () => {
+  it('renders iframe without autoplay when autoplay is false', async () => {
+    render(<VideoPlayer video={mockVideo} autoplay={false} />);
+
+    await waitFor(() => {
+      expect(screen.queryByTitle('bilibili-player')).toBeInTheDocument();
+    });
+
+    const iframe = screen.getByTitle('bilibili-player') as HTMLIFrameElement;
+    expect(iframe.src).toContain('BV1xx411c7XZ');
+    expect(iframe.src).toContain('autoplay=0');
+  });
+
+  it('renders iframe by default', async () => {
     render(<VideoPlayer video={mockVideo} />);
 
     await waitFor(() => {
@@ -35,6 +47,6 @@ describe('VideoPlayer', () => {
     });
 
     const iframe = screen.getByTitle('bilibili-player') as HTMLIFrameElement;
-    expect(iframe.src).not.toContain('autoplay=1');
+    expect(iframe.src).toContain('BV1xx411c7XZ');
   });
 });

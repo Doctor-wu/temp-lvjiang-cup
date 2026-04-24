@@ -251,24 +251,6 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
     `,
     );
 
-    // advancement 表
-    await run(
-      this.db,
-      `
-      CREATE TABLE IF NOT EXISTS advancement (
-        id INTEGER PRIMARY KEY CHECK(id = 1),
-        top8 TEXT DEFAULT '[]',
-        eliminated TEXT DEFAULT '[]',
-        winners2_0 TEXT DEFAULT '[]',
-        winners2_1 TEXT DEFAULT '[]',
-        losers_bracket TEXT DEFAULT '[]',
-        eliminated_3rd TEXT DEFAULT '[]',
-        eliminated_0_3 TEXT DEFAULT '[]',
-        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      )
-    `,
-    );
-
     // streamers 表
     await run(
       this.db,
@@ -424,7 +406,7 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
 
     await run(this.db, `CREATE UNIQUE INDEX IF NOT EXISTS idx_file_hash ON file_hashes(hash)`);
 
-    // 初始化 stream_info 和 advancement 的默认数据
+    // 初始化 stream_info 的默认数据
     await this.initDefaultData();
 
     this.logger.log('Database tables initialized');
@@ -437,14 +419,6 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
       `
       INSERT OR IGNORE INTO stream_info (id, title, url, is_live)
       VALUES (1, '', '', 0)
-    `,
-    );
-
-    await run(
-      this.db,
-      `
-      INSERT OR IGNORE INTO advancement (id, top8, eliminated, winners2_0, winners2_1, losers_bracket, eliminated_3rd, eliminated_0_3)
-      VALUES (1, '[]', '[]', '[]', '[]', '[]', '[]', '[]')
     `,
     );
   }
@@ -490,10 +464,6 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
     await run(
       this.db,
       `UPDATE stream_info SET title = '', url = '', is_live = 0, updated_at = CURRENT_TIMESTAMP WHERE id = 1`,
-    );
-    await run(
-      this.db,
-      `UPDATE advancement SET top8 = '[]', eliminated = '[]', winners2_0 = '[]', winners2_1 = '[]', losers_bracket = '[]', eliminated_3rd = '[]', eliminated_0_3 = '[]', updated_at = CURRENT_TIMESTAMP WHERE id = 1`,
     );
     this.logger.log('All data cleared');
   }

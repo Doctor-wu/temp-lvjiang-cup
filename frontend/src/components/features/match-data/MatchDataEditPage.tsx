@@ -331,7 +331,7 @@ const MatchDataEditPage: React.FC = () => {
           games={seriesInfo?.games || []}
           currentGame={currentGameRef.current}
           onChange={handleGameChange}
-          isBO1={seriesInfo?.format === 'BO1'}
+          format={seriesInfo?.format}
         />
 
         {isEditMode ? (

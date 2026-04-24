@@ -3,10 +3,6 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { VideoCarousel } from '@/components/video-carousel';
 import type { VideoItem } from '@/components/video-carousel/VideoPlayer';
 
-vi.mock('@/components/video-carousel/hooks/useAutoplay', () => ({
-  useAutoplay: vi.fn(() => ({ pause: vi.fn() })),
-}));
-
 vi.mock('@/hooks/useMediaQuery', () => ({
   useMediaQuery: vi.fn(() => false),
 }));
@@ -22,7 +18,7 @@ describe('VideoCarousel', () => {
     vi.clearAllMocks();
   });
 
-  it('renders VideoPlayer with current video', async () => {
+  it('renders VideoPlayer with autoplay enabled', async () => {
     render(<VideoCarousel videos={mockVideos} />);
 
     await waitFor(() => {
@@ -31,6 +27,7 @@ describe('VideoCarousel', () => {
 
     const iframe = document.querySelector('iframe') as HTMLIFrameElement;
     expect(iframe.src).toContain('BV1');
+    expect(iframe.src).toContain('autoplay=1');
   });
 
   it('shows thumbnails on PC (3 screens layout)', async () => {

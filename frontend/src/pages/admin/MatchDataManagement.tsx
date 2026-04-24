@@ -176,7 +176,7 @@ const MatchDataManagement: React.FC = () => {
       ) : (
         <div className="space-y-4">
           {Array.from({ length: getMaxGames() }, (_, i) => i + 1).map(gameNumber => {
-            const game = seriesInfo.games.find(g => g.gameNumber === gameNumber);
+            const game = seriesInfo?.games?.find(g => g.gameNumber === gameNumber);
             const isEnabled = gameStatuses[gameNumber]?.enabled ?? false;
             const hasData = game?.hasData ?? false;
 

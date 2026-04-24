@@ -83,7 +83,7 @@ const MatchDataEditDialog: React.FC<MatchDataEditDialogProps> = ({
           barons: gameData.redTeam.barons,
           isWinner: gameData.redTeam.isWinner,
         },
-        playerStats: gameData.playerStats.map(p => ({
+        playerStats: (gameData?.playerStats ?? []).map(p => ({
           kills: p.kills,
           deaths: p.deaths,
           assists: p.assists,
@@ -154,7 +154,7 @@ const MatchDataEditDialog: React.FC<MatchDataEditDialogProps> = ({
         redTeam: formData.redTeam,
         playerStats: formData.playerStats.map((p, index) => ({
           ...p,
-          playerId: gameData.playerStats[index].playerId,
+          playerId: gameData?.playerStats?.[index]?.playerId ?? '',
         })),
       });
 

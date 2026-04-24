@@ -108,6 +108,19 @@ export const ImportDialog: React.FC<ImportDialogProps> = ({ open, onClose, onSuc
           </div>
         </div>
 
+        <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+            <div className="text-sm text-red-200">
+              <p className="font-medium mb-1">⚠️ 重要警告</p>
+              <p className="text-red-300/80">
+                重新导入战队数据会导致队员ID重新生成，已导入的对战数据中的选手统计信息将无法关联显示。
+                重新导入战队数据后，需要重新导入被覆盖战队的对战数据，否则将显示异常。
+              </p>
+            </div>
+          </div>
+        </div>
+
         <div
           className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
             dragging ? 'border-blue-500 bg-blue-500/10' : 'border-gray-600 hover:border-gray-500'
