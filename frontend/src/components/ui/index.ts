@@ -14,9 +14,6 @@ export type { TextAreaProps } from './TextArea';
 export { Select } from './Select';
 export type { SelectProps, SelectOption } from './Select';
 
-export { default as Toast, ToastProvider, useToast } from './Toast';
-export type { ToastProps } from './Toast';
-
 export { Card, CardContent, CardHeader, CardTitle } from './card';
 
 export { ConfirmDialog } from './confirm-dialog';

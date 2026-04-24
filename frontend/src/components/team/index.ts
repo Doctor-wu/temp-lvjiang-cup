@@ -4,4 +4,3 @@ export { default as PlayerDetailDrawer } from './PlayerDetailDrawer';
 export type { PlayerDetailDrawerProps } from './PlayerDetailDrawer';
 export { TeamMemberModal } from './TeamMemberModal';
 export { default as PlayerDetailContent } from './PlayerDetailContent';
-export { PlayerDetailModal } from './PlayerDetailModal';
