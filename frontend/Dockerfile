@@ -12,6 +12,12 @@ RUN npm ci
 # 复制源代码
 COPY . .
 
+# 声明构建参数（设置默认值为 admin）
+ARG VITE_ADMIN_ROUTE_PREFIX=admin
+
+# 设置环境变量，Vite 构建时会自动读取
+ENV VITE_ADMIN_ROUTE_PREFIX=$VITE_ADMIN_ROUTE_PREFIX
+
 # 构建应用
 RUN npm run build
 

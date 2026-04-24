@@ -15,6 +15,7 @@ import {
 import { cn } from '../../lib/utils';
 import { Button } from '../ui/button';
 import { useAuth } from '../../hooks/useAuth';
+import { adminPath } from '../../constants/routes';
 
 /**
  * AdminLayout 组件属性接口
@@ -54,13 +55,13 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
    * 导航菜单项配置
    */
   const navItems = [
-    { path: '/admin/dashboard', label: '仪表盘', icon: LayoutDashboard },
-    { path: '/admin/stream', label: '直播配置', icon: Radio },
-    { path: '/admin/streamers', label: '主播管理', icon: User },
-    { path: '/admin/videos', label: '视频管理', icon: Video },
-    { path: '/admin/teams', label: '战队管理', icon: Users },
-    { path: '/admin/schedule', label: '赛程管理', icon: Calendar },
-    { path: '/admin/matches', label: '对战数据', icon: Trophy },
+    { path: adminPath('dashboard'), label: '仪表盘', icon: LayoutDashboard },
+    { path: adminPath('stream'), label: '直播配置', icon: Radio },
+    { path: adminPath('streamers'), label: '主播管理', icon: User },
+    { path: adminPath('videos'), label: '视频管理', icon: Video },
+    { path: adminPath('teams'), label: '战队管理', icon: Users },
+    { path: adminPath('schedule'), label: '赛程管理', icon: Calendar },
+    { path: adminPath('matches'), label: '对战数据', icon: Trophy },
   ];
 
   return (

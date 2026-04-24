@@ -12,6 +12,7 @@ import ProtectedRoute from '../components/layout/ProtectedRoute';
 import MatchDataList from '../pages/admin/MatchDataList';
 import MatchDataManagement from '../pages/admin/MatchDataManagement';
 import MatchDataEditPage from '../components/features/match-data/MatchDataEditPage';
+import { adminPath } from '../constants/routes';
 
 /**
  * 路由配置
@@ -24,13 +25,13 @@ export const routes: RouteObject[] = [
     element: <Home />,
   },
   {
-    path: '/admin/login',
+    path: adminPath('login'),
     element: <AdminLogin />,
   },
 
   // 受保护的管理后台路由
   {
-    path: '/admin/dashboard',
+    path: adminPath('dashboard'),
     element: (
       <ProtectedRoute>
         <AdminDashboard />
@@ -38,7 +39,7 @@ export const routes: RouteObject[] = [
     ),
   },
   {
-    path: '/admin/stream',
+    path: adminPath('stream'),
     element: (
       <ProtectedRoute>
         <AdminStream />
@@ -46,7 +47,7 @@ export const routes: RouteObject[] = [
     ),
   },
   {
-    path: '/admin/teams',
+    path: adminPath('teams'),
     element: (
       <ProtectedRoute>
         <AdminTeams />
@@ -54,7 +55,7 @@ export const routes: RouteObject[] = [
     ),
   },
   {
-    path: '/admin/schedule',
+    path: adminPath('schedule'),
     element: (
       <ProtectedRoute>
         <AdminSchedule />
@@ -62,7 +63,7 @@ export const routes: RouteObject[] = [
     ),
   },
   {
-    path: '/admin/streamers',
+    path: adminPath('streamers'),
     element: (
       <ProtectedRoute>
         <AdminStreamers />
@@ -70,7 +71,7 @@ export const routes: RouteObject[] = [
     ),
   },
   {
-    path: '/admin/videos',
+    path: adminPath('videos'),
     element: (
       <ProtectedRoute>
         <Videos />
@@ -78,7 +79,7 @@ export const routes: RouteObject[] = [
     ),
   },
   {
-    path: '/admin/matches',
+    path: adminPath('matches'),
     element: (
       <ProtectedRoute>
         <MatchDataList />
@@ -86,7 +87,7 @@ export const routes: RouteObject[] = [
     ),
   },
   {
-    path: '/admin/matches/:matchId/games/:gameNumber/edit',
+    path: adminPath('matches/:matchId/games/:gameNumber/edit'),
     element: (
       <ProtectedRoute>
         <MatchDataEditPage />
@@ -94,7 +95,7 @@ export const routes: RouteObject[] = [
     ),
   },
   {
-    path: '/admin/matches/:matchId/games',
+    path: adminPath('matches/:matchId/games'),
     element: (
       <ProtectedRoute>
         <MatchDataManagement />

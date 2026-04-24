@@ -13,6 +13,7 @@ import RadarChart from './RadarChart';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { getMatchSeries, getMatchGameData, updateMatchGameData } from '@/api/matchData';
 import type { MatchSeriesInfo, MatchGameData, PlayerStat, PositionType } from '@/types/matchData';
+import { ADMIN_PREFIX, adminPath } from '@/constants/routes';
 import { useMatchDataStore } from '@/store/matchDataStore';
 import { trackAdminEditOpen, trackAdminEditSave } from '@/utils/tracking';
 import MatchDataSkeleton from './MatchDataSkeleton';
@@ -134,8 +135,8 @@ const MatchDataEditPage: React.FC = () => {
 
   const handleBack = useCallback(() => {
     const navigateBack = () => {
-      if (window.location.pathname.includes('/admin/')) {
-        navigate('/admin/matches');
+      if (window.location.pathname.includes(`/${ADMIN_PREFIX}/`)) {
+        navigate(adminPath('matches'));
       } else {
         navigate(-1);
       }

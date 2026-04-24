@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Trophy } from 'lucide-react';
 import { ZIndexLayers } from '../../constants/zIndex';
 import { Footer } from './Footer';
+import { adminPath } from '../../constants/routes';
 
 // 隐藏滚动条的样式 + 全屏滚动吸附
 const styles = `
@@ -64,6 +65,19 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     return () => {
       document.head.removeChild(styleElement);
     };
+  }, []);
+
+  // 添加键盘快捷键监听，Ctrl+Shift+A 打开管理后台
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.shiftKey && event.key === 'A') {
+        event.preventDefault();
+        window.location.href = adminPath('login');
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   // 添加键盘事件监听器，实现上下键切换模块
@@ -180,21 +194,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             })}
           </nav>
 
-          {/* 右侧管理入口 */}
-          <Link
-            to="/admin/login"
-            className="group flex items-center space-x-2 text-lg font-bold text-gray-300 hover:text-secondary transition-all duration-300 px-6 py-3 rounded-lg border border-transparent hover:border-secondary/30 hover:bg-secondary/10"
-          >
-            <span>管理</span>
-            <svg
-              className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
+          {/* 右侧区域 - 已移除管理入口，使用快捷键 Ctrl+Shift+A 访问 */}
+          <div className="w-[120px]" />
         </div>
       </header>
 

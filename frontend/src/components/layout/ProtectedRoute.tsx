@@ -2,6 +2,7 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
+import { adminPath } from '../../constants/routes';
 
 /**
  * ProtectedRoute 组件属性接口
@@ -48,7 +49,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   // 未登录，重定向到登录页，并保留原始路径
   if (!isAuthenticated) {
-    return <Navigate to="/admin/login" state={{ from: location.pathname }} replace />;
+    return <Navigate to={adminPath('login')} state={{ from: location.pathname }} replace />;
   }
 
   // 已登录，显示子组件

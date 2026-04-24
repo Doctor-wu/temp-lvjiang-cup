@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios';
 import { toast } from 'sonner';
+import { adminPath } from '../constants/routes';
 
 /**
  * HTTP 错误码枚举
@@ -224,8 +225,8 @@ export function handleError(error: unknown, config: ErrorHandlerConfig = {}): Ap
       if (redirectToLogin) {
         localStorage.removeItem('token');
         const currentPath = window.location.pathname;
-        if (!currentPath.includes('/admin/login')) {
-          window.location.href = '/admin/login';
+        if (!currentPath.includes(adminPath('login'))) {
+          window.location.href = adminPath('login');
         }
       }
       break;

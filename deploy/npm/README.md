@@ -250,8 +250,130 @@ netstat -tlnp | grep :8181
 
 ---
 
-**文档版本**: v1.1  
-**更新日期**: 2026-04-07  
+**文档版本**: v1.2  
+**更新日期**: 2026-04-24  
 **适用场景**: 多应用服务器环境  
 **更新日志**:
+- v1.2: 添加管理端点 IP 白名单配置说明
 - v1.1: 添加 config.js 配置文件缓存配置说明
+
+---
+
+## 安全加固配置
+
+### 管理端点 IP 白名单
+
+在 NPM 中为后端 API 代理配置 IP 白名单，限制管理端点的访问来源。
+
+**操作步骤**：
+
+1. 登录 NPM Web UI (`http://服务器IP:8181`)
+2. 找到代理后端 API 的 Proxy Host（通常是 `/api` 路由或域名代理）
+3. 点击 **Edit**，切换到 **Advanced** 选项卡
+4. 在文本框中粘贴以下配置
+
+**Nginx 配置**：
+
+```nginx
+# ==========================================
+# 管理端点 IP 白名单配置
+# 注意：location 匹配顺序很重要，更具体的路径必须放在前面
+# ==========================================
+
+# 1. 登录接口 - 所有 IP 均可访问（必须在 /api/admin/ 之前）
+location /api/admin/auth/login {
+    proxy_pass http://lvjiang-backend:3000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+
+# 2. 管理端点 - 仅白名单 IP 可访问
+location /api/admin/ {
+    # 允许的 IP 地址（根据实际情况修改）
+    allow 192.168.1.100;    # 管理员 IP
+    allow 10.0.0.5;         # 办公室 IP
+    # allow 172.16.0.0/12; # 也可以配置 IP 段
+
+    # 拒绝其他所有 IP
+    deny all;
+
+    # 将请求代理到后端服务
+    proxy_pass http://lvjiang-backend:3000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+
+# 3. 其他 API 路径 - 所有 IP 均可访问
+location /api/ {
+    proxy_pass http://lvjiang-backend:3000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+```
+
+**重要注意事项**：
+
+1. `proxy_pass` 中必须使用容器名称 `lvjiang-backend`（而非 `127.0.0.1`），因为服务运行在 Docker `npm-network` 网络中
+2. `location /api/admin/auth/login` 必须放在 `location /api/admin/` 之前，Nginx 会优先匹配更具体的路径前缀
+3. 如果已存在 `/api` 的 location 配置，需要将其拆分为上面的三个 location 块
+
+**测试验证**：
+
+```bash
+# 测试白名单 IP 访问（应正常返回数据）
+curl http://your-domain.com/api/admin/teams -H "Authorization: Bearer <token>"
+
+# 测试登录接口不受影响（应返回 JWT token）
+curl -X POST http://your-domain.com/api/admin/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"your-password"}'
+
+# 测试非白名单 IP 访问（应返回 403 Forbidden）
+# 使用另一台机器或手机网络访问同一地址
+```
+
+**IP 白名单配置说明**：
+
+| 格式 | 示例 | 说明 |
+|------|------|------|
+| 单个 IPv4 | `allow 192.168.1.100;` | 允许单个 IP |
+| IPv4 网段 | `allow 192.168.1.0/24;` | 允许整个子网 |
+| 单个 IPv6 | `allow 2001:db8::1;` | 允许单个 IPv6 |
+| IPv6 网段 | `allow 2001:db8::/32;` | 允许 IPv6 网段 |
+
+**CDN 场景注意事项**：
+
+如果使用了 CDN（如腾讯云 CDN、Cloudflare），需要将 CDN 回源节点 IP 加入白名单，否则管理 API 会被 CDN 回源请求拒绝。
+
+腾讯云 CDN 回源 IP 段示例：
+```nginx
+allow 101.226.0.0/16;
+allow 101.227.0.0/16;
+allow 101.228.0.0/16;
+allow 101.229.0.0/16;
+```
+
+Cloudflare IP 段列表：[https://www.cloudflare.com/ips/](https://www.cloudflare.com/ips/)
+
+**不配置 IP 白名单的情况**：
+
+如果管理员使用动态 IP 或移动网络访问，可以不配置 IP 白名单，仅保留全局代理配置：
+
+```nginx
+location /api/ {
+    proxy_pass http://lvjiang-backend:3000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+```
+
+此时管理端点仅受 JWT Token 认证保护，行为与修改前完全一致。
+

@@ -7,6 +7,7 @@ import { matchService } from '@/services/matchService';
 import { streamService } from '@/services/streamService';
 import { Users, Trophy, Radio, Activity, BarChart3 } from 'lucide-react';
 import { toast } from 'sonner';
+import { adminPath } from '../../constants/routes';
 
 interface DashboardStats {
   totalTeams: number;
@@ -160,7 +161,7 @@ const AdminDashboard: React.FC = () => {
           icon={BarChart3}
           color="bg-secondary"
           subtitle={`${stats.totalMatches - stats.matchesWithData} 场比赛待导入`}
-          onClick={() => navigate('/admin/matches')}
+          onClick={() => navigate(adminPath('matches'))}
         />
         <StatCard
           title="直播状态"
@@ -182,7 +183,7 @@ const AdminDashboard: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div
           className="bg-gray-800 p-6 rounded-lg border border-gray-700 hover:border-blue-500/50 transition-colors cursor-pointer"
-          onClick={() => (window.location.href = '/admin/stream')}
+          onClick={() => (window.location.href = adminPath('stream'))}
         >
           <h3 className="text-xl font-semibold text-secondary mb-2">直播管理</h3>
           <p className="text-gray-400">管理直播链接和状态</p>
@@ -193,7 +194,7 @@ const AdminDashboard: React.FC = () => {
         </div>
         <div
           className="bg-gray-800 p-6 rounded-lg border border-gray-700 hover:border-blue-500/50 transition-colors cursor-pointer"
-          onClick={() => (window.location.href = '/admin/streamers')}
+          onClick={() => (window.location.href = adminPath('streamers'))}
         >
           <h3 className="text-xl font-semibold text-secondary mb-2">主播管理</h3>
           <p className="text-gray-400">管理主播信息和直播间配置</p>
@@ -204,7 +205,7 @@ const AdminDashboard: React.FC = () => {
         </div>
         <div
           className="bg-gray-800 p-6 rounded-lg border border-gray-700 hover:border-blue-500/50 transition-colors cursor-pointer"
-          onClick={() => (window.location.href = '/admin/videos')}
+          onClick={() => (window.location.href = adminPath('videos'))}
         >
           <h3 className="text-xl font-semibold text-secondary mb-2">视频管理</h3>
           <p className="text-gray-400">管理赛事视频内容和展示配置</p>
@@ -215,7 +216,7 @@ const AdminDashboard: React.FC = () => {
         </div>
         <div
           className="bg-gray-800 p-6 rounded-lg border border-gray-700 hover:border-blue-500/50 transition-colors cursor-pointer"
-          onClick={() => (window.location.href = '/admin/teams')}
+          onClick={() => (window.location.href = adminPath('teams'))}
         >
           <h3 className="text-xl font-semibold text-secondary mb-2">战队管理</h3>
           <p className="text-gray-400">管理参赛战队和队员信息</p>
@@ -226,7 +227,7 @@ const AdminDashboard: React.FC = () => {
         </div>
         <div
           className="bg-gray-800 p-6 rounded-lg border border-gray-700 hover:border-blue-500/50 transition-colors cursor-pointer"
-          onClick={() => (window.location.href = '/admin/schedule')}
+          onClick={() => (window.location.href = adminPath('schedule'))}
         >
           <h3 className="text-xl font-semibold text-secondary mb-2">赛程管理</h3>
           <p className="text-gray-400">更新比赛结果和赛程安排</p>
@@ -237,7 +238,7 @@ const AdminDashboard: React.FC = () => {
         </div>
         <div
           className="bg-gray-800 p-6 rounded-lg border border-gray-700 hover:border-blue-500/50 transition-colors cursor-pointer"
-          onClick={() => (window.location.href = '/admin/matches')}
+          onClick={() => (window.location.href = adminPath('matches'))}
         >
           <h3 className="text-xl font-semibold text-secondary mb-2">对战数据管理</h3>
           <p className="text-gray-400">导入和管理比赛详细数据</p>

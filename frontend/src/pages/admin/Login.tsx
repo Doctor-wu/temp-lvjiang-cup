@@ -10,6 +10,7 @@ import {
 } from '../../components/ui/card';
 import { Trophy, Loader2, User, Lock } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
+import { adminPath } from '../../constants/routes';
 
 /**
  * 表单验证错误接口
@@ -43,7 +44,7 @@ const AdminLogin: React.FC = () => {
   // 如果用户已登录，自动跳转到管理后台
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/admin/dashboard', { replace: true });
+      navigate(adminPath('dashboard'), { replace: true });
     }
   }, [isAuthenticated, navigate]);
 

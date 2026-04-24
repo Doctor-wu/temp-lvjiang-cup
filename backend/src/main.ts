@@ -127,16 +127,24 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
-  const config = new DocumentBuilder()
-    .setTitle('驴酱杯赛事 API')
-    .setDescription('驴酱杯LOL娱乐赛事网站后端 API 文档')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
+  const enableSwagger = process.env.ENABLE_SWAGGER === 'true';
 
   const port = parseInt(process.env.PORT!, 10);
+
+  if (enableSwagger) {
+    const config = new DocumentBuilder()
+      .setTitle('驴酱杯赛事 API')
+      .setDescription('驴酱杯LOL娱乐赛事网站后端 API 文档')
+      .setVersion('1.0')
+      .addBearerAuth()
+      .build();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api/docs', app, document);
+    logger.log(`Swagger 文档地址：http://0.0.0.0:${port}/api/docs`);
+  } else {
+    logger.log('Swagger 文档已禁用 (设置 ENABLE_SWAGGER=true 启用)');
+  }
+
   await app.listen(port, '0.0.0.0');
   logger.log(`应用启动于 http://0.0.0.0:${port}/api`);
   logger.log(`Swagger 文档地址：http://0.0.0.0:${port}/api/docs`);

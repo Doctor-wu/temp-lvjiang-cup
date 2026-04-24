@@ -8,24 +8,23 @@ import AdminTeams from './pages/admin/Teams';
 import AdminSchedule from './pages/admin/Schedule';
 import AdminStreamers from './pages/admin/Streamers';
 import Videos from './pages/admin/Videos';
-// [REMOVE] 晋级名单管理页面已废弃
-// import AdvancementManager from './pages/admin/AdvancementManager';
 import ProtectedRoute from './components/layout/ProtectedRoute';
 import MatchDataPage from './components/features/match-data/MatchDataPage';
 import MatchDataList from './pages/admin/MatchDataList';
 import MatchDataManagement from './pages/admin/MatchDataManagement';
+import { adminPath } from './constants/routes';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path={adminPath('login')} element={<AdminLogin />} />
         <Route path="/match/:id/games" element={<MatchDataPage />} />
 
         {/* Protected Routes */}
         <Route
-          path="/admin/dashboard"
+          path={adminPath('dashboard')}
           element={
             <ProtectedRoute>
               <AdminDashboard />
@@ -33,7 +32,7 @@ function App() {
           }
         />
         <Route
-          path="/admin/stream"
+          path={adminPath('stream')}
           element={
             <ProtectedRoute>
               <AdminStream />
@@ -41,7 +40,7 @@ function App() {
           }
         />
         <Route
-          path="/admin/teams"
+          path={adminPath('teams')}
           element={
             <ProtectedRoute>
               <AdminTeams />
@@ -49,22 +48,15 @@ function App() {
           }
         />
         <Route
-          path="/admin/schedule"
+          path={adminPath('schedule')}
           element={
             <ProtectedRoute>
               <AdminSchedule />
             </ProtectedRoute>
           }
         />
-        {/* [REMOVE] 晋级名单管理页面已废弃
-        <Route path="/admin/advancement" element={
-          <ProtectedRoute>
-            <AdvancementManager />
-          </ProtectedRoute>
-        } />
-        */}
         <Route
-          path="/admin/streamers"
+          path={adminPath('streamers')}
           element={
             <ProtectedRoute>
               <AdminStreamers />
@@ -72,7 +64,7 @@ function App() {
           }
         />
         <Route
-          path="/admin/videos"
+          path={adminPath('videos')}
           element={
             <ProtectedRoute>
               <Videos />
@@ -80,7 +72,7 @@ function App() {
           }
         />
         <Route
-          path="/admin/matches"
+          path={adminPath('matches')}
           element={
             <ProtectedRoute>
               <MatchDataList />
@@ -88,7 +80,7 @@ function App() {
           }
         />
         <Route
-          path="/admin/matches/:matchId/games"
+          path={adminPath('matches/:matchId/games')}
           element={
             <ProtectedRoute>
               <MatchDataManagement />

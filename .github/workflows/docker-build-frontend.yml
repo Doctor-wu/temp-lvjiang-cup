@@ -40,6 +40,8 @@ jobs:
           context: ./frontend
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/frontend:${{ inputs.tag || 'latest' }}
+          build-args: |
+            VITE_ADMIN_ROUTE_PREFIX=${{ secrets.ADMIN_ROUTE_PREFIX || 'admin' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64

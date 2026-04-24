@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { login as loginApi, getCurrentUser, logout as logoutApi } from '../api/auth';
 import type { LoginRequest, UserInfo } from '../api/types';
 import { isTokenValid } from '../utils/tokenUtils';
+import { adminPath } from '../constants/routes';
 
 /**
  * 认证状态接口
@@ -148,7 +149,7 @@ export function useAuth(): UseAuthReturn {
         });
 
         // 登录成功后跳转到管理后台
-        navigate('/admin/dashboard');
+        navigate(adminPath('dashboard'));
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : '登录失败，请检查用户名和密码';
         setState(prev => ({
@@ -180,7 +181,7 @@ export function useAuth(): UseAuthReturn {
     });
 
     // 跳转到登录页
-    navigate('/admin/login');
+    navigate(adminPath('login'));
   }, [navigate]);
 
   /**

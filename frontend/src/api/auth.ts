@@ -1,6 +1,7 @@
 import apiClient from './axios';
 import type { ApiResponse, LoginRequest, LoginResponse, UserInfo } from './types';
 import { jwtDecode } from 'jwt-decode';
+import { adminPath } from '../constants/routes';
 
 /**
  * 认证 API
@@ -80,7 +81,7 @@ export function logout(): void {
   localStorage.removeItem('token');
 
   // 跳转到登录页
-  window.location.href = '/admin/login';
+  window.location.href = adminPath('login');
 }
 
 /**

@@ -42,6 +42,7 @@ services:
       - DATABASE_PATH=/app/data/lvjiang.db
       - UPLOAD_BASE_DIR=/app/uploads
       - CORS_ORIGIN=${CORS_ORIGIN}
+      - ENABLE_SWAGGER=false
     volumes:
       # 数据持久化
       - ../data:/app/data

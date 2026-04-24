@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Database, ArrowLeft } from 'lucide-react';
+import { ADMIN_PREFIX, adminPath } from '@/constants/routes';
 
 interface MatchDataEmptyStateProps {
   matchId?: string;
@@ -10,8 +11,8 @@ const MatchDataEmptyState: React.FC<MatchDataEmptyStateProps> = ({ matchId }) =>
   const navigate = useNavigate();
 
   const handleBack = () => {
-    if (matchId && window.location.pathname.includes('/admin/')) {
-      navigate('/admin/matches');
+    if (matchId && window.location.pathname.includes(`/${ADMIN_PREFIX}/`)) {
+      navigate(adminPath('matches'));
     } else {
       navigate(-1);
     }
