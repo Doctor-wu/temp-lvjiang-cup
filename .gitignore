@@ -39,6 +39,7 @@ coverage/
 **/.env
 **/.env.local
 **/.env.*.local
+**/.env.development
 **/.env.production
 
 # Trae IDE configuration
