@@ -3,9 +3,7 @@ import { Match, Team } from '@/types';
 import SwissMatchCard from './SwissMatchCard';
 import SwissTeamLogo from './SwissTeamLogo';
 import { SWISS_THEME } from '@/constants/swissTheme';
-import {
-  type SwissRecordConfig,
-} from '@/constants/swissTreeConfig';
+import { type SwissRecordConfig } from '@/constants/swissTreeConfig';
 
 interface SwissRecordSectionProps {
   config: SwissRecordConfig;
@@ -52,11 +50,7 @@ const SwissRecordSection: React.FC<SwissRecordSectionProps> = ({
   const filteredPromotionTeams = useMemo(() => {
     if (!promotionTeams || promotionTeams.length === 0 || !rankings) return [];
     // 根据当前列的战绩筛选队伍
-    const teamIdsWithRecord = new Set(
-      rankings
-        .filter(r => r.record === record)
-        .map(r => r.teamId)
-    );
+    const teamIdsWithRecord = new Set(rankings.filter(r => r.record === record).map(r => r.teamId));
     return promotionTeams
       .filter(team => teamIdsWithRecord.has(team.id))
       .sort((a, b) => {
@@ -70,11 +64,7 @@ const SwissRecordSection: React.FC<SwissRecordSectionProps> = ({
   const filteredEliminationTeams = useMemo(() => {
     if (!eliminationTeams || eliminationTeams.length === 0 || !rankings) return [];
     // 根据当前列的战绩筛选队伍
-    const teamIdsWithRecord = new Set(
-      rankings
-        .filter(r => r.record === record)
-        .map(r => r.teamId)
-    );
+    const teamIdsWithRecord = new Set(rankings.filter(r => r.record === record).map(r => r.teamId));
     return eliminationTeams
       .filter(team => teamIdsWithRecord.has(team.id))
       .sort((a, b) => {
@@ -124,14 +114,13 @@ const SwissRecordSection: React.FC<SwissRecordSectionProps> = ({
             minHeight: '60px',
           }}
         >
-          {filteredPromotionTeams.map((team) => (
+          {filteredPromotionTeams.map(team => (
             <div
               key={team.id}
               className="flex items-center gap-3 px-4 py-3"
               style={{
                 borderBottom:
-                  filteredPromotionTeams.indexOf(team) <
-                  filteredPromotionTeams.length - 1
+                  filteredPromotionTeams.indexOf(team) < filteredPromotionTeams.length - 1
                     ? '1px solid rgba(255,255,255,0.08)'
                     : 'none',
               }}
@@ -226,14 +215,13 @@ const SwissRecordSection: React.FC<SwissRecordSectionProps> = ({
             minHeight: '60px',
           }}
         >
-          {filteredEliminationTeams.map((team) => (
+          {filteredEliminationTeams.map(team => (
             <div
               key={team.id}
               className="flex items-center gap-3 px-4 py-2.5"
               style={{
                 borderBottom:
-                  filteredEliminationTeams.indexOf(team) <
-                  filteredEliminationTeams.length - 1
+                  filteredEliminationTeams.indexOf(team) < filteredEliminationTeams.length - 1
                     ? '1px solid rgba(255,255,255,0.08)'
                     : 'none',
               }}

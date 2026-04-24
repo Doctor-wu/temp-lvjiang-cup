@@ -228,7 +228,9 @@ describe('MatchDataManagement', () => {
     });
 
     const toggleButtons = screen.getAllByRole('button');
-    const toggleButton = toggleButtons.find(btn => btn.title?.includes('启用') || btn.title?.includes('禁用'));
+    const toggleButton = toggleButtons.find(
+      btn => btn.title?.includes('启用') || btn.title?.includes('禁用')
+    );
     expect(toggleButton).toBeInTheDocument();
 
     // After click, the icon should change

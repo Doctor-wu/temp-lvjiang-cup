@@ -603,7 +603,7 @@ const AdminTeams: React.FC = () => {
                         {team.name || '未命名战队'}
                       </h3>
                       <p className="text-[#64748B] text-sm">
-                        {(team.players?.filter(p => p.nickname).length ?? 0)} / {LOL_POSITIONS.length}{' '}
+                        {team.players?.filter(p => p.nickname).length ?? 0} / {LOL_POSITIONS.length}{' '}
                         名队员
                       </p>
                     </div>

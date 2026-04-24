@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Trophy } from 'lucide-react';
 import { ZIndexLayers } from '../../constants/zIndex';
 import { Footer } from './Footer';

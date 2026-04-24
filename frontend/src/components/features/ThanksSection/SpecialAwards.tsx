@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StarBurst, TrophyIcon } from './DecorativeIcons';
 import { useStaggeredAnimation } from './useScrollAnimation';
 import type { SponsorConfig } from '@/data/types';
@@ -10,6 +10,9 @@ interface SpecialAwardsProps {
 export const SpecialAwards: React.FC<SpecialAwardsProps> = ({ sponsors }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [shouldScroll, setShouldScroll] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const scrollContentRef = useRef<HTMLDivElement>(null);
 
   // 检测是否为移动端
   useEffect(() => {
@@ -29,18 +32,76 @@ export const SpecialAwards: React.FC<SpecialAwardsProps> = ({ sponsors }) => {
   const displayAwards = isMobile && !isExpanded ? awards.slice(0, 3) : awards;
   const hasMoreAwards = awards.length > 3;
 
+  // 检测内容是否溢出，需要滚动
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (scrollContainerRef.current && scrollContentRef.current) {
+        const containerHeight = scrollContainerRef.current.clientHeight;
+        const contentHeight = scrollContentRef.current.scrollHeight;
+        const needsScroll = contentHeight > containerHeight;
+        setShouldScroll(needsScroll);
+      }
+    };
+
+    // 使用 setTimeout 确保在 DOM 完全渲染后检测
+    const timer = setTimeout(() => {
+      checkOverflow();
+    }, 100);
+
+    window.addEventListener('resize', checkOverflow);
+
+    // 监听图片等资源加载完成
+    window.addEventListener('load', checkOverflow);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', checkOverflow);
+      window.removeEventListener('load', checkOverflow);
+    };
+  }, [sponsors, isMobile, isExpanded]);
+
   // Hook 必须在条件判断之前调用
   const { containerRef, visibleItems } = useStaggeredAnimation(displayAwards.length, 100);
 
   // 如果没有特殊奖项，返回 null（在 Hook 调用之后）
   if (awards.length === 0) return null;
 
+  const awardItems = displayAwards.map((award, index) => (
+    <li
+      key={award.id}
+      className={`flex items-start gap-3 p-3 rounded-xl bg-black/30 border border-white/5 hover:border-pink-500/30 hover:bg-pink-900/10 transition-all duration-300 group/item min-h-[72px] ${
+        visibleItems.has(index) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
+      }`}
+      style={{
+        transitionDelay: `${index * 100}ms`,
+      }}
+    >
+      <TrophyIcon className="flex-shrink-0 w-6 h-6 text-amber-400 mt-0.5" />
+      <div className="flex-1 min-w-0">
+        <strong
+          className="text-pink-400 font-semibold text-sm md:text-base block mb-1"
+          style={{ fontFamily: 'Chakra Petch, sans-serif' }}
+        >
+          {award.sponsorName}
+        </strong>
+        <p className="text-gray-200 text-xs md:text-sm leading-relaxed">{award.specialAward}</p>
+      </div>
+    </li>
+  ));
+
   return (
     <div
       data-testid="special-awards-container"
       ref={containerRef}
-      className="relative mt-8 md:mt-12 p-5 md:p-6 rounded-2xl border border-pink-500/20 bg-gradient-to-br from-pink-900/20 via-black/50 to-amber-900/20 backdrop-blur-md overflow-hidden group"
+      className="relative mt-8 md:mt-12 p-5 md:p-6 rounded-2xl border border-pink-500/20 bg-gradient-to-br from-pink-900/20 via-black/50 to-amber-900/20 backdrop-blur-md overflow-hidden group flex flex-col w-full"
     >
+      {/* 定义 scroll-up 关键帧动画 */}
+      <style>{`
+        @keyframes scroll-up {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(-50%); }
+        }
+      `}</style>
       {/* CRT 扫描线效果 */}
       <div className="absolute inset-0 pointer-events-none opacity-5">
         <div
@@ -74,39 +135,43 @@ export const SpecialAwards: React.FC<SpecialAwardsProps> = ({ sponsors }) => {
             backgroundClip: 'text',
           }}
         >
-          <StarBurst size={18} className="text-pink-400 flex-shrink-0" style={{ WebkitTextFillColor: 'initial' }} />
+          <StarBurst
+            size={18}
+            className="text-pink-400 flex-shrink-0"
+            style={{ WebkitTextFillColor: 'initial' }}
+          />
           特殊奖项
-          <StarBurst size={18} className="text-amber-400 flex-shrink-0" style={{ WebkitTextFillColor: 'initial' }} />
+          <StarBurst
+            size={18}
+            className="text-amber-400 flex-shrink-0"
+            style={{ WebkitTextFillColor: 'initial' }}
+          />
         </h3>
         <div className="flex-1 h-px bg-gradient-to-r from-pink-500/50 via-amber-500/30 to-transparent" />
       </div>
 
-      {/* 奖项列表 */}
-      <div ref={containerRef} className="relative space-y-3">
-        {displayAwards.map((award, index) => (
-          <li
-            key={award.id}
-            className={`flex items-start gap-3 p-3 rounded-xl bg-black/30 border border-white/5 hover:border-pink-500/30 hover:bg-pink-900/10 transition-all duration-300 group/item min-h-[72px] ${
-              visibleItems.has(index) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
-            }`}
-            style={{
-              transitionDelay: `${index * 100}ms`,
-            }}
-          >
-            <TrophyIcon className="flex-shrink-0 w-6 h-6 text-amber-400 mt-0.5" />
-            <div className="flex-1 min-w-0">
-              <strong
-                className="text-pink-400 font-semibold text-sm md:text-base block mb-1"
-                style={{ fontFamily: 'Chakra Petch, sans-serif' }}
-              >
-                {award.sponsorName}
-              </strong>
-              <p className="text-gray-200 text-xs md:text-sm leading-relaxed">
-                {award.specialAward}
-              </p>
-            </div>
-          </li>
-        ))}
+      {/* 奖项列表 - 带滚动效果，flex-1 确保填充剩余空间 */}
+      <div
+        ref={scrollContainerRef}
+        className="relative overflow-hidden flex-1"
+        style={{ maxHeight: '280px', minHeight: '200px' }}
+      >
+        <div
+          ref={scrollContentRef}
+          className="space-y-3"
+          style={
+            shouldScroll
+              ? {
+                  animation: 'scroll-up 20s linear infinite',
+                  width: '100%',
+                }
+              : undefined
+          }
+        >
+          {awardItems}
+          {/* 复制一份内容用于无缝循环滚动 */}
+          {shouldScroll && awardItems}
+        </div>
       </div>
 
       {/* 展开/收起按钮 */}

@@ -4,6 +4,7 @@ import { Toaster } from 'sonner';
 import App from './App';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { SpriteProvider } from '@/components/icons/PositionIcons';
+import { reportWebVitals } from '@/utils/performance';
 import './index.css';
 
 const rootElement = document.getElementById('root');
@@ -31,3 +32,9 @@ createRoot(rootElement).render(
     </ErrorBoundary>
   </StrictMode>
 );
+
+/**
+ * 启动性能监控
+ * 收集 FCP、LCP、CLS、TTFB、INP 等核心 Web Vitals 指标
+ */
+reportWebVitals();

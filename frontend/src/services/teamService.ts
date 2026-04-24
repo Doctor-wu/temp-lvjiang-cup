@@ -1,5 +1,6 @@
 import * as teamApi from '@/api/teams';
 import type { Team, CreateTeamRequest, UpdateTeamRequest } from '@/api/types';
+import { requestCache, CACHE_TTL } from '@/utils/requestCache';
 
 /**
  * 战队服务状态接口
@@ -99,11 +100,18 @@ export const teamService: TeamService = {
    * @returns 战队列表
    */
   async getAll(): Promise<Team[]> {
+    const cached = requestCache.get<Team[]>('teams', CACHE_TTL.teams);
+    if (cached) {
+      setState({ teams: cached, loading: false, error: null });
+      return cached;
+    }
+
     setState({ loading: true, error: null });
 
     try {
       const teams = await teamApi.getAll();
 
+      requestCache.set('teams', teams);
       setState({
         teams,
         loading: false,

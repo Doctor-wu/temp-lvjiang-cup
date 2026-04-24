@@ -447,7 +447,9 @@ describe('Videos API Integration Tests', () => {
         .expect(200);
 
       // 集成测试中没有应用 TransformInterceptor，响应直接返回 Video[]
-      const videos = Array.isArray(adminResponse.body) ? adminResponse.body : (adminResponse.body.data || []);
+      const videos = Array.isArray(adminResponse.body)
+        ? adminResponse.body
+        : adminResponse.body.data || [];
       expect(videos.length).toBeGreaterThanOrEqual(1);
 
       const orderedIds = videos.slice(0, 3).map((v: any) => v.id);

@@ -1,5 +1,6 @@
 import * as matchApi from '@/api/matches';
 import type { Match, UpdateMatchRequest, FindMatchesByStageRequest } from '@/api/types';
+import { requestCache, CACHE_TTL } from '@/utils/requestCache';
 
 /**
  * 比赛服务状态接口
@@ -108,11 +109,18 @@ export const matchService: MatchService = {
    * @returns 比赛列表
    */
   async getAll(): Promise<Match[]> {
+    const cached = requestCache.get<Match[]>('matches', CACHE_TTL.matches);
+    if (cached) {
+      setState({ matches: cached, loading: false, error: null });
+      return cached;
+    }
+
     setState({ loading: true, error: null });
 
     try {
       const matches = await matchApi.getAll();
 
+      requestCache.set('matches', matches);
       setState({
         matches,
         loading: false,

@@ -77,10 +77,7 @@ export function useScrollAnimation(options: UseScrollAnimationOptions = {}) {
  * 批量滚动动画 Hook
  * 用于列表项依次进入动画
  */
-export function useStaggeredAnimation(
-  itemCount: number,
-  baseDelay: number = 100
-) {
+export function useStaggeredAnimation(itemCount: number, baseDelay: number = 100) {
   const [visibleItems, setVisibleItems] = useState<Set<number>>(new Set());
   const containerRef = useRef<HTMLDivElement>(null);
   const hasTriggered = useRef(false);

@@ -101,9 +101,27 @@ describe('calculateAdvancement', () => {
   describe('赛制规则验证 - 3胜晋级，3败淘汰', () => {
     it('3-0 战绩的队伍应该进入晋级名单', () => {
       const matches = [
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team2' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team3' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team4' },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team2',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team3',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team4',
+        },
       ];
 
       const teams = [{ id: 'team1' }, { id: 'team2' }, { id: 'team3' }, { id: 'team4' }];
@@ -116,9 +134,27 @@ describe('calculateAdvancement', () => {
 
     it('0-3 战绩的队伍应该进入淘汰名单', () => {
       const matches = [
-        { stage: 'swiss', status: 'finished', winnerId: 'team2', teamAId: 'team1', teamBId: 'team2' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team3', teamAId: 'team1', teamBId: 'team3' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team4', teamAId: 'team1', teamBId: 'team4' },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team2',
+          teamAId: 'team1',
+          teamBId: 'team2',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team3',
+          teamAId: 'team1',
+          teamBId: 'team3',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team4',
+          teamAId: 'team1',
+          teamBId: 'team4',
+        },
       ];
 
       const teams = [{ id: 'team1' }, { id: 'team2' }, { id: 'team3' }, { id: 'team4' }];
@@ -131,15 +167,42 @@ describe('calculateAdvancement', () => {
 
     it('3-1 战绩的队伍应该进入晋级名单', () => {
       const matches = [
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team2' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team3' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team4' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team5', teamAId: 'team1', teamBId: 'team5' },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team2',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team3',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team4',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team5',
+          teamAId: 'team1',
+          teamBId: 'team5',
+        },
       ];
 
       const teams = [
-        { id: 'team1' }, { id: 'team2' }, { id: 'team3' },
-        { id: 'team4' }, { id: 'team5' }
+        { id: 'team1' },
+        { id: 'team2' },
+        { id: 'team3' },
+        { id: 'team4' },
+        { id: 'team5' },
       ];
 
       const result = calculateAdvancement(matches, teams);
@@ -150,15 +213,42 @@ describe('calculateAdvancement', () => {
 
     it('1-3 战绩的队伍应该进入淘汰名单', () => {
       const matches = [
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team2' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team3', teamAId: 'team1', teamBId: 'team3' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team4', teamAId: 'team1', teamBId: 'team4' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team5', teamAId: 'team1', teamBId: 'team5' },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team2',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team3',
+          teamAId: 'team1',
+          teamBId: 'team3',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team4',
+          teamAId: 'team1',
+          teamBId: 'team4',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team5',
+          teamAId: 'team1',
+          teamBId: 'team5',
+        },
       ];
 
       const teams = [
-        { id: 'team1' }, { id: 'team2' }, { id: 'team3' },
-        { id: 'team4' }, { id: 'team5' }
+        { id: 'team1' },
+        { id: 'team2' },
+        { id: 'team3' },
+        { id: 'team4' },
+        { id: 'team5' },
       ];
 
       const result = calculateAdvancement(matches, teams);
@@ -169,16 +259,50 @@ describe('calculateAdvancement', () => {
 
     it('3-2 战绩的队伍应该进入晋级名单', () => {
       const matches = [
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team2' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team3' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team4', teamAId: 'team1', teamBId: 'team4' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team5', teamAId: 'team1', teamBId: 'team5' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team6' },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team2',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team3',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team4',
+          teamAId: 'team1',
+          teamBId: 'team4',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team5',
+          teamAId: 'team1',
+          teamBId: 'team5',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team6',
+        },
       ];
 
       const teams = [
-        { id: 'team1' }, { id: 'team2' }, { id: 'team3' },
-        { id: 'team4' }, { id: 'team5' }, { id: 'team6' }
+        { id: 'team1' },
+        { id: 'team2' },
+        { id: 'team3' },
+        { id: 'team4' },
+        { id: 'team5' },
+        { id: 'team6' },
       ];
 
       const result = calculateAdvancement(matches, teams);
@@ -189,16 +313,50 @@ describe('calculateAdvancement', () => {
 
     it('2-3 战绩的队伍应该进入淘汰名单', () => {
       const matches = [
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team2' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team3' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team4', teamAId: 'team1', teamBId: 'team4' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team5', teamAId: 'team1', teamBId: 'team5' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team6', teamAId: 'team1', teamBId: 'team6' },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team2',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team3',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team4',
+          teamAId: 'team1',
+          teamBId: 'team4',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team5',
+          teamAId: 'team1',
+          teamBId: 'team5',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team6',
+          teamAId: 'team1',
+          teamBId: 'team6',
+        },
       ];
 
       const teams = [
-        { id: 'team1' }, { id: 'team2' }, { id: 'team3' },
-        { id: 'team4' }, { id: 'team5' }, { id: 'team6' }
+        { id: 'team1' },
+        { id: 'team2' },
+        { id: 'team3' },
+        { id: 'team4' },
+        { id: 'team5' },
+        { id: 'team6' },
       ];
 
       const result = calculateAdvancement(matches, teams);
@@ -212,20 +370,92 @@ describe('calculateAdvancement', () => {
     it('晋级区应该按 3-0 > 3-1 > 3-2 排序', () => {
       const matches = [
         // team1: 3-2
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team5' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team6' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team7', teamAId: 'team1', teamBId: 'team7' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team8', teamAId: 'team1', teamBId: 'team8' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team9' },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team5',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team6',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team7',
+          teamAId: 'team1',
+          teamBId: 'team7',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team8',
+          teamAId: 'team1',
+          teamBId: 'team8',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team9',
+        },
         // team2: 3-1
-        { stage: 'swiss', status: 'finished', winnerId: 'team2', teamAId: 'team2', teamBId: 'team5' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team2', teamAId: 'team2', teamBId: 'team6' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team2', teamAId: 'team2', teamBId: 'team7' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team8', teamAId: 'team2', teamBId: 'team8' },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team2',
+          teamAId: 'team2',
+          teamBId: 'team5',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team2',
+          teamAId: 'team2',
+          teamBId: 'team6',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team2',
+          teamAId: 'team2',
+          teamBId: 'team7',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team8',
+          teamAId: 'team2',
+          teamBId: 'team8',
+        },
         // team3: 3-0
-        { stage: 'swiss', status: 'finished', winnerId: 'team3', teamAId: 'team3', teamBId: 'team5' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team3', teamAId: 'team3', teamBId: 'team6' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team3', teamAId: 'team3', teamBId: 'team7' },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team3',
+          teamAId: 'team3',
+          teamBId: 'team5',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team3',
+          teamAId: 'team3',
+          teamBId: 'team6',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team3',
+          teamAId: 'team3',
+          teamBId: 'team7',
+        },
       ];
 
       const teams = Array.from({ length: 9 }, (_, i) => ({ id: `team${i + 1}` }));
@@ -244,20 +474,92 @@ describe('calculateAdvancement', () => {
     it('淘汰区应该按 0-3 > 1-3 > 2-3 排序', () => {
       const matches = [
         // team1: 0-3
-        { stage: 'swiss', status: 'finished', winnerId: 'team4', teamAId: 'team1', teamBId: 'team4' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team5', teamAId: 'team1', teamBId: 'team5' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team6', teamAId: 'team1', teamBId: 'team6' },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team4',
+          teamAId: 'team1',
+          teamBId: 'team4',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team5',
+          teamAId: 'team1',
+          teamBId: 'team5',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team6',
+          teamAId: 'team1',
+          teamBId: 'team6',
+        },
         // team2: 1-3
-        { stage: 'swiss', status: 'finished', winnerId: 'team2', teamAId: 'team2', teamBId: 'team4' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team5', teamAId: 'team2', teamBId: 'team5' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team6', teamAId: 'team2', teamBId: 'team6' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team7', teamAId: 'team2', teamBId: 'team7' },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team2',
+          teamAId: 'team2',
+          teamBId: 'team4',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team5',
+          teamAId: 'team2',
+          teamBId: 'team5',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team6',
+          teamAId: 'team2',
+          teamBId: 'team6',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team7',
+          teamAId: 'team2',
+          teamBId: 'team7',
+        },
         // team3: 2-3
-        { stage: 'swiss', status: 'finished', winnerId: 'team3', teamAId: 'team3', teamBId: 'team4' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team3', teamAId: 'team3', teamBId: 'team5' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team6', teamAId: 'team3', teamBId: 'team6' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team7', teamAId: 'team3', teamBId: 'team7' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team8', teamAId: 'team3', teamBId: 'team8' },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team3',
+          teamAId: 'team3',
+          teamBId: 'team4',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team3',
+          teamAId: 'team3',
+          teamBId: 'team5',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team6',
+          teamAId: 'team3',
+          teamBId: 'team6',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team7',
+          teamAId: 'team3',
+          teamBId: 'team7',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team8',
+          teamAId: 'team3',
+          teamBId: 'team8',
+        },
       ];
 
       const teams = Array.from({ length: 8 }, (_, i) => ({ id: `team${i + 1}` }));
@@ -277,13 +579,43 @@ describe('calculateAdvancement', () => {
   describe('边界情况', () => {
     it('应该忽略非瑞士轮比赛', () => {
       const matches = [
-        { stage: 'elimination', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team2' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team3' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team4' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team5' },
+        {
+          stage: 'elimination',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team2',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team3',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team4',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team5',
+        },
       ];
 
-      const teams = [{ id: 'team1' }, { id: 'team2' }, { id: 'team3' }, { id: 'team4' }, { id: 'team5' }];
+      const teams = [
+        { id: 'team1' },
+        { id: 'team2' },
+        { id: 'team3' },
+        { id: 'team4' },
+        { id: 'team5' },
+      ];
 
       const result = calculateAdvancement(matches, teams);
 
@@ -295,12 +627,36 @@ describe('calculateAdvancement', () => {
     it('应该忽略未结束的比赛', () => {
       const matches = [
         { stage: 'swiss', status: 'ongoing', winnerId: null, teamAId: 'team1', teamBId: 'team2' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team3' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team4' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team5' },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team3',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team4',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team5',
+        },
       ];
 
-      const teams = [{ id: 'team1' }, { id: 'team2' }, { id: 'team3' }, { id: 'team4' }, { id: 'team5' }];
+      const teams = [
+        { id: 'team1' },
+        { id: 'team2' },
+        { id: 'team3' },
+        { id: 'team4' },
+        { id: 'team5' },
+      ];
 
       const result = calculateAdvancement(matches, teams);
 
@@ -310,13 +666,43 @@ describe('calculateAdvancement', () => {
 
     it('战绩为 2-2 的队伍不应该出现在晋级或淘汰名单中', () => {
       const matches = [
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team2' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team1', teamAId: 'team1', teamBId: 'team3' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team4', teamAId: 'team1', teamBId: 'team4' },
-        { stage: 'swiss', status: 'finished', winnerId: 'team5', teamAId: 'team1', teamBId: 'team5' },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team2',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team1',
+          teamAId: 'team1',
+          teamBId: 'team3',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team4',
+          teamAId: 'team1',
+          teamBId: 'team4',
+        },
+        {
+          stage: 'swiss',
+          status: 'finished',
+          winnerId: 'team5',
+          teamAId: 'team1',
+          teamBId: 'team5',
+        },
       ];
 
-      const teams = [{ id: 'team1' }, { id: 'team2' }, { id: 'team3' }, { id: 'team4' }, { id: 'team5' }];
+      const teams = [
+        { id: 'team1' },
+        { id: 'team2' },
+        { id: 'team3' },
+        { id: 'team4' },
+        { id: 'team5' },
+      ];
 
       const result = calculateAdvancement(matches, teams);
 

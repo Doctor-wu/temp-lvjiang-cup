@@ -138,7 +138,7 @@ const ScheduleSection: React.FC = () => {
 
   // 加载数据
   const loadData = useCallback(
-    async (forceRefresh = false) => {
+    async (_forceRefresh = false) => {
       try {
         setLoading(true);
         setError(null);
@@ -188,27 +188,34 @@ const ScheduleSection: React.FC = () => {
     loadData();
   }, [loadData]);
 
-  // 动态计算缩放比例
+  // 动态计算缩放比例（优化：使用 requestAnimationFrame 减少布局抖动）
   useEffect(() => {
+    let rafId: number;
     const calculateScale = () => {
-      const viewportHeight = window.innerHeight;
-      const headerHeight = 98;
-      const availableHeight = viewportHeight - headerHeight;
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const viewportHeight = window.innerHeight;
+        const headerHeight = 98;
+        const availableHeight = viewportHeight - headerHeight;
 
-      if (contentRef.current) {
-        const contentHeight = contentRef.current.scrollHeight || 886;
-        const newScale = Math.min(1, availableHeight / contentHeight);
-        setScale(newScale);
-      } else {
-        const contentHeight = 886;
-        const newScale = Math.min(1, availableHeight / contentHeight);
-        setScale(newScale);
-      }
+        if (contentRef.current) {
+          const contentHeight = contentRef.current.scrollHeight || 886;
+          const newScale = Math.min(1, availableHeight / contentHeight);
+          setScale(newScale);
+        } else {
+          const contentHeight = 886;
+          const newScale = Math.min(1, availableHeight / contentHeight);
+          setScale(newScale);
+        }
+      });
     };
 
     calculateScale();
-    window.addEventListener('resize', calculateScale);
-    return () => window.removeEventListener('resize', calculateScale);
+    window.addEventListener('resize', calculateScale, { passive: true });
+    return () => {
+      window.removeEventListener('resize', calculateScale);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, [activeTab]);
 
   return (

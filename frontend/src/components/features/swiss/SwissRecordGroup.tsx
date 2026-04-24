@@ -35,9 +35,7 @@ const SwissRecordGroup: React.FC<SwissRecordGroupProps> = ({
     // 如果提供了 rankings 和 record，按战绩过滤
     if (rankings && record) {
       const teamIdsWithRecord = new Set(
-        rankings
-          .filter(r => r.record === record)
-          .map(r => r.teamId)
+        rankings.filter(r => r.record === record).map(r => r.teamId)
       );
       result = result.filter(team => teamIdsWithRecord.has(team.id));
     }
@@ -109,9 +107,7 @@ const SwissRecordGroup: React.FC<SwissRecordGroupProps> = ({
             className="flex items-center gap-3 px-4 py-2.5"
             style={{
               borderBottom:
-                index < filteredTeams.length - 1
-                  ? '1px solid rgba(255,255,255,0.08)'
-                  : 'none',
+                index < filteredTeams.length - 1 ? '1px solid rgba(255,255,255,0.08)' : 'none',
             }}
             data-testid={`${testId}-team-${index}`}
           >
@@ -153,8 +149,7 @@ const SwissRecordGroup: React.FC<SwissRecordGroupProps> = ({
           <div
             className="flex flex-col items-center justify-center gap-2 w-full py-4"
             style={{
-              border:
-                type === 'qualified' ? '2px dashed #3d8f5e' : '2px dashed #a05050',
+              border: type === 'qualified' ? '2px dashed #3d8f5e' : '2px dashed #a05050',
               borderRadius: '8px',
               backgroundColor: 'rgba(45, 46, 48, 0.5)',
             }}
@@ -171,4 +166,3 @@ const SwissRecordGroup: React.FC<SwissRecordGroupProps> = ({
 };
 
 export default SwissRecordGroup;
-

@@ -432,13 +432,13 @@ function parsePlayerStatsRow(row: any[], _rowIndex: number): PlayerStatsData {
   const rawChampionName = extractCellValue(row[3]);
   // 将中文英雄名转换为英文ID
   const championId = findChampionId(rawChampionName);
-  
+
   return {
     side: extractCellValue(row[0]),
     position: extractCellValue(row[1]).toUpperCase(),
     nickname: extractCellValue(row[2]),
-    championName: championId || '',  // 转换为英文ID，找不到则为空字符串
-    championNameRaw: rawChampionName,  // 保留原始值用于错误提示
+    championName: championId || '', // 转换为英文ID，找不到则为空字符串
+    championNameRaw: rawChampionName, // 保留原始值用于错误提示
     kills: extractNumericValue(row[4]),
     deaths: extractNumericValue(row[5]),
     assists: extractNumericValue(row[6]),
@@ -521,7 +521,7 @@ export function validateParsedMatchData(parsedData: ParsedMatchData): Validation
   parsedData.playerStats.forEach((ps, index) => {
     if (!ps.championName && ps.championNameRaw) {
       errors.push(
-        `第${index + 7}行选手"${ps.nickname}"使用的英雄"${ps.championNameRaw}"不存在，请检查英雄名称`
+        `第${index + 7}行选手"${ps.nickname}"使用的英雄"${ps.championNameRaw}"不存在，请检查英雄名称`,
       );
     }
   });

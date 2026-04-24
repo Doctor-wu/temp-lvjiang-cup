@@ -48,6 +48,10 @@ export interface TeamGameData {
   barons: number;
   /** 是否为获胜方 */
   isWinner: boolean;
+  /** 团队总伤害（用于计算伤害占比） */
+  totalDamage?: number;
+  /** 团队总承伤（用于计算承伤占比） */
+  totalDamageTaken?: number;
 }
 
 /**

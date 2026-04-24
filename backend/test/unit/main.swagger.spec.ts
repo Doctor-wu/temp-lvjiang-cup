@@ -38,7 +38,7 @@ describe('ENABLE_SWAGGER 环境变量', () => {
 
   it('设置为任意非 "true" 值时应该禁用 Swagger', () => {
     const falsyValues = ['0', 'yes', '1', 'TRUE', 'True'];
-    falsyValues.forEach(value => {
+    falsyValues.forEach((value) => {
       process.env.ENABLE_SWAGGER = value;
       const enableSwagger = process.env.ENABLE_SWAGGER === 'true';
       expect(enableSwagger).toBe(false);

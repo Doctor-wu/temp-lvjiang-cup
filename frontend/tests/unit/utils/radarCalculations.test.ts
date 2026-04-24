@@ -245,5 +245,110 @@ describe('雷达图计算工具函数', () => {
         expect(dimensions).toHaveLength(6);
       });
     });
+
+    describe('damageShare 精确计算', () => {
+      it('应使用团队总伤害精确计算伤害占比', () => {
+        const teamWithDamage = {
+          ...mockTeamStats,
+          totalDamage: 115000,
+          totalDamageTaken: 120000,
+        };
+
+        const dimensions = calculateRadarDimension(mockPlayer, 'TOP', teamWithDamage, '32:45');
+
+        // 伤害占比 = 20000 / 115000 * 100 ≈ 17.39%
+        expect(dimensions[1]).toBeCloseTo(17.39, 1);
+      });
+
+      it('团队总伤害为 0 时伤害占比应为 0', () => {
+        const teamWithZeroDamage = {
+          ...mockTeamStats,
+          totalDamage: 0,
+          totalDamageTaken: 0,
+        };
+
+        const dimensions = calculateRadarDimension(mockPlayer, 'TOP', teamWithZeroDamage, '30:00');
+
+        expect(dimensions[1]).toBe(0);
+      });
+
+      it('团队总伤害未定义时使用 0', () => {
+        const teamWithoutDamage = {
+          teamId: 'team-1',
+          teamName: 'TeamA',
+          side: 'blue' as const,
+          kills: 15,
+          gold: 55000,
+          towers: 5,
+          dragons: 2,
+          barons: 1,
+          isWinner: true,
+        };
+
+        const dimensions = calculateRadarDimension(mockPlayer, 'TOP', teamWithoutDamage, '30:00');
+
+        expect(dimensions[1]).toBe(0);
+      });
+    });
+
+    describe('damageTakenShare 精确计算', () => {
+      it('应使用团队总承伤精确计算承伤占比', () => {
+        const teamWithDamage = {
+          ...mockTeamStats,
+          totalDamage: 115000,
+          totalDamageTaken: 120000,
+        };
+
+        const dimensions = calculateRadarDimension(mockPlayer, 'TOP', teamWithDamage, '32:45');
+
+        // 承伤占比 = 30000 / 120000 * 100 = 25%
+        expect(dimensions[2]).toBeCloseTo(25, 1);
+      });
+
+      it('团队总承伤为 0 时承伤占比应为 0', () => {
+        const teamWithZeroDamage = {
+          ...mockTeamStats,
+          totalDamage: 0,
+          totalDamageTaken: 0,
+        };
+
+        const dimensions = calculateRadarDimension(mockPlayer, 'TOP', teamWithZeroDamage, '30:00');
+
+        expect(dimensions[2]).toBe(0);
+      });
+    });
+
+    describe('JUNGLE 位置伤害占比', () => {
+      it('应使用团队总伤害计算 JUNGLE 伤害占比', () => {
+        const teamWithDamage = {
+          ...mockTeamStats,
+          totalDamage: 100000,
+          totalDamageTaken: 110000,
+        };
+
+        const dimensions = calculateRadarDimension(mockPlayer, 'JUNGLE', teamWithDamage, '30:00');
+
+        // 伤害占比 = 20000 / 100000 * 100 = 20%
+        expect(dimensions[1]).toBeCloseTo(20, 1);
+
+        // 承伤占比 = 30000 / 110000 * 100 ≈ 27.27%
+        expect(dimensions[2]).toBeCloseTo(27.27, 1);
+      });
+    });
+
+    describe('SUPPORT 位置承伤占比', () => {
+      it('应使用团队总承伤计算 SUPPORT 承伤占比', () => {
+        const teamWithDamage = {
+          ...mockTeamStats,
+          totalDamage: 90000,
+          totalDamageTaken: 100000,
+        };
+
+        const dimensions = calculateRadarDimension(mockPlayer, 'SUPPORT', teamWithDamage, '30:00');
+
+        // 承伤占比 = 30000 / 100000 * 100 = 30%
+        expect(dimensions[2]).toBeCloseTo(30, 1);
+      });
+    });
   });
 });

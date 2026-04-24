@@ -14,7 +14,12 @@ global.IntersectionObserver = MockIntersectionObserver as unknown as typeof Inte
 describe('SpecialAwards', () => {
   const mockAwards: SponsorConfig[] = [
     { id: 1, sponsorName: '为何如此衰', sponsorContent: '8K', specialAward: '8强每个队伍1K' },
-    { id: 2, sponsorName: '董B登', sponsorContent: '1K', specialAward: '冠军每人750g蓝莓果干+250g参片' },
+    {
+      id: 2,
+      sponsorName: '董B登',
+      sponsorContent: '1K',
+      specialAward: '冠军每人750g蓝莓果干+250g参片',
+    },
     { id: 3, sponsorName: 'MT', sponsorContent: '2K', specialAward: '4强每人一份贡菜千层肚' },
   ];
 
@@ -100,6 +105,50 @@ describe('SpecialAwards', () => {
 
       const description = screen.getByText(mockAwards[0].specialAward!);
       expect(description.className).toContain('text-gray-200');
+    });
+
+    it('容器应该使用 flex 布局以支持高度拉伸', () => {
+      render(<SpecialAwards sponsors={mockAwards} />);
+
+      const container = screen.getByTestId('special-awards-container');
+      expect(container.className).toContain('flex');
+      expect(container.className).toContain('flex-col');
+      expect(container.className).toContain('w-full');
+    });
+
+    it('滚动区域应该使用 flex-1 填充剩余空间', () => {
+      render(<SpecialAwards sponsors={mockAwards} />);
+
+      const container = screen.getByTestId('special-awards-container');
+      const scrollContainer = container.querySelector('div[style*="min-height: 200px"]');
+      expect(scrollContainer).not.toBeNull();
+      expect(scrollContainer?.className).toContain('flex-1');
+    });
+  });
+
+  describe('滚动动画', () => {
+    it('应该有滚动容器', () => {
+      render(<SpecialAwards sponsors={mockAwards} />);
+
+      const container = screen.getByTestId('special-awards-container');
+      const scrollContainer = container.querySelector('div[style*="max-height"]');
+      expect(scrollContainer).not.toBeNull();
+    });
+
+    it('滚动容器应该限制最大高度', () => {
+      render(<SpecialAwards sponsors={mockAwards} />);
+
+      const container = screen.getByTestId('special-awards-container');
+      const scrollContainer = container.querySelector('div[style*="max-height: 280px"]');
+      expect(scrollContainer).not.toBeNull();
+    });
+
+    it('滚动内容区域应该应用CSS动画样式', () => {
+      render(<SpecialAwards sponsors={mockAwards} />);
+
+      const container = screen.getByTestId('special-awards-container');
+      const scrollContent = container.querySelector('div[class="space-y-3"]');
+      expect(scrollContent).not.toBeNull();
     });
   });
 

@@ -123,13 +123,10 @@ const MatchDataImportDialog: React.FC<MatchDataImportDialogProps> = ({
 
       // 检查是否为覆盖导入
       if (result.overwritten) {
-        toast.warning(
-          `数据已导入并覆盖第 ${result.gameNumber} 局的原有数据，请预览确认`,
-          {
-            id: toastId,
-            duration: 5000,
-          },
-        );
+        toast.warning(`数据已导入并覆盖第 ${result.gameNumber} 局的原有数据，请预览确认`, {
+          id: toastId,
+          duration: 5000,
+        });
       } else if (result.failedCount && result.failedCount > 0) {
         const errors = parseErrorDetails(result);
         setErrorDetails(errors);
@@ -273,18 +270,22 @@ const MatchDataImportDialog: React.FC<MatchDataImportDialogProps> = ({
         )}
 
         {preview && (
-          <div className={`p-4 border rounded-lg ${
-            preview.overwritten 
-              ? 'bg-amber-500/10 border-amber-500/30' 
-              : 'bg-green-500/10 border-green-500/20'
-          }`}>
+          <div
+            className={`p-4 border rounded-lg ${
+              preview.overwritten
+                ? 'bg-amber-500/10 border-amber-500/30'
+                : 'bg-green-500/10 border-green-500/20'
+            }`}
+          >
             <div className="flex items-start gap-3 mb-2">
               {preview.overwritten && (
                 <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
               )}
-              <h4 className={`font-medium ${
-                preview.overwritten ? 'text-amber-400' : 'text-green-400'
-              }`}>
+              <h4
+                className={`font-medium ${
+                  preview.overwritten ? 'text-amber-400' : 'text-green-400'
+                }`}
+              >
                 {preview.overwritten ? '覆盖导入预览' : '导入预览'}
               </h4>
             </div>

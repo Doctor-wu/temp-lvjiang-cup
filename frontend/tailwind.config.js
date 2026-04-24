@@ -84,6 +84,10 @@ export default {
           "0%, 100%": { opacity: "0.6" },
           "50%": { opacity: "1" },
         },
+        "scroll-up": {
+          "0%": { transform: "translateY(0)" },
+          "100%": { transform: "translateY(-50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -91,6 +95,7 @@ export default {
         "shine": "shine 8s ease-in-out infinite",
         "fade-in-up": "fade-in-up 0.5s ease-out forwards",
         "glow-pulse": "glow-pulse 2s ease-in-out infinite",
+        "scroll-up": "scroll-up 20s linear infinite",
       },
     },
   },

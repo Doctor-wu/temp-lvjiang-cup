@@ -58,13 +58,15 @@ vi.mock('@/services', () => {
         name: 'Test Team 1',
         logo: 'logo1.png',
         battleCry: 'Test battle cry 1',
-        members: [{
-          id: 'player-1',
-          nickname: 'TestPlayer',
-          position: 'TOP',
-          avatarUrl: 'avatar1.png',
-          teamId: 'team-1',
-        }],
+        members: [
+          {
+            id: 'player-1',
+            nickname: 'TestPlayer',
+            position: 'TOP',
+            avatarUrl: 'avatar1.png',
+            teamId: 'team-1',
+          },
+        ],
       },
       {
         id: 'team-2',

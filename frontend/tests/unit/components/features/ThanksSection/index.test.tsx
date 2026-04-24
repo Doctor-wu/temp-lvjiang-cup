@@ -45,13 +45,6 @@ describe('ThanksSection', () => {
     expect(emojis).toBeNull();
   });
 
-  it('不应该有固定的最小高度', () => {
-    render(<ThanksSection />);
-
-    const section = screen.getByTestId('thanks-section');
-    expect(section.className).not.toContain('min-h-[500px]');
-  });
-
   it('应该有正确的背景样式', () => {
     render(<ThanksSection />);
 
@@ -62,12 +55,26 @@ describe('ThanksSection', () => {
     expect(section.className).toContain('to-black');
   });
 
-  it('应该有正确的内边距', () => {
+  it('应该限制在视窗高度内', () => {
     render(<ThanksSection />);
 
     const section = screen.getByTestId('thanks-section');
-    expect(section.className).toContain('py-16');
-    expect(section.className).toContain('md:py-24');
+    expect(section.className).toContain('h-[calc(100vh-96px)]');
+  });
+
+  it('应该使用flex布局', () => {
+    render(<ThanksSection />);
+
+    const section = screen.getByTestId('thanks-section');
+    expect(section.className).toContain('flex');
+    expect(section.className).toContain('flex-col');
+  });
+
+  it('应该防止内容溢出', () => {
+    render(<ThanksSection />);
+
+    const section = screen.getByTestId('thanks-section');
+    expect(section.className).toContain('overflow-hidden');
   });
 
   it('应该有正确的模块间距', () => {
@@ -117,5 +124,14 @@ describe('ThanksSection', () => {
     render(<ThanksSection />);
 
     expect(screen.getByText('再次感谢所有支持')).toBeInTheDocument();
+  });
+
+  it('内容区域应该有动态缩放样式', () => {
+    render(<ThanksSection />);
+
+    const section = screen.getByTestId('thanks-section');
+    // 检查内部是否有带 scale 样式的元素
+    const scaledContent = section.querySelector('div[style*="scale"]');
+    expect(scaledContent).not.toBeNull();
   });
 });

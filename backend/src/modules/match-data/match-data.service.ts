@@ -277,6 +277,23 @@ export class MatchDataService {
       mvp: ps.mvp === 1,
     }));
 
+    // 聚合团队总伤害和总承伤
+    const redTeamDamage = playerStatsRaw
+      .filter((ps) => ps.team_id === game.red_team_id)
+      .reduce((sum, ps) => sum + (ps.damage_dealt || 0), 0);
+
+    const redTeamDamageTaken = playerStatsRaw
+      .filter((ps) => ps.team_id === game.red_team_id)
+      .reduce((sum, ps) => sum + (ps.damage_taken || 0), 0);
+
+    const blueTeamDamage = playerStatsRaw
+      .filter((ps) => ps.team_id === game.blue_team_id)
+      .reduce((sum, ps) => sum + (ps.damage_dealt || 0), 0);
+
+    const blueTeamDamageTaken = playerStatsRaw
+      .filter((ps) => ps.team_id === game.blue_team_id)
+      .reduce((sum, ps) => sum + (ps.damage_taken || 0), 0);
+
     // 解析BAN数据（JSON字符串转数组）
     const parseBans = (banJson: string | null): string[] => {
       if (!banJson) return [];
@@ -307,6 +324,8 @@ export class MatchDataService {
         dragons: game.blue_dragons,
         barons: game.blue_barons,
         isWinner: game.winner_team_id === game.blue_team_id,
+        totalDamage: blueTeamDamage,
+        totalDamageTaken: blueTeamDamageTaken,
       },
       redTeam: {
         teamId: game.red_team_id,
@@ -319,6 +338,8 @@ export class MatchDataService {
         dragons: game.red_dragons,
         barons: game.red_barons,
         isWinner: game.winner_team_id === game.red_team_id,
+        totalDamage: redTeamDamage,
+        totalDamageTaken: redTeamDamageTaken,
       },
       bans: {
         red: parseBans(game.red_ban),
@@ -347,7 +368,7 @@ export class MatchDataService {
     gameNumber: number;
     playerCount: number;
     failedCount: number;
-    overwritten: boolean;  // 新增：标记是否覆盖导入
+    overwritten: boolean; // 新增：标记是否覆盖导入
     failedPlayers?: Array<{
       row: number;
       nickname: string;

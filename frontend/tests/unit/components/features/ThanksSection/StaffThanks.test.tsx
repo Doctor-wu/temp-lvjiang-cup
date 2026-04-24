@@ -118,6 +118,50 @@ describe('StaffThanks', () => {
       expect(roleBadge.className).toContain('bg-gradient-to-r');
       expect(roleBadge.className).toContain('text-amber-400');
     });
+
+    it('容器应该使用 flex 布局以支持高度拉伸', () => {
+      render(<StaffThanks staff={mockStaff} />);
+
+      const container = screen.getByTestId('staff-thanks-container');
+      expect(container.className).toContain('flex');
+      expect(container.className).toContain('flex-col');
+      expect(container.className).toContain('w-full');
+    });
+
+    it('滚动区域应该使用 flex-1 填充剩余空间', () => {
+      render(<StaffThanks staff={mockStaff} />);
+
+      const container = screen.getByTestId('staff-thanks-container');
+      const scrollContainer = container.querySelector('div[style*="min-height: 200px"]');
+      expect(scrollContainer).not.toBeNull();
+      expect(scrollContainer?.className).toContain('flex-1');
+    });
+  });
+
+  describe('滚动动画', () => {
+    it('应该有滚动容器', () => {
+      render(<StaffThanks staff={mockStaff} />);
+
+      const container = screen.getByTestId('staff-thanks-container');
+      const scrollContainer = container.querySelector('div[style*="max-height"]');
+      expect(scrollContainer).not.toBeNull();
+    });
+
+    it('滚动容器应该限制最大高度', () => {
+      render(<StaffThanks staff={mockStaff} />);
+
+      const container = screen.getByTestId('staff-thanks-container');
+      const scrollContainer = container.querySelector('div[style*="max-height: 280px"]');
+      expect(scrollContainer).not.toBeNull();
+    });
+
+    it('滚动内容区域应该应用CSS动画样式', () => {
+      render(<StaffThanks staff={mockStaff} />);
+
+      const container = screen.getByTestId('staff-thanks-container');
+      const scrollContent = container.querySelector('div[class="space-y-3 md:space-y-4"]');
+      expect(scrollContent).not.toBeNull();
+    });
   });
 
   describe('移动端适配', () => {

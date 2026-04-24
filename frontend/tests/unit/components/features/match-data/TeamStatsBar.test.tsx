@@ -36,8 +36,16 @@ describe('TeamStatsBar', () => {
     });
 
     it('应该显示队伍Logo', () => {
-      const blueTeam = createMockTeamData({ teamName: 'BLG', side: 'blue', logoUrl: 'https://example.com/blg.png' });
-      const redTeam = createMockTeamData({ teamName: 'WBG', side: 'red', logoUrl: 'https://example.com/wbg.png' });
+      const blueTeam = createMockTeamData({
+        teamName: 'BLG',
+        side: 'blue',
+        logoUrl: 'https://example.com/blg.png',
+      });
+      const redTeam = createMockTeamData({
+        teamName: 'WBG',
+        side: 'red',
+        logoUrl: 'https://example.com/wbg.png',
+      });
       const { container } = render(<TeamStatsBar blueTeam={blueTeam} redTeam={redTeam} />);
 
       const logos = container.querySelectorAll('img[alt="BLG"], img[alt="WBG"]');
@@ -206,7 +214,10 @@ describe('TeamStatsBar', () => {
       // 检查胜利图标是否存在
       const victoryIcon = container.querySelector('img[alt="胜利"]');
       expect(victoryIcon).toBeInTheDocument();
-      expect(victoryIcon).toHaveAttribute('src', 'https://game.gtimg.cn/images/lpl/es/web201612/victory_ico.png');
+      expect(victoryIcon).toHaveAttribute(
+        'src',
+        'https://game.gtimg.cn/images/lpl/es/web201612/victory_ico.png'
+      );
     });
 
     it('红色方获胜时应该显示胜利标识', () => {

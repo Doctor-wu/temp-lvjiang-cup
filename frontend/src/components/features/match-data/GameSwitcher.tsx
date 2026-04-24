@@ -65,9 +65,10 @@ const GameSwitcher: React.FC<GameSwitcherProps> = ({
               disabled={isDisabled}
               className={`
                 relative px-8 py-3 text-base font-medium transition-all duration-200
-                ${isActive
-                  ? 'text-[#c49f58] bg-[#2d2d2d]'
-                  : 'text-gray-400 hover:text-white hover:bg-[#2d2d2d]/50'
+                ${
+                  isActive
+                    ? 'text-[#c49f58] bg-[#2d2d2d]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#2d2d2d]/50'
                 }
                 ${isDisabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}
               `}

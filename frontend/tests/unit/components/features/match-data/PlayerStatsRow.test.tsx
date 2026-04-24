@@ -164,12 +164,8 @@ describe('PlayerStatsRow', () => {
       );
 
       const elements = container.querySelectorAll('*');
-      const hasBPlaceholder = Array.from(elements).some(
-        el => el.textContent === 'B'
-      );
-      const hasZPlaceholder = Array.from(elements).some(
-        el => el.textContent === 'Z'
-      );
+      const hasBPlaceholder = Array.from(elements).some(el => el.textContent === 'B');
+      const hasZPlaceholder = Array.from(elements).some(el => el.textContent === 'Z');
       // 应该有至少一个占位符（如果头像图片失败也会显示占位符）
       expect(hasBPlaceholder || hasZPlaceholder).toBe(true);
     });
@@ -194,12 +190,8 @@ describe('PlayerStatsRow', () => {
       );
 
       const elements = container.querySelectorAll('*');
-      const hasBPlaceholder = Array.from(elements).some(
-        el => el.textContent === 'B'
-      );
-      const hasZPlaceholder = Array.from(elements).some(
-        el => el.textContent === 'Z'
-      );
+      const hasBPlaceholder = Array.from(elements).some(el => el.textContent === 'B');
+      const hasZPlaceholder = Array.from(elements).some(el => el.textContent === 'Z');
       expect(hasBPlaceholder || hasZPlaceholder).toBe(true);
     });
   });

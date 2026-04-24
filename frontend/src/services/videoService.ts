@@ -1,5 +1,7 @@
 import axios from 'axios';
 import type { Video, VideoItem } from '@/api/types';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { requestCache, CACHE_TTL } from '@/utils/requestCache';
 
 const API_BASE = '/api';
 

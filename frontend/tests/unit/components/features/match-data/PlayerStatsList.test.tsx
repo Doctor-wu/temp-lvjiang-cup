@@ -1,7 +1,19 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import PlayerStatsList from '@/components/features/match-data/PlayerStatsList';
-import type { PlayerStat } from '@/types/matchData';
+import type { PlayerStat, TeamGameData } from '@/types/matchData';
+
+const createMockTeamStats = (teamId: string): TeamGameData => ({
+  teamId,
+  teamName: teamId === 'team1' ? 'TeamA' : 'TeamB',
+  side: teamId === 'team1' ? 'blue' : 'red',
+  kills: 15,
+  gold: 50000,
+  towers: 5,
+  dragons: 3,
+  barons: 1,
+  isWinner: true,
+});
 
 const createMockPlayerStat = (
   overrides: Partial<PlayerStat> & { playerName: string; position: string }
@@ -51,6 +63,9 @@ describe('PlayerStatsList', () => {
           redPlayers={redPlayers}
           expandedPosition={null}
           onToggle={vi.fn()}
+          gameDuration="32:45"
+          redTeamStats={createMockTeamStats('team2')}
+          blueTeamStats={createMockTeamStats('team1')}
         />
       );
 
@@ -77,6 +92,9 @@ describe('PlayerStatsList', () => {
           redPlayers={redPlayers}
           expandedPosition={null}
           onToggle={vi.fn()}
+          gameDuration="32:45"
+          redTeamStats={createMockTeamStats('team2')}
+          blueTeamStats={createMockTeamStats('team1')}
         />
       );
 
@@ -103,6 +121,9 @@ describe('PlayerStatsList', () => {
           redPlayers={redPlayers}
           expandedPosition={null}
           onToggle={vi.fn()}
+          gameDuration="32:45"
+          redTeamStats={createMockTeamStats('team2')}
+          blueTeamStats={createMockTeamStats('team1')}
         />
       );
 
@@ -131,6 +152,9 @@ describe('PlayerStatsList', () => {
           redPlayers={redPlayers}
           expandedPosition={null}
           onToggle={vi.fn()}
+          gameDuration="32:45"
+          redTeamStats={createMockTeamStats('team2')}
+          blueTeamStats={createMockTeamStats('team1')}
         />
       );
 
@@ -167,10 +191,12 @@ describe('PlayerStatsList', () => {
           redPlayers={redPlayers}
           expandedPosition="JUNGLE"
           onToggle={handleToggle}
+          gameDuration="32:45"
+          redTeamStats={createMockTeamStats('team2')}
+          blueTeamStats={createMockTeamStats('team1')}
         />
       );
 
-      // 验证组件渲染成功
       expect(screen.getByText('Bin')).toBeInTheDocument();
       expect(screen.getByText('Xun')).toBeInTheDocument();
       expect(screen.getByText('Zika')).toBeInTheDocument();
@@ -204,10 +230,12 @@ describe('PlayerStatsList', () => {
           redPlayers={redPlayers}
           expandedPosition={null}
           onToggle={handleToggle}
+          gameDuration="32:45"
+          redTeamStats={createMockTeamStats('team2')}
+          blueTeamStats={createMockTeamStats('team1')}
         />
       );
 
-      // 验证组件渲染成功
       expect(screen.getByText('Bin')).toBeInTheDocument();
       expect(screen.getByText('Xun')).toBeInTheDocument();
     });

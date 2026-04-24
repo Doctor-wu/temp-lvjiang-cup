@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { MarqueeBanner } from './MarqueeBanner';
 import { SpecialAwards } from './SpecialAwards';
@@ -42,13 +42,35 @@ const itemVariants = {
 };
 
 export const ThanksSection: React.FC = () => {
+  const [scale, setScale] = useState(1);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  // 动态计算缩放比例，确保内容在视窗内完整展示
+  useEffect(() => {
+    const calculateScale = () => {
+      const viewportHeight = window.innerHeight;
+      const headerHeight = 96; // 导航栏高度
+      const availableHeight = viewportHeight - headerHeight;
+
+      if (contentRef.current) {
+        const contentHeight = contentRef.current.scrollHeight;
+        const newScale = Math.min(1, availableHeight / contentHeight);
+        setScale(newScale);
+      }
+    };
+
+    calculateScale();
+    window.addEventListener('resize', calculateScale);
+    return () => window.removeEventListener('resize', calculateScale);
+  }, []);
+
   if (sponsors.length === 0 && staff.length === 0) return null;
 
   return (
     <motion.section
       id="thanks"
       data-testid="thanks-section"
-      className="relative py-16 md:py-24 bg-gradient-to-b from-black via-gray-950 to-black overflow-hidden"
+      className="relative h-[calc(100vh-96px)] flex flex-col bg-gradient-to-b from-black via-gray-950 to-black overflow-hidden"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.1 }}
@@ -83,97 +105,114 @@ export const ThanksSection: React.FC = () => {
         />
       </div>
 
-      <div className="relative container mx-auto px-4">
-        {/* 标题区域 */}
-        <motion.div className="text-center mb-10 md:mb-14" variants={itemVariants}>
-          {/* 顶部装饰线 */}
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="h-px w-16 md:w-24 bg-gradient-to-r from-transparent via-pink-500 to-amber-500" />
-            <div className="flex gap-1">
-              <span className="w-2 h-2 rounded-full bg-pink-500 animate-pulse" />
-              <span
-                className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"
-                style={{ animationDelay: '0.2s' }}
-              />
-              <span
-                className="w-2 h-2 rounded-full bg-pink-500 animate-pulse"
-                style={{ animationDelay: '0.4s' }}
-              />
+      <div className="relative container mx-auto px-4 flex-1 flex flex-col justify-center min-h-0 py-8">
+        <div
+          ref={contentRef}
+          style={{
+            transform: `scale(${scale})`,
+            transformOrigin: 'top center',
+            width: '100%',
+          }}
+        >
+          {/* 标题区域 */}
+          <motion.div className="text-center mb-10 md:mb-14" variants={itemVariants}>
+            {/* 顶部装饰线 */}
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-px w-16 md:w-24 bg-gradient-to-r from-transparent via-pink-500 to-amber-500" />
+              <div className="flex gap-1">
+                <span className="w-2 h-2 rounded-full bg-pink-500 animate-pulse" />
+                <span
+                  className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"
+                  style={{ animationDelay: '0.2s' }}
+                />
+                <span
+                  className="w-2 h-2 rounded-full bg-pink-500 animate-pulse"
+                  style={{ animationDelay: '0.4s' }}
+                />
+              </div>
+              <div className="h-px w-16 md:w-24 bg-gradient-to-l from-transparent via-pink-500 to-amber-500" />
             </div>
-            <div className="h-px w-16 md:w-24 bg-gradient-to-l from-transparent via-pink-500 to-amber-500" />
-          </div>
 
-          <h2
-            data-testid="thanks-section-title"
-            className="text-2xl md:text-4xl font-bold tracking-wider flex items-center justify-center gap-3"
-            style={{
-              fontFamily: 'Chakra Petch, sans-serif',
-              background: 'linear-gradient(135deg, #F472B6 0%, #FBBF24 50%, #F472B6 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              textShadow: '0 0 30px rgba(244, 114, 182, 0.3)',
-            }}
-          >
-            <StarBurst size={24} className="text-pink-400 flex-shrink-0" style={{ WebkitTextFillColor: 'initial' }} />
-            特别鸣谢
-            <StarBurst size={24} className="text-amber-400 flex-shrink-0" style={{ WebkitTextFillColor: 'initial' }} />
-          </h2>
+            <h2
+              data-testid="thanks-section-title"
+              className="text-2xl md:text-4xl font-bold tracking-wider flex items-center justify-center gap-3"
+              style={{
+                fontFamily: 'Chakra Petch, sans-serif',
+                background: 'linear-gradient(135deg, #F472B6 0%, #FBBF24 50%, #F472B6 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                textShadow: '0 0 30px rgba(244, 114, 182, 0.3)',
+              }}
+            >
+              <StarBurst
+                size={24}
+                className="text-pink-400 flex-shrink-0"
+                style={{ WebkitTextFillColor: 'initial' }}
+              />
+              特别鸣谢
+              <StarBurst
+                size={24}
+                className="text-amber-400 flex-shrink-0"
+                style={{ WebkitTextFillColor: 'initial' }}
+              />
+            </h2>
 
-          <p
-            className="mt-3 text-gray-400 text-sm md:text-base max-w-md mx-auto"
-            style={{ fontFamily: 'Chakra Petch, sans-serif' }}
-          >
-            感谢每一位支持者的信任与陪伴
-          </p>
-
-          {/* 底部装饰线 */}
-          <div className="flex items-center justify-center gap-4 mt-6">
-            <div className="h-px w-12 md:w-20 bg-gradient-to-r from-transparent to-amber-500/50" />
-            <span
-              className="text-amber-500/40 text-xs tracking-[0.3em]"
+            <p
+              className="mt-3 text-gray-400 text-sm md:text-base max-w-md mx-auto"
               style={{ fontFamily: 'Chakra Petch, sans-serif' }}
             >
-              SPONSORS & STAFF
-            </span>
-            <div className="h-px w-12 md:w-20 bg-gradient-to-l from-transparent to-amber-500/50" />
-          </div>
-        </motion.div>
+              感谢每一位支持者的信任与陪伴
+            </p>
 
-        {/* 弹幕区域 */}
-        <motion.div className="mb-8 md:mb-10" variants={itemVariants}>
-          <MarqueeBanner sponsors={sponsors} />
-        </motion.div>
-
-        {/* 特殊奖项和幕后工作人员左右布局 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-          {/* 特殊奖项 - 左侧 */}
-          <motion.div variants={itemVariants}>
-            <SpecialAwards sponsors={sponsors} />
+            {/* 底部装饰线 */}
+            <div className="flex items-center justify-center gap-4 mt-6">
+              <div className="h-px w-12 md:w-20 bg-gradient-to-r from-transparent to-amber-500/50" />
+              <span
+                className="text-amber-500/40 text-xs tracking-[0.3em]"
+                style={{ fontFamily: 'Chakra Petch, sans-serif' }}
+              >
+                SPONSORS & STAFF
+              </span>
+              <div className="h-px w-12 md:w-20 bg-gradient-to-l from-transparent to-amber-500/50" />
+            </div>
           </motion.div>
 
-          {/* 幕后工作人员 - 右侧 */}
-          <motion.div variants={itemVariants}>
-            <StaffThanks staff={staff} />
+          {/* 弹幕区域 */}
+          <motion.div className="mb-8 md:mb-10" variants={itemVariants}>
+            <MarqueeBanner sponsors={sponsors} />
+          </motion.div>
+
+          {/* 特殊奖项和幕后工作人员左右布局 - 使用 items-stretch 确保高度一致 */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
+            {/* 特殊奖项 - 左侧 */}
+            <motion.div className="flex" variants={itemVariants}>
+              <SpecialAwards sponsors={sponsors} />
+            </motion.div>
+
+            {/* 幕后工作人员 - 右侧 */}
+            <motion.div className="flex" variants={itemVariants}>
+              <StaffThanks staff={staff} />
+            </motion.div>
+          </div>
+
+          {/* 底部装饰 */}
+          <motion.div
+            className="mt-16 md:mt-20 flex items-center justify-center"
+            variants={itemVariants}
+          >
+            <div className="flex items-center gap-3 px-6 py-3 rounded-full border border-pink-500/20 bg-black/40 backdrop-blur-sm">
+              <HeartIcon size={20} className="text-pink-400" />
+              <span
+                className="text-gray-400 text-sm"
+                style={{ fontFamily: 'Chakra Petch, sans-serif' }}
+              >
+                再次感谢所有支持
+              </span>
+              <HeartIcon size={20} className="text-amber-400" />
+            </div>
           </motion.div>
         </div>
-
-        {/* 底部装饰 */}
-        <motion.div
-          className="mt-16 md:mt-20 flex items-center justify-center"
-          variants={itemVariants}
-        >
-          <div className="flex items-center gap-3 px-6 py-3 rounded-full border border-pink-500/20 bg-black/40 backdrop-blur-sm">
-            <HeartIcon size={20} className="text-pink-400" />
-            <span
-              className="text-gray-400 text-sm"
-              style={{ fontFamily: 'Chakra Petch, sans-serif' }}
-            >
-              再次感谢所有支持
-            </span>
-            <HeartIcon size={20} className="text-amber-400" />
-          </div>
-        </motion.div>
       </div>
     </motion.section>
   );

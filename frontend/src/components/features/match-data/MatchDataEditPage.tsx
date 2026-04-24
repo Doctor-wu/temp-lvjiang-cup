@@ -9,7 +9,6 @@ import TeamStatsBar from './TeamStatsBar';
 import TeamStatsBarEdit from './TeamStatsBarEdit';
 import PlayerStatsList from './PlayerStatsList';
 import PlayerStatsRowEdit from './PlayerStatsRowEdit';
-import RadarChart from './RadarChart';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { getMatchSeries, getMatchGameData, updateMatchGameData } from '@/api/matchData';
 import type { MatchSeriesInfo, MatchGameData, PlayerStat, PositionType } from '@/types/matchData';
@@ -369,22 +368,12 @@ const MatchDataEditPage: React.FC = () => {
               redPlayers={sortedRedPlayers}
               expandedPosition={expandedPosition}
               onToggle={handleTogglePosition}
-            />
-          )}
-        </div>
-
-        {expandedPosition && sortedBluePlayers.length >= 1 && sortedRedPlayers.length >= 1 && (
-          <div className="mt-4 max-w-5xl mx-auto">
-            <RadarChart
-              player1={sortedBluePlayers[0]}
-              player2={sortedRedPlayers[0]}
               gameDuration={gameData.gameDuration}
               redTeamStats={gameData.redTeam}
               blueTeamStats={gameData.blueTeam}
-              visible={true}
             />
-          </div>
-        )}
+          )}
+        </div>
       </>
     );
   };

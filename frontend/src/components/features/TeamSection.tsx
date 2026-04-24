@@ -222,6 +222,8 @@ const TeamSection: React.FC = () => {
                   <img
                     src={team.logo}
                     alt={team.name}
+                    loading="lazy"
+                    decoding="async"
                     className="w-16 h-16 object-contain drop-shadow-lg transform group-hover:scale-110 transition-transform duration-300"
                     data-testid="team-logo"
                   />

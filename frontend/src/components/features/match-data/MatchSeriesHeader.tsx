@@ -73,10 +73,7 @@ const getMatchStatus = (gameData: MatchGameData | null): string => {
  * 系列赛头部组件
  * 展示双方队伍Logo、总比分、比赛日期和状态
  */
-const MatchSeriesHeader: React.FC<MatchSeriesHeaderProps> = ({ 
-  seriesInfo, 
-  gameData 
-}) => {
+const MatchSeriesHeader: React.FC<MatchSeriesHeaderProps> = ({ seriesInfo, gameData }) => {
   const [redScore, blueScore] = calculateSeriesScore(seriesInfo, gameData);
   const { date, time } = formatMatchDateTime(gameData?.gameStartTime || null);
   const status = getMatchStatus(gameData);
@@ -131,12 +128,8 @@ const MatchSeriesHeader: React.FC<MatchSeriesHeaderProps> = ({
 
           {/* 日期和状态 */}
           <div className="flex items-center gap-4">
-            <span className="text-lg text-gray-400">
-              {date}
-            </span>
-            <span className="text-lg text-[#c49f58]">
-              {time}
-            </span>
+            <span className="text-lg text-gray-400">{date}</span>
+            <span className="text-lg text-[#c49f58]">{time}</span>
           </div>
           <span
             className={`text-base px-4 py-1.5 rounded-full ${

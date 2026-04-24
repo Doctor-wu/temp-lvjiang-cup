@@ -10,7 +10,7 @@ vi.mock('framer-motion', () => ({
   AnimatePresence: ({ children }: any) => <>{children}</>,
 }));
 
-const createMockImage = function(this: any) {
+const createMockImage = function (this: any) {
   const img = document.createElement('img');
   setTimeout(() => {
     Object.defineProperty(img, 'complete', { value: true });

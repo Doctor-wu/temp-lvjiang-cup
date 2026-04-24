@@ -6,7 +6,6 @@ import MatchSeriesHeader from './MatchSeriesHeader';
 import GameSwitcher from './GameSwitcher';
 import TeamStatsBar from './TeamStatsBar';
 import PlayerStatsList from './PlayerStatsList';
-import RadarChart from './RadarChart';
 import { getMatchSeries, getMatchGameData } from '@/api/matchData';
 import type { MatchSeriesInfo, MatchGameData, PlayerStat, PositionType } from '@/types/matchData';
 import { useMatchDataStore } from '@/store/matchDataStore';
@@ -148,6 +147,8 @@ const MatchDataPage: React.FC = () => {
     const loadData = async () => {
       setLoading(true);
       setError(null);
+      // 切换对局时重置雷达图展开状态
+      setExpandedPosition(null);
 
       try {
         await Promise.all([loadSeriesInfo(matchId), loadGameData(matchId, currentGameNumber)]);
@@ -277,11 +278,6 @@ const MatchDataPage: React.FC = () => {
   const renderContent = () => {
     if (!gameData) return null;
 
-    const topPlayers =
-      sortedBluePlayers.length >= 1 && sortedRedPlayers.length >= 1
-        ? { blue: sortedBluePlayers[0], red: sortedRedPlayers[0] }
-        : null;
-
     return (
       <>
         {/* 系列赛头部：展示总比分和比赛状态 */}
@@ -309,21 +305,10 @@ const MatchDataPage: React.FC = () => {
           redPlayers={sortedRedPlayers}
           expandedPosition={expandedPosition}
           onToggle={handleTogglePosition}
+          gameDuration={gameData.gameDuration}
+          redTeamStats={gameData.redTeam}
+          blueTeamStats={gameData.blueTeam}
         />
-
-        {/* 雷达图（展开时显示） */}
-        {expandedPosition && topPlayers && (
-          <div className="mt-4 max-w-5xl mx-auto">
-            <RadarChart
-              player1={topPlayers.blue}
-              player2={topPlayers.red}
-              gameDuration={gameData.gameDuration}
-              redTeamStats={gameData.redTeam}
-              blueTeamStats={gameData.blueTeam}
-              visible={true}
-            />
-          </div>
-        )}
       </>
     );
   };

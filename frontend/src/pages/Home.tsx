@@ -1,26 +1,21 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo, lazy, Suspense } from 'react';
 import { Loader2, AlertCircle } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import { StartBox } from '../components/features/StartBox';
 import HeroSection from '../components/features/HeroSection';
-import ScheduleSection from '../components/features/ScheduleSection';
-import TeamSection from '../components/features/TeamSection';
-import StreamerSection from '../components/features/StreamerSection';
-import { ThanksSection } from '../components/features/ThanksSection';
-import { VideoCarousel, VideoItem } from '../components/video-carousel';
 import { streamService, teamService, matchService } from '../services';
 import * as videoApi from '../api/videos';
 import { ZIndexLayers } from '../constants/zIndex';
+import { HomeDataProvider } from '../context/HomeDataContext';
+import type { VideoItem } from '../components/video-carousel';
+import type { Stream, Team as ApiTeam } from '../api/types';
 
 /**
- * 首页数据加载状态
+ * 首页数据状态
  */
 interface HomeDataState {
-  /** 是否正在加载 */
   loading: boolean;
-  /** 错误信息 */
   error: string | null;
-  /** 各模块加载状态 */
   modules: {
     stream: boolean;
     teams: boolean;
@@ -65,11 +60,35 @@ const GlobalLoadingIndicator: React.FC<{ visible: boolean }> = ({ visible }) => 
 };
 
 /**
+ * 懒加载非首屏组件
+ * 使用 React.lazy 实现代码分割和按需加载
+ */
+const ScheduleSection = lazy(() => import('../components/features/ScheduleSection'));
+const TeamSection = lazy(() => import('../components/features/TeamSection'));
+const StreamerSection = lazy(() => import('../components/features/StreamerSection'));
+const ThanksSection = lazy(() =>
+  import('../components/features/ThanksSection').then(m => ({ default: m.ThanksSection }))
+);
+const LazyVideoCarousel = lazy(() =>
+  import('../components/video-carousel').then(m => ({ default: m.VideoCarousel }))
+);
+
+/**
+ * 骨架屏占位符
+ */
+const SectionSkeleton: React.FC = () => (
+  <div className="h-[calc(100vh-96px)] flex items-center justify-center bg-black">
+    <Loader2 className="w-8 h-8 text-yellow-400 animate-spin" />
+  </div>
+);
+
+/**
  * 首页组件
  *
- * 功能：
- * 1. 整合 HeroSection、TeamSection、ScheduleSection 三大模块
- * 2. 全局加载状态和错误处理
+ * 性能优化：
+ * 1. 优先级加载：先加载首屏需要的数据（直播、战队），后台加载非首屏数据（比赛、视频）
+ * 2. Context 共享数据：避免子组件重复请求
+ * 3. 懒加载非首屏组件：使用 React.lazy 延迟渲染 ScheduleSection、TeamSection 等
  */
 const Home: React.FC = () => {
   const [state, setState] = useState<HomeDataState>({
@@ -83,12 +102,14 @@ const Home: React.FC = () => {
     },
   });
 
+  const [streamData, setStreamData] = useState<Stream | null>(null);
+  const [teamsData, setTeamsData] = useState<ApiTeam[]>([]);
+  const [matchesData, setMatchesData] = useState<unknown[]>([]);
   const [videos, setVideos] = useState<VideoItem[]>([]);
-
   const [showError, setShowError] = useState(false);
 
   /**
-   * 更新加载状态
+   * 更新模块加载状态
    */
   const updateLoadingState = useCallback(
     (module: keyof HomeDataState['modules'], loading: boolean) => {
@@ -106,7 +127,11 @@ const Home: React.FC = () => {
   );
 
   /**
-   * 加载所有数据
+   * 优先级加载策略
+   * 优先级1: 直播信息（Hero区域需要）
+   * 优先级2: 战队数据（用户可见区域）
+   * 优先级3: 比赛数据（需滚动才能看到）
+   * 优先级4: 视频数据（需滚动才能看到）
    */
   const loadAllData = useCallback(
     async (isBackground = false) => {
@@ -115,37 +140,41 @@ const Home: React.FC = () => {
       }
 
       try {
-        // 并行加载所有数据
+        // 优先级1: 直播信息（首屏Hero区域需要）
+        updateLoadingState('stream', true);
+        try {
+          const stream = await streamService.get();
+          setStreamData(stream);
+        } catch (err) {
+          console.error('[Home] 直播信息加载失败:', err);
+        } finally {
+          updateLoadingState('stream', false);
+        }
+
+        // 优先级2: 战队数据（首屏可见区域）
+        updateLoadingState('teams', true);
+        try {
+          const teams = await teamService.getAll();
+          setTeamsData(teams);
+        } catch (err) {
+          console.error('[Home] 战队数据加载失败:', err);
+        } finally {
+          updateLoadingState('teams', false);
+        }
+
+        // 优先级3和4: 比赛和视频数据（后台并行加载，非首屏）
         await Promise.all([
-          // 直播信息
-          (async () => {
-            updateLoadingState('stream', true);
-            try {
-              await streamService.get();
-            } finally {
-              updateLoadingState('stream', false);
-            }
-          })(),
-          // 战队数据
-          (async () => {
-            updateLoadingState('teams', true);
-            try {
-              await teamService.getAll();
-            } finally {
-              updateLoadingState('teams', false);
-            }
-          })(),
-          // 比赛数据
           (async () => {
             updateLoadingState('matches', true);
             try {
-              await matchService.getAll();
+              const matches = await matchService.getAll();
+              setMatchesData(matches);
+            } catch (err) {
+              console.error('[Home] 比赛数据加载失败:', err);
             } finally {
               updateLoadingState('matches', false);
             }
           })(),
-
-          // 视频数据
           (async () => {
             updateLoadingState('videos', true);
             try {
@@ -178,6 +207,60 @@ const Home: React.FC = () => {
     [updateLoadingState]
   );
 
+  /**
+   * 单模块刷新函数，供 Context 使用
+   */
+  const handleRefresh = useCallback(
+    async (module: string) => {
+      switch (module) {
+        case 'stream':
+          updateLoadingState('stream', true);
+          try {
+            const stream = await streamService.get();
+            setStreamData(stream);
+          } finally {
+            updateLoadingState('stream', false);
+          }
+          break;
+        case 'teams':
+          updateLoadingState('teams', true);
+          try {
+            const teams = await teamService.getAll();
+            setTeamsData(teams);
+          } finally {
+            updateLoadingState('teams', false);
+          }
+          break;
+        case 'matches':
+          updateLoadingState('matches', true);
+          try {
+            const matches = await matchService.getAll();
+            setMatchesData(matches);
+          } finally {
+            updateLoadingState('matches', false);
+          }
+          break;
+        case 'videos':
+          updateLoadingState('videos', true);
+          try {
+            const result = await videoApi.getVideos({ isEnabled: true, pageSize: 100 });
+            const videoList = Array.isArray(result) ? result : result.list || [];
+            setVideos(
+              videoList.map(video => ({
+                bvid: video.bvid,
+                title: video.title,
+                cover: video.coverUrl || undefined,
+              }))
+            );
+          } finally {
+            updateLoadingState('videos', false);
+          }
+          break;
+      }
+    },
+    [updateLoadingState]
+  );
+
   useEffect(() => {
     loadAllData(false);
   }, [loadAllData]);
@@ -192,41 +275,83 @@ const Home: React.FC = () => {
     }
   }, [showError]);
 
+  // 计算加载状态供 Context 使用
+  const isLoadingModules = useMemo(
+    () => ({
+      stream: state.modules.stream,
+      teams: state.modules.teams,
+      matches: state.modules.matches,
+      videos: state.modules.videos,
+    }),
+    [state.modules]
+  );
+
+  // 统一数据供 Context 共享
+  const contextData = useMemo(
+    () => ({
+      stream: streamData,
+      teams: teamsData,
+      matches: matchesData,
+      videos,
+    }),
+    [streamData, teamsData, matchesData, videos]
+  );
+
   return (
-    <Layout>
-      <StartBox />
+    <HomeDataProvider
+      initialData={contextData}
+      isLoading={isLoadingModules}
+      onRefresh={handleRefresh}
+    >
+      <Layout>
+        <StartBox />
 
-      {/* 全局错误提示 */}
-      {showError && state.error && (
-        <GlobalErrorToast message={state.error} onClose={() => setShowError(false)} />
-      )}
+        {/* 全局错误提示 */}
+        {showError && state.error && (
+          <GlobalErrorToast message={state.error} onClose={() => setShowError(false)} />
+        )}
 
-      {/* 全局加载指示器 */}
-      <GlobalLoadingIndicator visible={state.loading} />
+        {/* 全局加载指示器 */}
+        <GlobalLoadingIndicator visible={state.loading} />
 
-      {/* 页面内容 */}
-      <HeroSection />
-      <section
-        id="videos"
-        className="h-[calc(100vh-96px)] bg-gradient-to-b from-[#0a0a0a] to-[#1a1a2e] flex items-center justify-center"
-      >
-        <div className="container mx-auto px-4 w-full h-full flex flex-col justify-center">
-          {videos.length > 0 ? (
-            <div className="flex-1 flex items-center justify-center min-h-0">
-              <VideoCarousel videos={videos} />
-            </div>
-          ) : (
-            <div className="text-center text-gray-500 py-12">
-              <p className="text-lg">暂无视频</p>
-            </div>
-          )}
-        </div>
-      </section>
-      <StreamerSection />
-      <TeamSection />
-      <ScheduleSection />
-      <ThanksSection />
-    </Layout>
+        {/* 首屏组件：立即渲染 */}
+        <HeroSection />
+
+        {/* 视频区域：次优先渲染 */}
+        <section
+          id="videos"
+          className="h-[calc(100vh-96px)] bg-gradient-to-b from-[#0a0a0a] to-[#1a1a2e] flex items-center justify-center"
+        >
+          <div className="container mx-auto px-4 w-full h-full flex flex-col justify-center">
+            {videos.length > 0 ? (
+              <div className="flex-1 flex items-center justify-center min-h-0">
+                <Suspense fallback={<SectionSkeleton />}>
+                  <LazyVideoCarousel videos={videos} />
+                </Suspense>
+              </div>
+            ) : (
+              <div className="text-center text-gray-500 py-12">
+                <p className="text-lg">暂无视频</p>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* 非首屏组件：使用 Suspense + lazy 延迟渲染 */}
+        <Suspense fallback={<SectionSkeleton />}>
+          <StreamerSection />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton />}>
+          <TeamSection />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton />}>
+          <ScheduleSection />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton />}>
+          <ThanksSection />
+        </Suspense>
+      </Layout>
+    </HomeDataProvider>
   );
 };
 

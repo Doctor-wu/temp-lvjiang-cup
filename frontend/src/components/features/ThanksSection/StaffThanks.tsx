@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StarBurst } from './DecorativeIcons';
 import { useStaggeredAnimation } from './useScrollAnimation';
 import type { StaffConfig } from '@/data/types';
@@ -8,6 +8,38 @@ interface StaffThanksProps {
 }
 
 export const StaffThanks: React.FC<StaffThanksProps> = ({ staff }) => {
+  const [shouldScroll, setShouldScroll] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const scrollContentRef = useRef<HTMLDivElement>(null);
+
+  // 检测内容是否溢出，需要滚动
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (scrollContainerRef.current && scrollContentRef.current) {
+        const containerHeight = scrollContainerRef.current.clientHeight;
+        const contentHeight = scrollContentRef.current.scrollHeight;
+        const needsScroll = contentHeight > containerHeight;
+        setShouldScroll(needsScroll);
+      }
+    };
+
+    // 使用 setTimeout 确保在 DOM 完全渲染后检测
+    const timer = setTimeout(() => {
+      checkOverflow();
+    }, 100);
+
+    window.addEventListener('resize', checkOverflow);
+
+    // 监听图片等资源加载完成
+    window.addEventListener('load', checkOverflow);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', checkOverflow);
+      window.removeEventListener('load', checkOverflow);
+    };
+  }, [staff]);
+
   // 按角色分组
   const grouped = staff.reduce<Record<string, string[]>>((acc, s) => {
     if (!acc[s.role]) acc[s.role] = [];
@@ -21,15 +53,55 @@ export const StaffThanks: React.FC<StaffThanksProps> = ({ staff }) => {
   const roles = Object.entries(grouped);
 
   // Hook 必须在条件判断之前调用
-  const { containerRef, visibleItems } = useStaggeredAnimation(roles.length, 100);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { containerRef: _containerRef, visibleItems } = useStaggeredAnimation(roles.length, 100);
 
   if (staff.length === 0) return null;
+
+  const roleItems = roles.map(([role, names], groupIndex) => (
+    <div
+      key={role}
+      className={`flex flex-wrap items-center gap-2 p-3 md:p-4 rounded-xl bg-black/30 border border-white/5 hover:border-amber-500/30 hover:bg-amber-900/10 transition-all duration-300 ${
+        visibleItems.has(groupIndex) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
+      }`}
+      style={{
+        transitionDelay: `${groupIndex * 100}ms`,
+      }}
+    >
+      <span
+        className="px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/20 to-pink-500/20 border border-amber-500/30 text-amber-400 text-xs md:text-sm font-semibold whitespace-nowrap"
+        style={{ fontFamily: 'Chakra Petch, sans-serif' }}
+      >
+        {role}
+      </span>
+      <span className="text-gray-400 text-sm">:</span>
+      <div className="flex flex-wrap gap-2">
+        {names.map((name, nameIndex) => (
+          <span
+            key={nameIndex}
+            className="text-gray-200 text-sm md:text-base hover:text-pink-400 transition-colors duration-200 cursor-default"
+            style={{ fontFamily: 'Chakra Petch, sans-serif' }}
+          >
+            {name}
+            {nameIndex < names.length - 1 && <span className="text-amber-500/50 ml-2">·</span>}
+          </span>
+        ))}
+      </div>
+    </div>
+  ));
 
   return (
     <div
       data-testid="staff-thanks-container"
-      className="relative mt-8 md:mt-12 p-5 md:p-6 rounded-2xl border border-amber-500/20 bg-gradient-to-br from-amber-900/20 via-black/50 to-pink-900/20 backdrop-blur-md overflow-hidden group"
+      className="relative mt-8 md:mt-12 p-5 md:p-6 rounded-2xl border border-amber-500/20 bg-gradient-to-br from-amber-900/20 via-black/50 to-pink-900/20 backdrop-blur-md overflow-hidden group flex flex-col w-full"
     >
+      {/* 定义 scroll-up 关键帧动画 */}
+      <style>{`
+        @keyframes scroll-up {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(-50%); }
+        }
+      `}</style>
       {/* CRT 扫描线效果 */}
       <div className="absolute inset-0 pointer-events-none opacity-5">
         <div
@@ -63,57 +135,58 @@ export const StaffThanks: React.FC<StaffThanksProps> = ({ staff }) => {
             backgroundClip: 'text',
           }}
         >
-          <StarBurst size={18} className="text-amber-400 flex-shrink-0" style={{ WebkitTextFillColor: 'initial' }} />
+          <StarBurst
+            size={18}
+            className="text-amber-400 flex-shrink-0"
+            style={{ WebkitTextFillColor: 'initial' }}
+          />
           幕后工作人员
-          <StarBurst size={18} className="text-pink-400 flex-shrink-0" style={{ WebkitTextFillColor: 'initial' }} />
+          <StarBurst
+            size={18}
+            className="text-pink-400 flex-shrink-0"
+            style={{ WebkitTextFillColor: 'initial' }}
+          />
         </h3>
         <div className="flex-1 h-px bg-gradient-to-r from-amber-500/50 via-pink-500/30 to-transparent" />
       </div>
 
-      {/* 工作人员列表 */}
+      {/* 工作人员列表 - 带滚动效果，flex-1 确保填充剩余空间 */}
       {!hasRealData ? (
-        <div className="relative text-center py-8">
+        <div
+          className="relative text-center py-8 flex-1 flex flex-col justify-center"
+          style={{ minHeight: '200px' }}
+        >
           <StarBurst size={32} className="mx-auto mb-3 text-amber-500/50 animate-glow-pulse" />
-          <p className="text-gray-500 text-sm md:text-base" style={{ fontFamily: 'Chakra Petch, sans-serif' }}>
+          <p
+            className="text-gray-500 text-sm md:text-base"
+            style={{ fontFamily: 'Chakra Petch, sans-serif' }}
+          >
             幕后工作人员名单即将公布
           </p>
           <p className="text-gray-600 text-xs mt-2">敬请期待</p>
         </div>
       ) : (
-        <div ref={containerRef} className="relative space-y-3 md:space-y-4">
-          {roles.map(([role, names], groupIndex) => (
-            <div
-              key={role}
-              className={`flex flex-wrap items-center gap-2 p-3 md:p-4 rounded-xl bg-black/30 border border-white/5 hover:border-amber-500/30 hover:bg-amber-900/10 transition-all duration-300 ${
-                visibleItems.has(groupIndex) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
-              }`}
-              style={{
-                transitionDelay: `${groupIndex * 100}ms`,
-              }}
-            >
-              <span
-                className="px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/20 to-pink-500/20 border border-amber-500/30 text-amber-400 text-xs md:text-sm font-semibold whitespace-nowrap"
-                style={{ fontFamily: 'Chakra Petch, sans-serif' }}
-              >
-                {role}
-              </span>
-              <span className="text-gray-400 text-sm">:</span>
-              <div className="flex flex-wrap gap-2">
-                {names.map((name, nameIndex) => (
-                  <span
-                    key={nameIndex}
-                    className="text-gray-200 text-sm md:text-base hover:text-pink-400 transition-colors duration-200 cursor-default"
-                    style={{ fontFamily: 'Chakra Petch, sans-serif' }}
-                  >
-                    {name}
-                    {nameIndex < names.length - 1 && (
-                      <span className="text-amber-500/50 ml-2">·</span>
-                    )}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
+        <div
+          ref={scrollContainerRef}
+          className="relative overflow-hidden flex-1"
+          style={{ maxHeight: '280px', minHeight: '200px' }}
+        >
+          <div
+            ref={scrollContentRef}
+            className="space-y-3 md:space-y-4"
+            style={
+              shouldScroll
+                ? {
+                    animation: 'scroll-up 20s linear infinite',
+                    width: '100%',
+                  }
+                : undefined
+            }
+          >
+            {roleItems}
+            {/* 复制一份内容用于无缝循环滚动 */}
+            {shouldScroll && roleItems}
+          </div>
         </div>
       )}
 

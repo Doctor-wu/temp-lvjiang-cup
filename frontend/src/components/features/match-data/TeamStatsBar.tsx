@@ -114,7 +114,14 @@ const StatItem: React.FC<{
   blueValue: number | string;
   redColor?: string;
   blueColor?: string;
-}> = ({ icon, label, redValue, blueValue, redColor = 'text-[#f44336]', blueColor = 'text-[#00bcd4]' }) => (
+}> = ({
+  icon,
+  label,
+  redValue,
+  blueValue,
+  redColor = 'text-[#f44336]',
+  blueColor = 'text-[#00bcd4]',
+}) => (
   <div className="flex flex-col items-center gap-1 min-w-[80px]">
     <div className="flex items-center gap-1 text-gray-400 text-xs">
       {icon}
@@ -135,15 +142,15 @@ const TeamStatsBar: React.FC<TeamStatsBarProps> = ({
   blueTeam,
   redTeam,
   bans,
-  gameDuration,
+  gameDuration: _gameDuration,
   firstBloodTeam,
 }) => {
   return (
     <div className="bg-[#2d2d2d] rounded-b-xl rounded-t-none p-6 max-w-5xl mx-auto">
       {/* 顶部：队标队名 + 击杀对比 */}
-      <div className="flex items-center justify-between mb-6">
-        {/* 左侧：红色方队标队名 */}
-        <div className="flex items-center gap-3">
+      <div className="grid grid-cols-3 items-center mb-6">
+        {/* 左侧：红色方队标队名 - 固定占比，居左 */}
+        <div className="flex items-center gap-3 justify-start">
           <TeamLogo logoUrl={redTeam.logoUrl} teamName={redTeam.teamName} size={48} />
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
@@ -154,8 +161,8 @@ const TeamStatsBar: React.FC<TeamStatsBarProps> = ({
           </div>
         </div>
 
-        {/* 中间：击杀数对比 */}
-        <div className="flex items-center gap-4">
+        {/* 中间：击杀数对比 - 固定居中 */}
+        <div className="flex items-center justify-center gap-4">
           <span className="text-5xl font-bold text-[#f44336] font-mono neon-glow-red">
             {redTeam.kills}
           </span>
@@ -165,8 +172,8 @@ const TeamStatsBar: React.FC<TeamStatsBarProps> = ({
           </span>
         </div>
 
-        {/* 右侧：蓝色方队标队名 */}
-        <div className="flex items-center gap-3">
+        {/* 右侧：蓝色方队标队名 - 固定占比，居右 */}
+        <div className="flex items-center gap-3 justify-end">
           <div className="flex flex-col items-end">
             <div className="flex items-center gap-2">
               {blueTeam.isWinner && <VictoryIcon />}

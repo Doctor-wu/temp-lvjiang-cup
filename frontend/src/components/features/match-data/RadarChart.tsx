@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as echarts from 'echarts/core';
-import { RadarChart } from 'echarts/charts';
+import { RadarChart as EChartsRadar } from 'echarts/charts';
 import { TooltipComponent, GridComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import type { EChartsType } from 'echarts/core';
@@ -12,12 +12,12 @@ import {
   normalizeRadarValue,
   calculateRadarDimension,
   getRadarDimensionConfig,
+  formatDimensionValue,
+  getDimensionUnit,
 } from '@/utils/radarCalculations';
 
-// 按需注册 ECharts 模块
-echarts.use([RadarChart, TooltipComponent, GridComponent, CanvasRenderer]);
+echarts.use([EChartsRadar, TooltipComponent, GridComponent, CanvasRenderer]);
 
-// 颜色常量
 const COLORS = {
   redTeam: '#f44336',
   redTeamFill: 'rgba(244, 67, 54, 0.3)',
@@ -45,9 +45,11 @@ interface NormalizedPlayerData {
   rawValues: number[];
 }
 
-/**
- * 雷达图内部组件（未包裹memo）
- */
+interface TooltipPosition {
+  x: number;
+  y: number;
+}
+
 const RadarChartInner: React.FC<RadarChartProps> = ({
   player1,
   player2,
@@ -58,10 +60,12 @@ const RadarChartInner: React.FC<RadarChartProps> = ({
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   const chartInstanceRef = useRef<EChartsType | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState<RadarDimension[]>([]);
   const [normalizedData, setNormalizedData] = useState<NormalizedPlayerData[]>([]);
+  const [hoveredDimensionIndex, setHoveredDimensionIndex] = useState<number | null>(null);
+  const [tooltipPos, setTooltipPos] = useState<TooltipPosition>({ x: 0, y: 0 });
 
-  // 确定玩家所属阵营
   const getPlayerSide = useCallback(
     (player: PlayerStat): 'red' | 'blue' => {
       return player.teamId === redTeamStats.teamId ? 'red' : 'blue';
@@ -69,7 +73,6 @@ const RadarChartInner: React.FC<RadarChartProps> = ({
     [redTeamStats.teamId]
   );
 
-  // 获取队伍统计数据
   const getTeamStats = useCallback(
     (player: PlayerStat): TeamGameData => {
       return player.teamId === redTeamStats.teamId ? redTeamStats : blueTeamStats;
@@ -77,7 +80,6 @@ const RadarChartInner: React.FC<RadarChartProps> = ({
     [redTeamStats, blueTeamStats]
   );
 
-  // 计算雷达图数据
   useEffect(() => {
     const position = player1.position as PositionType;
     const config = getRadarDimensionConfig(position);
@@ -91,10 +93,8 @@ const RadarChartInner: React.FC<RadarChartProps> = ({
     const rawValues1 = calculateRadarDimension(player1, position, teamStats1, gameDuration);
     const rawValues2 = calculateRadarDimension(player2, position, teamStats2, gameDuration);
 
-    // 计算每个维度的最大值用于归一化
     const maxValues = config.map((_, index) => Math.max(rawValues1[index], rawValues2[index]));
 
-    // 归一化数据
     const normalized1: NormalizedPlayerData = {
       name: player1.playerName,
       teamName: player1.teamName,
@@ -114,7 +114,6 @@ const RadarChartInner: React.FC<RadarChartProps> = ({
     setNormalizedData([normalized1, normalized2]);
   }, [player1, player2, gameDuration, redTeamStats, blueTeamStats, getPlayerSide, getTeamStats]);
 
-  // 初始化图表
   useEffect(() => {
     if (!chartRef.current) return;
 
@@ -129,7 +128,6 @@ const RadarChartInner: React.FC<RadarChartProps> = ({
     };
   }, []);
 
-  // 响应式调整
   useEffect(() => {
     const handleResize = () => {
       chartInstanceRef.current?.resize();
@@ -141,7 +139,6 @@ const RadarChartInner: React.FC<RadarChartProps> = ({
     };
   }, []);
 
-  // 更新图表配置
   useEffect(() => {
     if (!chartInstanceRef.current || dimensions.length === 0 || normalizedData.length === 0) {
       return;
@@ -169,28 +166,7 @@ const RadarChartInner: React.FC<RadarChartProps> = ({
 
     const option = {
       tooltip: {
-        trigger: 'item' as const,
-        formatter: (params: { name: string; value: number[] }) => {
-          const playerData = normalizedData.find(d => `${d.name} (${d.teamName})` === params.name);
-          if (!playerData) return '';
-
-          const tooltipLines = [`<strong>${params.name}</strong>`, ''];
-          dimensions.forEach((dim, index) => {
-            const rawValue = playerData.rawValues[index];
-            const displayValue =
-              dim.key === 'kda' || dim.key === 'assists'
-                ? rawValue.toFixed(1)
-                : rawValue.toFixed(2);
-            tooltipLines.push(`${dim.label}: ${displayValue}`);
-          });
-          return tooltipLines.join('<br/>');
-        },
-        backgroundColor: 'rgba(30, 30, 30, 0.9)',
-        borderColor: 'rgba(255, 255, 255, 0.2)',
-        textStyle: {
-          color: '#fff',
-          fontSize: 12,
-        },
+        show: false,
       },
       radar: {
         indicator,
@@ -230,6 +206,151 @@ const RadarChartInner: React.FC<RadarChartProps> = ({
     chartInstanceRef.current.setOption(option, true);
   }, [dimensions, normalizedData]);
 
+  const handleDimensionHover = useCallback(
+    (index: number, event: React.MouseEvent<HTMLDivElement>) => {
+      setHoveredDimensionIndex(index);
+
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+
+        setTooltipPos({ x, y });
+      }
+    },
+    []
+  );
+
+  const handleDimensionLeave = useCallback(() => {
+    setHoveredDimensionIndex(null);
+  }, []);
+
+  const renderLeftPanel = () => {
+    const playerData = normalizedData.find(p => p.side === 'red') || normalizedData[0];
+    if (!playerData) return null;
+
+    return (
+      <div className="hidden md:flex flex-col justify-center gap-2 w-[140px] lg:w-[160px]">
+        {dimensions.map((dim, index) => (
+          <div
+            key={dim.key}
+            className="flex items-center justify-end gap-1 text-sm cursor-pointer hover:opacity-80 transition-opacity"
+            onMouseEnter={e => handleDimensionHover(index, e)}
+            onMouseLeave={handleDimensionLeave}
+          >
+            <span className="text-red-400 font-mono font-medium">
+              {formatDimensionValue(playerData.rawValues[index], dim.key)}
+            </span>
+            <span className="text-gray-500 text-xs">
+              {dim.label}
+              {getDimensionUnit(dim.key)}
+            </span>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const renderRightPanel = () => {
+    const playerData = normalizedData.find(p => p.side === 'blue') || normalizedData[1];
+    if (!playerData) return null;
+
+    return (
+      <div className="hidden md:flex flex-col justify-center gap-2 w-[140px] lg:w-[160px]">
+        {dimensions.map((dim, index) => (
+          <div
+            key={dim.key}
+            className="flex items-center gap-1 text-sm cursor-pointer hover:opacity-80 transition-opacity"
+            onMouseEnter={e => handleDimensionHover(index, e)}
+            onMouseLeave={handleDimensionLeave}
+          >
+            <span className="text-gray-500 text-xs">
+              {dim.label}
+              {getDimensionUnit(dim.key)}
+            </span>
+            <span className="text-cyan-400 font-mono font-medium">
+              {formatDimensionValue(playerData.rawValues[index], dim.key)}
+            </span>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const renderMobilePanel = () => {
+    const redPlayer = normalizedData.find(p => p.side === 'red') || normalizedData[0];
+    const bluePlayer = normalizedData.find(p => p.side === 'blue') || normalizedData[1];
+    if (!redPlayer || !bluePlayer) return null;
+
+    return (
+      <div className="md:hidden grid grid-cols-2 gap-1 text-xs mt-3">
+        {dimensions.map((dim, index) => (
+          <React.Fragment key={dim.key}>
+            <div className="text-right pr-2">
+              <span className="text-red-400 font-mono">
+                {formatDimensionValue(redPlayer.rawValues[index], dim.key)}
+              </span>
+              <span className="text-gray-500 ml-1">
+                {dim.label}
+                {getDimensionUnit(dim.key)}
+              </span>
+            </div>
+            <div className="text-left pl-2 border-l border-white/10">
+              <span className="text-gray-500 mr-1">
+                {dim.label}
+                {getDimensionUnit(dim.key)}
+              </span>
+              <span className="text-cyan-400 font-mono">
+                {formatDimensionValue(bluePlayer.rawValues[index], dim.key)}
+              </span>
+            </div>
+          </React.Fragment>
+        ))}
+      </div>
+    );
+  };
+
+  const renderTooltip = () => {
+    if (hoveredDimensionIndex === null || !dimensions[hoveredDimensionIndex]) return null;
+
+    const dim = dimensions[hoveredDimensionIndex];
+    const redPlayer = normalizedData.find(p => p.side === 'red') || normalizedData[0];
+    const bluePlayer = normalizedData.find(p => p.side === 'blue') || normalizedData[1];
+
+    if (!redPlayer || !bluePlayer) return null;
+
+    return (
+      <div
+        className="fixed z-[100] pointer-events-none"
+        style={{
+          left: tooltipPos.x,
+          top: tooltipPos.y,
+          transform: 'translate(-50%, -120%)',
+        }}
+      >
+        <div className="bg-gray-900/95 backdrop-blur border border-white/10 rounded-lg p-3 shadow-xl min-w-[160px]">
+          <div className="text-white font-medium text-sm mb-2">{dim.label}</div>
+          <div className="space-y-1">
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-red-400 text-xs">{redPlayer.name}</span>
+              <span className="text-red-400 font-mono font-medium text-xs">
+                {formatDimensionValue(redPlayer.rawValues[hoveredDimensionIndex], dim.key)}
+                {getDimensionUnit(dim.key)}
+              </span>
+            </div>
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-cyan-400 text-xs">{bluePlayer.name}</span>
+              <span className="text-cyan-400 font-mono font-medium text-xs">
+                {formatDimensionValue(bluePlayer.rawValues[hoveredDimensionIndex], dim.key)}
+                {getDimensionUnit(dim.key)}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <AnimatePresence>
       {visible && (
@@ -239,17 +360,33 @@ const RadarChartInner: React.FC<RadarChartProps> = ({
           exit={{ height: 0, opacity: 0 }}
           transition={{ duration: 0.3, ease: 'easeInOut' }}
           style={{ overflow: 'hidden' }}
+          className="bg-[#1a1a2e] border-t border-white/10"
         >
-          <div ref={chartRef} className="w-full h-[280px] sm:h-[320px] md:h-[360px] lg:h-[400px]" />
+          <div ref={containerRef} className="flex items-center justify-center relative px-4 py-3">
+            {/* 左侧数据面板 - 红方 */}
+            {renderLeftPanel()}
+
+            {/* 雷达图 */}
+            <div
+              ref={chartRef}
+              className="w-[280px] sm:w-[300px] h-[280px] sm:h-[300px] flex-shrink-0"
+            />
+
+            {/* 右侧数据面板 - 蓝方 */}
+            {renderRightPanel()}
+
+            {/* 移动端数据面板 */}
+            {renderMobilePanel()}
+
+            {/* 自定义 Tooltip */}
+            {renderTooltip()}
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
   );
 };
 
-/**
- * 雷达图组件（使用 React.memo 优化，避免不必要的重渲染）
- */
 const RadarChartComponent = React.memo(RadarChartInner);
 
 export default RadarChartComponent;

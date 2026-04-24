@@ -1,5 +1,6 @@
 import * as streamApi from '@/api/streams';
 import type { Stream, UpdateStreamRequest } from '@/api/types';
+import { requestCache, CACHE_TTL } from '@/utils/requestCache';
 
 /**
  * 直播服务状态接口
@@ -97,11 +98,19 @@ export const streamService: StreamService = {
    * @returns 直播信息
    */
   async get(id?: string): Promise<Stream> {
+    const cacheKey = id ? `stream_${id}` : 'stream_current';
+    const cached = requestCache.get<Stream>(cacheKey, CACHE_TTL.stream);
+    if (cached) {
+      setState({ currentStream: cached, loading: false, error: null });
+      return cached;
+    }
+
     setState({ loading: true, error: null });
 
     try {
       const stream = await streamApi.get(id);
 
+      requestCache.set(cacheKey, stream);
       setState({
         currentStream: stream,
         loading: false,

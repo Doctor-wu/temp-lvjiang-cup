@@ -62,6 +62,8 @@ const HeroSection: React.FC = () => {
           <img
             src={heroImgSrc}
             alt="Hero Background"
+            fetchPriority="high"
+            decoding="async"
             className="w-full h-full object-cover"
             onError={handleHeroImageError}
           />
@@ -91,6 +93,8 @@ const HeroSection: React.FC = () => {
           <img
             src={heroImgSrc}
             alt="Hero Background"
+            fetchPriority="high"
+            decoding="async"
             className="w-full h-full object-cover"
             onError={handleHeroImageError}
           />
@@ -125,6 +129,8 @@ const HeroSection: React.FC = () => {
         <img
           src={heroImgSrc}
           alt="Hero Background"
+          fetchPriority="high"
+          decoding="async"
           className="w-full h-full object-cover"
           onError={handleHeroImageError}
         />

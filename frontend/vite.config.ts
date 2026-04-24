@@ -8,7 +8,12 @@ export default defineConfig({
     sourcemap: 'hidden',
     rollupOptions: {
       output: {
-        manualChunks: undefined,
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          animation: ['framer-motion'],
+          chart: ['echarts'],
+          ui: ['lucide-react', '@radix-ui/react-tabs', 'sonner'],
+        },
       },
     },
     target: 'es2015',

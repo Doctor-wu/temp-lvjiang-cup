@@ -149,15 +149,9 @@ const SwissRoundTree: React.FC<SwissRoundTreeProps> = ({
                 config={recordConfig}
                 matches={matchesByRecord[recordConfig.record] || []}
                 teams={teams}
-                promotionTeams={
-                  recordConfig.type === 'promotion'
-                    ? promotionTeams
-                    : undefined
-                }
+                promotionTeams={recordConfig.type === 'promotion' ? promotionTeams : undefined}
                 eliminationTeams={
-                  recordConfig.type === 'elimination'
-                    ? eliminationTeams
-                    : undefined
+                  recordConfig.type === 'elimination' ? eliminationTeams : undefined
                 }
                 rankings={advancement?.rankings}
                 onMatchClick={onMatchClick}

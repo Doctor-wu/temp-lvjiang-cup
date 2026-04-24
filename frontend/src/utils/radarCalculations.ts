@@ -83,14 +83,19 @@ function calculateBaseMetrics(
 ) {
   // 基础计算
   const csPerMin = gameDurationMinutes > 0 ? player.cs / gameDurationMinutes : 0;
+
+  // 使用精确的团队总伤害计算伤害占比
   const damageShare =
-    teamStats.gold > 0
-      ? (player.damageDealt / (teamStats.gold * 1.5)) * 100 // 近似估算伤害占比
+    teamStats.totalDamage && teamStats.totalDamage > 0
+      ? (player.damageDealt / teamStats.totalDamage) * 100
       : 0;
+
+  // 使用精确的团队总承伤计算承伤占比
   const damageTakenShare =
-    teamStats.gold > 0
-      ? (player.damageTaken / (teamStats.gold * 1.2)) * 100 // 近似估算承伤占比
+    teamStats.totalDamageTaken && teamStats.totalDamageTaken > 0
+      ? (player.damageTaken / teamStats.totalDamageTaken) * 100
       : 0;
+
   const killParticipation =
     teamStats.kills > 0 ? ((player.kills + player.assists) / teamStats.kills) * 100 : 0;
   const damagePerGold = player.gold > 0 ? (player.damageDealt / player.gold) * 100 : 0;
@@ -136,4 +141,34 @@ export function calculateRadarDimension(
     const value = metrics[dimension.key as keyof typeof metrics];
     return typeof value === 'number' ? value : 0;
   });
+}
+
+/**
+ * 格式化维度数值显示
+ */
+export function formatDimensionValue(value: number, key: string): string {
+  if (key === 'kda' || key === 'assists') {
+    return value.toFixed(1);
+  }
+  return value.toFixed(2);
+}
+
+/**
+ * 获取维度单位
+ */
+export function getDimensionUnit(key: string): string {
+  const unitMap: Record<string, string> = {
+    csPerMin: '/min',
+    damageShare: '%',
+    damageTakenShare: '%',
+    killParticipation: '%',
+    damagePerGold: '%',
+    goldPerMin: '/min',
+    damagePerMin: '/min',
+    wardsPerMin: '/min',
+    damageTakenPerDeath: '',
+    assists: '次',
+    kda: '',
+  };
+  return unitMap[key] || '';
 }

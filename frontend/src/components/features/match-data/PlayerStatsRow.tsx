@@ -7,7 +7,11 @@ import {
   AdcIcon,
   SupportIcon,
 } from '@/components/icons/PositionIcons';
-import { getChampionIconByEn, getChampionTitleByEn, getChampionNameToEn } from '@/utils/championUtils';
+import {
+  getChampionIconByEn,
+  getChampionTitleByEn,
+  getChampionNameToEn,
+} from '@/utils/championUtils';
 import { getUploadUrl } from '@/utils/upload';
 
 const PositionIcon: React.FC<{ position: PositionType }> = ({ position }) => {
@@ -37,7 +41,7 @@ interface PlayerStatsRowProps {
 const PlayerStatsRow: React.FC<PlayerStatsRowProps> = ({
   bluePlayer,
   redPlayer,
-  isExpanded,
+  isExpanded: _isExpanded,
   onToggle,
 }) => {
   const formatGold = (gold: number): string => {
@@ -62,6 +66,7 @@ const PlayerStatsRow: React.FC<PlayerStatsRowProps> = ({
 
   return (
     <div
+      data-testid={`player-row-${redPlayer.position}`}
       className="bg-[#2d2d2d] hover:bg-[#27252c]
                  py-5 px-4 cursor-pointer transition-all duration-200 border-b border-white/10"
       onClick={handleRowClick}
@@ -84,25 +89,36 @@ const PlayerStatsRow: React.FC<PlayerStatsRowProps> = ({
                 </span>
               )}
             </div>
-            <span className="text-sm font-bold text-white truncate" style={{ maxWidth: 100 }}>{redPlayer.playerName}</span>
+            <span className="text-sm font-bold text-white truncate" style={{ maxWidth: 100 }}>
+              {redPlayer.playerName}
+            </span>
           </div>
 
           {/* 英雄图标 - 参考选手详情组件的加载逻辑 */}
           <div className="w-[100px] text-center">
-            <div
-              className="w-14 h-14 rounded border border-[#f44336]/50 bg-[#1a1a2e] flex items-center justify-center overflow-hidden mx-auto"
-              title={getChampionTitleByEn(getChampionNameToEn()[redPlayer.championName] || redPlayer.championName)}
-            >
-              <img
-                src={getChampionIcon(redPlayer.championName)}
-                alt={redPlayer.championName}
-                className="w-full h-full object-cover"
-                onError={e => {
-                  (e.target as HTMLImageElement).style.display = 'none';
-                  (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
-                }}
-              />
-              <span className="hidden text-xs">{redPlayer.championName.charAt(0)}</span>
+            <div className="relative inline-block">
+              {redPlayer.mvp && (
+                <span className="absolute -top-7 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-transparent text-[#f44336] text-[10px] font-extrabold rounded border-2 border-[#f44336] shadow-lg shadow-red-500/50 z-10 whitespace-nowrap">
+                  MVP
+                </span>
+              )}
+              <div
+                className="w-14 h-14 rounded border border-[#f44336]/50 bg-[#1a1a2e] flex items-center justify-center overflow-hidden mx-auto"
+                title={getChampionTitleByEn(
+                  getChampionNameToEn()[redPlayer.championName] || redPlayer.championName
+                )}
+              >
+                <img
+                  src={getChampionIcon(redPlayer.championName)}
+                  alt={redPlayer.championName}
+                  className="w-full h-full object-cover"
+                  onError={e => {
+                    (e.target as HTMLImageElement).style.display = 'none';
+                    (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                  }}
+                />
+                <span className="hidden text-xs">{redPlayer.championName.charAt(0)}</span>
+              </div>
             </div>
           </div>
 
@@ -138,7 +154,9 @@ const PlayerStatsRow: React.FC<PlayerStatsRowProps> = ({
 
           {/* 金币 */}
           <div className="w-[60px] text-center">
-            <span className="text-base text-[#c49f58] font-mono">{formatGold(bluePlayer.gold)}</span>
+            <span className="text-base text-[#c49f58] font-mono">
+              {formatGold(bluePlayer.gold)}
+            </span>
           </div>
 
           {/* KDA */}
@@ -148,20 +166,29 @@ const PlayerStatsRow: React.FC<PlayerStatsRowProps> = ({
 
           {/* 英雄图标 - 参考选手详情组件的加载逻辑 */}
           <div className="w-[100px] text-center">
-            <div
-              className="w-14 h-14 rounded border border-[#00bcd4]/50 bg-[#1a1a2e] flex items-center justify-center overflow-hidden mx-auto"
-              title={getChampionTitleByEn(getChampionNameToEn()[bluePlayer.championName] || bluePlayer.championName)}
-            >
-              <img
-                src={getChampionIcon(bluePlayer.championName)}
-                alt={bluePlayer.championName}
-                className="w-full h-full object-cover"
-                onError={e => {
-                  (e.target as HTMLImageElement).style.display = 'none';
-                  (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
-                }}
-              />
-              <span className="hidden text-xs">{bluePlayer.championName.charAt(0)}</span>
+            <div className="relative inline-block">
+              {bluePlayer.mvp && (
+                <span className="absolute -top-7 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-transparent text-[#f44336] text-[10px] font-extrabold rounded border-2 border-[#f44336] shadow-lg shadow-red-500/50 z-10 whitespace-nowrap">
+                  MVP
+                </span>
+              )}
+              <div
+                className="w-14 h-14 rounded border border-[#00bcd4]/50 bg-[#1a1a2e] flex items-center justify-center overflow-hidden mx-auto"
+                title={getChampionTitleByEn(
+                  getChampionNameToEn()[bluePlayer.championName] || bluePlayer.championName
+                )}
+              >
+                <img
+                  src={getChampionIcon(bluePlayer.championName)}
+                  alt={bluePlayer.championName}
+                  className="w-full h-full object-cover"
+                  onError={e => {
+                    (e.target as HTMLImageElement).style.display = 'none';
+                    (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                  }}
+                />
+                <span className="hidden text-xs">{bluePlayer.championName.charAt(0)}</span>
+              </div>
             </div>
           </div>
 
@@ -180,7 +207,9 @@ const PlayerStatsRow: React.FC<PlayerStatsRowProps> = ({
                 </span>
               )}
             </div>
-            <span className="text-sm font-bold text-white truncate" style={{ maxWidth: 100 }}>{bluePlayer.playerName}</span>
+            <span className="text-sm font-bold text-white truncate" style={{ maxWidth: 100 }}>
+              {bluePlayer.playerName}
+            </span>
           </div>
         </div>
       </div>
