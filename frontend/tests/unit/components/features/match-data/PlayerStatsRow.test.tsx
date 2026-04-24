@@ -123,7 +123,88 @@ describe('PlayerStatsRow', () => {
     });
   });
 
-  describe('英雄图标显示', () => {
+  describe('选手头像显示', () => {
+    it('当选手有头像时应该显示头像图片', () => {
+      const bluePlayer = createMockPlayerStat({
+        playerName: 'Bin',
+        playerAvatarUrl: '/api/uploads/players/bin-avatar.jpg',
+      });
+      const redPlayer = createMockPlayerStat({
+        playerName: 'Zika',
+        playerAvatarUrl: '/api/uploads/players/zika-avatar.jpg',
+        mvp: false,
+      });
+      const { container } = render(
+        <PlayerStatsRow
+          bluePlayer={bluePlayer}
+          redPlayer={redPlayer}
+          isExpanded={false}
+          onToggle={vi.fn()}
+        />
+      );
+
+      // 检查是否有两个头像图片
+      const images = container.querySelectorAll('img');
+      const avatarImages = Array.from(images).filter(
+        img => img.alt === 'Bin' || img.alt === 'Zika'
+      );
+      expect(avatarImages.length).toBeGreaterThanOrEqual(2);
+    });
+
+    it('当选手没有头像时应该显示首字母占位符', () => {
+      const bluePlayer = createMockPlayerStat({ playerName: 'Bin' });
+      const redPlayer = createMockPlayerStat({ playerName: 'Zika', mvp: false });
+      const { container } = render(
+        <PlayerStatsRow
+          bluePlayer={bluePlayer}
+          redPlayer={redPlayer}
+          isExpanded={false}
+          onToggle={vi.fn()}
+        />
+      );
+
+      const elements = container.querySelectorAll('*');
+      const hasBPlaceholder = Array.from(elements).some(
+        el => el.textContent === 'B'
+      );
+      const hasZPlaceholder = Array.from(elements).some(
+        el => el.textContent === 'Z'
+      );
+      // 应该有至少一个占位符（如果头像图片失败也会显示占位符）
+      expect(hasBPlaceholder || hasZPlaceholder).toBe(true);
+    });
+
+    it('当playerAvatarUrl为null时应该显示首字母占位符', () => {
+      const bluePlayer = createMockPlayerStat({
+        playerName: 'Bin',
+        playerAvatarUrl: null,
+      });
+      const redPlayer = createMockPlayerStat({
+        playerName: 'Zika',
+        playerAvatarUrl: null,
+        mvp: false,
+      });
+      const { container } = render(
+        <PlayerStatsRow
+          bluePlayer={bluePlayer}
+          redPlayer={redPlayer}
+          isExpanded={false}
+          onToggle={vi.fn()}
+        />
+      );
+
+      const elements = container.querySelectorAll('*');
+      const hasBPlaceholder = Array.from(elements).some(
+        el => el.textContent === 'B'
+      );
+      const hasZPlaceholder = Array.from(elements).some(
+        el => el.textContent === 'Z'
+      );
+      expect(hasBPlaceholder || hasZPlaceholder).toBe(true);
+    });
+  });
+
+  describe('英雄头像显示', () => {
     it('应该显示英雄图标', () => {
       const bluePlayer = createMockPlayerStat({ championName: '格温' });
       const redPlayer = createMockPlayerStat({ championName: '赛恩', mvp: false });
@@ -160,6 +241,23 @@ describe('PlayerStatsRow', () => {
       // 检查蓝色方边框
       const blueBorder = container.querySelector('[class*="border-[#00bcd4]"]');
       expect(blueBorder).toBeInTheDocument();
+    });
+
+    it('英雄图片加载失败时应该隐藏图片', () => {
+      const bluePlayer = createMockPlayerStat({ championName: '未知英雄' });
+      const redPlayer = createMockPlayerStat({ championName: '未知英雄', mvp: false });
+      const { container } = render(
+        <PlayerStatsRow
+          bluePlayer={bluePlayer}
+          redPlayer={redPlayer}
+          isExpanded={false}
+          onToggle={vi.fn()}
+        />
+      );
+
+      // 检查图片元素存在
+      const images = container.querySelectorAll('img');
+      expect(images.length).toBeGreaterThanOrEqual(2);
     });
   });
 

@@ -252,7 +252,7 @@ describe('DatabaseService', () => {
         executedQueries.some((q) => q.includes('CREATE TABLE IF NOT EXISTS stream_info')),
       ).toBe(true);
       expect(
-        executedQueries.some((q) => q.includes('CREATE TABLE IF NOT EXISTS advancement')),
+        executedQueries.some((q) => q.includes('CREATE TABLE IF NOT EXISTS player_match_stats')),
       ).toBe(true);
     });
 
@@ -280,9 +280,6 @@ describe('DatabaseService', () => {
       await service.onModuleInit();
 
       expect(executedQueries.some((q) => q.includes('INSERT OR IGNORE INTO stream_info'))).toBe(
-        true,
-      );
-      expect(executedQueries.some((q) => q.includes('INSERT OR IGNORE INTO advancement'))).toBe(
         true,
       );
     });

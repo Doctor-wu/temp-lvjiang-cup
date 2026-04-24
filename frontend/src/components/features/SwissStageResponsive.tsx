@@ -10,6 +10,7 @@ interface SwissStageProps {
   advancement?: {
     top8: string[];
     eliminated: string[];
+    rankings?: { teamId: string; record: string; rank: number }[];
   };
   onMatchClick?: (match: Match) => void;
   className?: string;

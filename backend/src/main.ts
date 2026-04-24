@@ -103,7 +103,29 @@ async function bootstrap() {
   await loadEnvironmentConfig();
   await validateEnvironmentConfig();
 
-  const app = await NestFactory.create(AppModule);
+  const nodeEnv = process.env.NODE_ENV || 'development';
+  const logLevelEnv = process.env.LOG_LEVEL || 'debug';
+
+  // 根据环境配置日志级别：生产环境默认只显示 warn 和 error 级别
+  let logLevels: ('log' | 'error' | 'warn' | 'debug' | 'verbose')[];
+
+  if (logLevelEnv === 'warn') {
+    logLevels = ['warn', 'error', 'log'];
+  } else if (logLevelEnv === 'error') {
+    logLevels = ['error'];
+  } else if (logLevelEnv === 'log') {
+    logLevels = ['log', 'error', 'warn'];
+  } else if (nodeEnv === 'production') {
+    // 生产环境：只显示 warn 和 error，不显示 debug 日志
+    logLevels = ['warn', 'error', 'log'];
+  } else {
+    // 开发环境：显示所有级别包括 debug
+    logLevels = ['log', 'error', 'warn', 'debug', 'verbose'];
+  }
+
+  const app = await NestFactory.create(AppModule, {
+    logger: logLevels,
+  });
 
   // 启用gzip压缩中间件，减少响应体大小，提升传输性能
   app.use(compression());

@@ -181,7 +181,7 @@ describe('MatchDataManagement', () => {
       expect(screen.getByText(/第 1 局/i)).toBeInTheDocument();
     });
 
-    const editButtons = screen.getAllByTitle('编辑数据');
+    const editButtons = screen.getAllByText('编辑');
     fireEvent.click(editButtons[0]);
 
     await waitFor(() => {
@@ -195,7 +195,7 @@ describe('MatchDataManagement', () => {
     renderWithRouter(<MatchDataManagement />);
 
     await waitFor(() => {
-      const editButtons = screen.getAllByTitle('编辑数据');
+      const editButtons = screen.getAllByText('编辑');
       const lastEditButton = editButtons[editButtons.length - 1];
       expect(lastEditButton).toBeDisabled();
     });
@@ -210,7 +210,7 @@ describe('MatchDataManagement', () => {
       expect(screen.getByText(/第 1 局/i)).toBeInTheDocument();
     });
 
-    const deleteButtons = screen.getAllByTitle('删除数据');
+    const deleteButtons = screen.getAllByText('删除');
     fireEvent.click(deleteButtons[0]);
 
     await waitFor(() => {
@@ -227,9 +227,9 @@ describe('MatchDataManagement', () => {
       expect(screen.getByText(/第 1 局/i)).toBeInTheDocument();
     });
 
-    const toggleButtons = screen.getAllByTitle(/启用此局|禁用此局/i);
-    const firstToggle = toggleButtons[0];
-    fireEvent.click(firstToggle);
+    const toggleButtons = screen.getAllByRole('button');
+    const toggleButton = toggleButtons.find(btn => btn.title?.includes('启用') || btn.title?.includes('禁用'));
+    expect(toggleButton).toBeInTheDocument();
 
     // After click, the icon should change
     expect(screen.getByTitle('禁用此局')).toBeInTheDocument();

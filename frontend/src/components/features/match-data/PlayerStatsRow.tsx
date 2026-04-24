@@ -7,7 +7,8 @@ import {
   AdcIcon,
   SupportIcon,
 } from '@/components/icons/PositionIcons';
-import { getChampionIconUrl } from '@/utils/championUtils';
+import { getChampionIconByEn, getChampionTitleByEn, getChampionNameToEn } from '@/utils/championUtils';
+import { getUploadUrl } from '@/utils/upload';
 
 const PositionIcon: React.FC<{ position: PositionType }> = ({ position }) => {
   switch (position) {
@@ -47,8 +48,16 @@ const PlayerStatsRow: React.FC<PlayerStatsRowProps> = ({
     onToggle();
   };
 
+  // 参考选手详情组件的加载逻辑，使用 getUploadUrl 处理头像路径
   const getPlayerAvatar = (player: PlayerStat): string | null => {
-    return null;
+    return player.playerAvatarUrl ? getUploadUrl(player.playerAvatarUrl) : null;
+  };
+
+  // 将中文英雄名转换为英文ID，然后获取英雄图标URL
+  const getChampionIcon = (cnName: string): string => {
+    const nameToEn = getChampionNameToEn();
+    const enId = nameToEn[cnName] || cnName;
+    return getChampionIconByEn(enId);
   };
 
   return (
@@ -78,14 +87,14 @@ const PlayerStatsRow: React.FC<PlayerStatsRowProps> = ({
             <span className="text-sm font-bold text-white truncate" style={{ maxWidth: 100 }}>{redPlayer.playerName}</span>
           </div>
 
-          {/* 英雄图标 - 调大到56px */}
+          {/* 英雄图标 - 参考选手详情组件的加载逻辑 */}
           <div className="w-[100px] text-center">
             <div
               className="w-14 h-14 rounded border border-[#f44336]/50 bg-[#1a1a2e] flex items-center justify-center overflow-hidden mx-auto"
-              title={redPlayer.championName}
+              title={getChampionTitleByEn(getChampionNameToEn()[redPlayer.championName] || redPlayer.championName)}
             >
               <img
-                src={getChampionIconUrl(redPlayer.championName)}
+                src={getChampionIcon(redPlayer.championName)}
                 alt={redPlayer.championName}
                 className="w-full h-full object-cover"
                 onError={e => {
@@ -137,14 +146,14 @@ const PlayerStatsRow: React.FC<PlayerStatsRowProps> = ({
             <span className="text-base text-[#00bcd4] font-mono font-bold">{bluePlayer.kda}</span>
           </div>
 
-          {/* 英雄图标 - 调大到56px */}
+          {/* 英雄图标 - 参考选手详情组件的加载逻辑 */}
           <div className="w-[100px] text-center">
             <div
               className="w-14 h-14 rounded border border-[#00bcd4]/50 bg-[#1a1a2e] flex items-center justify-center overflow-hidden mx-auto"
-              title={bluePlayer.championName}
+              title={getChampionTitleByEn(getChampionNameToEn()[bluePlayer.championName] || bluePlayer.championName)}
             >
               <img
-                src={getChampionIconUrl(bluePlayer.championName)}
+                src={getChampionIcon(bluePlayer.championName)}
                 alt={bluePlayer.championName}
                 className="w-full h-full object-cover"
                 onError={e => {

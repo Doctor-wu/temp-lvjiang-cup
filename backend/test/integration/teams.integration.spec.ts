@@ -54,7 +54,7 @@ describe('Teams Integration Tests', () => {
     await databaseService.run(`
       CREATE TABLE IF NOT EXISTS teams (
         id TEXT PRIMARY KEY,
-        name TEXT NOT NULL,
+        name TEXT NOT NULL UNIQUE,
         logo TEXT,
         logo_url TEXT,
         logo_thumbnail_url TEXT,
@@ -492,21 +492,23 @@ describe('Teams Integration Tests', () => {
   });
 
   describe('数据完整性验证', () => {
-    it('should enforce team name uniqueness at application level', async () => {
+    it('should enforce team name uniqueness at database level', async () => {
       await service.create({
         name: 'Unique Team Name',
         logo: 'logo1.png',
         battleCry: 'Description 1',
       });
 
-      await service.create({
-        name: 'Unique Team Name',
-        logo: 'logo2.png',
-        battleCry: 'Description 2',
-      });
+      await expect(
+        service.create({
+          name: 'Unique Team Name',
+          logo: 'logo2.png',
+          battleCry: 'Description 2',
+        }),
+      ).rejects.toThrow();
 
       const allTeams = await service.findAll();
-      expect(allTeams).toHaveLength(2);
+      expect(allTeams).toHaveLength(1);
     });
 
     it('should validate UUID generation for empty or missing id', async () => {

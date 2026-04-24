@@ -14,6 +14,7 @@ interface SwissStageVisualEditorProps {
   advancement?: {
     top8: string[];
     eliminated: string[];
+    rankings?: { teamId: string; record: string; rank: number }[];
   };
   onMatchUpdate: (match: Match) => void;
   onMatchCreate?: (match: Omit<Match, 'id'>) => void;
@@ -328,23 +329,74 @@ const SwissStageVisualEditor: React.FC<SwissStageVisualEditorProps> = ({
           ))}
         </div>
 
-        {/* 晋级/淘汰区域 */}
+        {/* 晋级/淘汰区域 - 按战绩拆分 */}
         <div className="flex gap-6 pt-6 mt-6 border-t border-gray-700">
-          {qualifiedTeams.length > 0 && (
-            <SwissRecordGroup
-              type="qualified"
-              title="3-2 晋级"
-              teams={qualifiedTeams}
-              data-testid="editor-qualified-3-2"
-            />
+          {advancement?.rankings && (
+            <>
+              {/* 晋级区域 - 3-0, 3-1, 3-2 */}
+              <div className="flex gap-3">
+                {['3-0', '3-1', '3-2'].map(record => {
+                  const titleMap: Record<string, string> = {
+                    '3-0': '3-0 晋级',
+                    '3-1': '3-1 晋级',
+                    '3-2': '3-2 晋级',
+                  };
+                  return (
+                    <SwissRecordGroup
+                      key={record}
+                      type="qualified"
+                      title={titleMap[record]}
+                      teams={qualifiedTeams}
+                      record={record}
+                      rankings={advancement.rankings}
+                      data-testid={`editor-qualified-${record}`}
+                    />
+                  );
+                })}
+              </div>
+
+              {/* 淘汰区域 - 0-3, 1-3, 2-3 */}
+              <div className="flex gap-3">
+                {['0-3', '1-3', '2-3'].map(record => {
+                  const titleMap: Record<string, string> = {
+                    '0-3': '0-3 淘汰',
+                    '1-3': '1-3 淘汰',
+                    '2-3': '2-3 淘汰',
+                  };
+                  return (
+                    <SwissRecordGroup
+                      key={record}
+                      type="eliminated"
+                      title={titleMap[record]}
+                      teams={eliminatedTeams}
+                      record={record}
+                      rankings={advancement.rankings}
+                      data-testid={`editor-eliminated-${record}`}
+                    />
+                  );
+                })}
+              </div>
+            </>
           )}
-          {eliminatedTeams.length > 0 && (
-            <SwissRecordGroup
-              type="eliminated"
-              title="2-3 淘汰"
-              teams={eliminatedTeams}
-              data-testid="editor-eliminated-2-3"
-            />
+          {!advancement?.rankings && (
+            <>
+              {qualifiedTeams.length > 0 && (
+                <SwissRecordGroup
+                  type="qualified"
+                  title="3-2 晋级"
+                  teams={qualifiedTeams}
+                  data-testid="editor-qualified-3-2"
+                />
+              )}
+              {eliminatedTeams.length > 0 && (
+                <SwissRecordGroup
+                  type="eliminated"
+                  title="2-3 淘汰"
+                  teams={eliminatedTeams}
+                  data-testid="editor-eliminated-2-3"
+                />
+              )}
+            </>
           )}
         </div>
       </div>

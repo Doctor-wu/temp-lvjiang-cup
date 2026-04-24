@@ -1,5 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+
+vi.mock('./DecorativeIcons', () => ({
+  StarBurst: ({ size, className, style }: any) => (
+    <span data-testid="starburst" style={style} className={className}>
+      ★
+    </span>
+  ),
+}));
+
 import { MarqueeBanner } from '@/components/features/ThanksSection/MarqueeBanner';
 import type { SponsorConfig } from '@/data/types';
 
@@ -37,6 +46,14 @@ describe('MarqueeBanner', () => {
 
       expect(screen.getByText('感谢所有支持驴酱杯的朋友们')).toBeInTheDocument();
     });
+
+    it('空状态应该渲染SVG图标替代emoji', () => {
+      render(<MarqueeBanner sponsors={[]} />);
+
+      const container = screen.getByTestId('marquee-empty');
+      const svgs = container.querySelectorAll('svg');
+      expect(svgs.length).toBeGreaterThanOrEqual(2);
+    });
   });
 
   describe('正常渲染', () => {
@@ -65,6 +82,14 @@ describe('MarqueeBanner', () => {
       const elements = screen.getAllByText(firstSponsor.sponsorName);
       expect(elements.length).toBeGreaterThanOrEqual(2);
     });
+
+    it('应该使用SVG图标替代emoji装饰', () => {
+      render(<MarqueeBanner sponsors={mockSponsors} />);
+
+      const container = screen.getByTestId('marquee-container');
+      const svgs = container.querySelectorAll('svg');
+      expect(svgs.length).toBeGreaterThanOrEqual(2);
+    });
   });
 
   describe('悬停暂停功能', () => {
@@ -89,7 +114,7 @@ describe('MarqueeBanner', () => {
       render(<MarqueeBanner sponsors={mockSponsors} />);
 
       const container = screen.getByTestId('marquee-container');
-      expect(container.className).toContain('h-[44px]');
+      expect(container.className).toContain('h-[52px]');
       expect(container.className).toContain('md:h-[60px]');
     });
 
@@ -109,6 +134,27 @@ describe('MarqueeBanner', () => {
       expect(container.className).toContain('bg-gradient-to-r');
       expect(container.className).toContain('from-pink-900/30');
       expect(container.className).toContain('backdrop-blur-sm');
+    });
+
+    it('应该使用响应式文字大小', () => {
+      render(<MarqueeBanner sponsors={mockSponsors} />);
+
+      // 文字大小类应用在包含整个文本的外层span上
+      const sponsorTexts = screen.getAllByText(mockSponsors[0].sponsorName);
+      const sponsorElement = sponsorTexts[0].closest('span[class*="text-amber-400"]');
+      expect(sponsorElement?.className).toContain('text-sm');
+      expect(sponsorElement?.className).toContain('md:text-lg');
+    });
+  });
+
+  describe('动画时长', () => {
+    it('动画时长应该在合理范围内', () => {
+      render(<MarqueeBanner sponsors={mockSponsors} />);
+
+      const content = screen.getByTestId('marquee-content');
+      const duration = content.style.animationDuration;
+      const durationValue = parseFloat(duration);
+      expect(durationValue).toBeGreaterThanOrEqual(10);
     });
   });
 

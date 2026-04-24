@@ -7,6 +7,7 @@ import {
   validateTeamStats,
   validatePlayerStats,
   validateTeamNamesMatch,
+  validateParsedMatchData,
 } from '../utils/match-excel.util';
 
 @Injectable()
@@ -233,6 +234,7 @@ export class MatchDataService {
               pms.wards_placed, pms.level, pms.first_blood, pms.mvp,
               pms.team_id,
               tm.nickname as player_name,
+              tm.avatar_url as player_avatar_url,
               t.name as team_name
        FROM player_match_stats pms
        JOIN team_members tm ON pms.player_id = tm.id
@@ -255,6 +257,7 @@ export class MatchDataService {
       id: ps.id,
       playerId: ps.player_id,
       playerName: ps.player_name,
+      playerAvatarUrl: ps.player_avatar_url || null,
       teamId: ps.team_id,
       teamName: ps.team_name,
       position: ps.position,
@@ -344,6 +347,7 @@ export class MatchDataService {
     gameNumber: number;
     playerCount: number;
     failedCount: number;
+    overwritten: boolean;  // 新增：标记是否覆盖导入
     failedPlayers?: Array<{
       row: number;
       nickname: string;
@@ -438,6 +442,16 @@ export class MatchDataService {
         }
       }
 
+      // 验证英雄名称（BAN和选手使用英雄）
+      const championValidation = validateParsedMatchData(parsedData);
+      if (!championValidation.valid) {
+        throw new BadRequestException({
+          code: 40002,
+          message: '英雄名称验证失败',
+          errors: championValidation.errors,
+        });
+      }
+
       // 使用事务导入数据
       await this.databaseService.begin();
 
@@ -487,6 +501,9 @@ export class MatchDataService {
           'SELECT id FROM match_games WHERE match_id = ? AND game_number = ?',
           [matchId, parsedData.matchInfo.gameNumber],
         );
+
+        // 标记是否为覆盖导入
+        const overwritten = !!existingGame;
 
         if (existingGame) {
           // 删除旧数据（级联删除player_match_stats）
@@ -603,6 +620,14 @@ export class MatchDataService {
           // 判断当前选手是否获得一血（根据阵营）
           const isFirstBlood = ps.side === firstBloodSide ? 1 : 0;
 
+          // 防御性验证：确保英雄名称不为空
+          if (!ps.championName) {
+            throw new BadRequestException({
+              code: 40002,
+              message: `选手"${ps.nickname}"的英雄名称无效`,
+            });
+          }
+
           await this.databaseService.run(
             `INSERT INTO player_match_stats (
               match_game_id, player_id, team_id, position, champion_name,
@@ -661,6 +686,7 @@ export class MatchDataService {
           gameNumber: parsedData.matchInfo.gameNumber,
           playerCount,
           failedCount: failedPlayers.length,
+          overwritten,
           failedPlayers: failedPlayers.length > 0 ? failedPlayers : undefined,
         };
       } catch (error) {
@@ -793,6 +819,13 @@ export class MatchDataService {
 
           // 插入新数据
           for (const ps of data.playerStats) {
+            if (!ps.championName) {
+              throw new BadRequestException({
+                code: 40002,
+                message: `选手"${ps.nickname}"的英雄名称无效`,
+              });
+            }
+
             await this.databaseService.run(
               `INSERT INTO player_match_stats (
                 match_game_id, player_id, team_id, position, champion_name,

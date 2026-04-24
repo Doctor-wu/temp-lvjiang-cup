@@ -8,6 +8,7 @@ import {
   validateTeamStats,
   validatePlayerStats,
   validateTeamNamesMatch,
+  validateParsedMatchData,
 } from '../../src/modules/utils/match-excel.util';
 
 describe('match-excel.util', () => {
@@ -174,17 +175,19 @@ describe('match-excel.util', () => {
 
       expect(result.playerStats).toHaveLength(10);
 
-      // 红方选手
+      // 红方选手 - championName现在是英文ID
       expect(result.playerStats[0].side).toBe('red');
       expect(result.playerStats[0].position).toBe('TOP');
       expect(result.playerStats[0].nickname).toBe('Bin');
-      expect(result.playerStats[0].championName).toBe('格温');
+      expect(result.playerStats[0].championName).toBe('Gwen');
+      expect(result.playerStats[0].championNameRaw).toBe('格温');
 
       // 蓝方选手
       expect(result.playerStats[5].side).toBe('blue');
       expect(result.playerStats[5].position).toBe('TOP');
       expect(result.playerStats[5].nickname).toBe('TheShy');
-      expect(result.playerStats[5].championName).toBe('奎桑提');
+      expect(result.playerStats[5].championName).toBe('KSante');
+      expect(result.playerStats[5].championNameRaw).toBe('奎桑提');
     });
 
     it('应该将位置转换为大写', () => {
@@ -193,6 +196,24 @@ describe('match-excel.util', () => {
       result.playerStats.forEach((player) => {
         expect(player.position).toBe(player.position.toUpperCase());
       });
+    });
+
+    it('应该正确解析BAN数据并转换为英文ID', () => {
+      const result = parseMatchDataExcel(validExcelBuffer);
+
+      expect(result.bans).toBeDefined();
+      expect(result.bans.redBans).toHaveLength(5);
+      expect(result.bans.blueBans).toHaveLength(5);
+
+      // 验证红方BAN转换为英文ID
+      expect(result.bans.redBans).toContain('Aatrox');
+      expect(result.bans.redBans).toContain('Ahri');
+      expect(result.bans.redBans).toContain('Thresh');
+
+      // 验证蓝方BAN转换为英文ID
+      expect(result.bans.blueBans).toContain('Renekton');
+      expect(result.bans.blueBans).toContain('Aphelios');
+      expect(result.bans.blueBans).toContain('Leona');
     });
 
     it('当Excel行数不足时应抛出错误', () => {
@@ -507,7 +528,8 @@ describe('match-excel.util', () => {
         side: 'red',
         position: 'TOP',
         nickname: 'Bin',
-        championName: '格温',
+        championName: 'Gwen',
+        championNameRaw: '格温',
         kills: 2,
         deaths: 2,
         assists: 11,
@@ -531,7 +553,8 @@ describe('match-excel.util', () => {
         side: 'red',
         position: 'INVALID',
         nickname: 'Bin',
-        championName: '格温',
+        championName: 'Gwen',
+        championNameRaw: '格温',
         kills: 2,
         deaths: 2,
         assists: 11,
@@ -555,7 +578,8 @@ describe('match-excel.util', () => {
         side: 'red',
         position: 'TOP',
         nickname: 'Bin',
-        championName: '格温',
+        championName: 'Gwen',
+        championNameRaw: '格温',
         kills: 2,
         deaths: 2,
         assists: 11,
@@ -648,6 +672,287 @@ describe('match-excel.util', () => {
       expect(result.errors).toHaveLength(2);
       expect(result.errors[0]).toContain('红方战队名');
       expect(result.errors[0]).toContain('驴酱 vs IC');
+    });
+  });
+
+  describe('validateParsedMatchData - BAN英雄验证', () => {
+    it('当BAN英雄名称有效时应通过验证', () => {
+      const parsedData = {
+        matchInfo: {} as any,
+        teamStats: [],
+        playerStats: [],
+        bans: {
+          redBans: ['Aatrox', 'Graves', 'Ahri', 'Kaisa', 'Thresh'],
+          blueBans: ['Renekton', 'LeeSin', 'Syndra', 'Aphelios', 'Leona'],
+          errors: [],
+        },
+      };
+
+      const result = validateParsedMatchData(parsedData);
+      expect(result.valid).toBe(true);
+      expect(result.errors).toHaveLength(0);
+    });
+
+    it('当BAN英雄名称无效时应返回错误', () => {
+      const parsedData = {
+        matchInfo: {} as any,
+        teamStats: [],
+        playerStats: [],
+        bans: {
+          redBans: ['Aatrox'],
+          blueBans: [],
+          errors: ['红方BAN2英雄"不存在的英雄"不存在，请检查英雄名称'],
+        },
+      };
+
+      const result = validateParsedMatchData(parsedData);
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain('红方BAN2英雄"不存在的英雄"不存在，请检查英雄名称');
+    });
+
+    it('当多个BAN英雄名称无效时应返回多个错误', () => {
+      const parsedData = {
+        matchInfo: {} as any,
+        teamStats: [],
+        playerStats: [],
+        bans: {
+          redBans: ['Aatrox'],
+          blueBans: ['Renekton'],
+          errors: [
+            '红方BAN2英雄"无效英雄1"不存在，请检查英雄名称',
+            '蓝方BAN1英雄"无效英雄2"不存在，请检查英雄名称',
+          ],
+        },
+      };
+
+      const result = validateParsedMatchData(parsedData);
+      expect(result.valid).toBe(false);
+      expect(result.errors).toHaveLength(2);
+    });
+  });
+
+  describe('validateParsedMatchData - 选手使用英雄验证', () => {
+    it('当选手使用英雄名称有效时应通过验证', () => {
+      const parsedData = {
+        matchInfo: {} as any,
+        teamStats: [],
+        playerStats: [
+          {
+            side: 'red',
+            position: 'TOP',
+            nickname: 'Bin',
+            championName: 'Gwen',
+            championNameRaw: '格温',
+            kills: 2,
+            deaths: 2,
+            assists: 11,
+            cs: 349,
+            gold: 17315,
+            damageDealt: 28500,
+            damageTaken: 32000,
+            level: 18,
+            visionScore: 45,
+            wardsPlaced: 12,
+            wardsCleared: 12,
+          },
+        ],
+        bans: {
+          redBans: [],
+          blueBans: [],
+          errors: [],
+        },
+      };
+
+      const result = validateParsedMatchData(parsedData);
+      expect(result.valid).toBe(true);
+      expect(result.errors).toHaveLength(0);
+    });
+
+    it('当选手使用英雄名称无效时应返回错误', () => {
+      const parsedData = {
+        matchInfo: {} as any,
+        teamStats: [],
+        playerStats: [
+          {
+            side: 'red',
+            position: 'TOP',
+            nickname: 'Bin',
+            championName: '',
+            championNameRaw: '不存在的英雄',
+            kills: 2,
+            deaths: 2,
+            assists: 11,
+            cs: 349,
+            gold: 17315,
+            damageDealt: 28500,
+            damageTaken: 32000,
+            level: 18,
+            visionScore: 45,
+            wardsPlaced: 12,
+            wardsCleared: 12,
+          },
+        ],
+        bans: {
+          redBans: [],
+          blueBans: [],
+          errors: [],
+        },
+      };
+
+      const result = validateParsedMatchData(parsedData);
+      expect(result.valid).toBe(false);
+      expect(result.errors).toHaveLength(1);
+      expect(result.errors[0]).toContain('选手"Bin"使用的英雄"不存在的英雄"不存在');
+    });
+
+    it('当多个选手使用英雄名称无效时应返回多个错误', () => {
+      const parsedData = {
+        matchInfo: {} as any,
+        teamStats: [],
+        playerStats: [
+          {
+            side: 'red',
+            position: 'TOP',
+            nickname: 'Player1',
+            championName: '',
+            championNameRaw: '无效英雄1',
+            kills: 0,
+            deaths: 0,
+            assists: 0,
+            cs: 0,
+            gold: 0,
+            damageDealt: 0,
+            damageTaken: 0,
+            level: 1,
+            visionScore: 0,
+            wardsPlaced: 0,
+            wardsCleared: 0,
+          },
+          {
+            side: 'red',
+            position: 'JUNGLE',
+            nickname: 'Player2',
+            championName: '',
+            championNameRaw: '无效英雄2',
+            kills: 0,
+            deaths: 0,
+            assists: 0,
+            cs: 0,
+            gold: 0,
+            damageDealt: 0,
+            damageTaken: 0,
+            level: 1,
+            visionScore: 0,
+            wardsPlaced: 0,
+            wardsCleared: 0,
+          },
+        ],
+        bans: {
+          redBans: [],
+          blueBans: [],
+          errors: [],
+        },
+      };
+
+      const result = validateParsedMatchData(parsedData);
+      expect(result.valid).toBe(false);
+      expect(result.errors).toHaveLength(2);
+      expect(result.errors[0]).toContain('第7行选手"Player1"使用的英雄"无效英雄1"不存在');
+      expect(result.errors[1]).toContain('第8行选手"Player2"使用的英雄"无效英雄2"不存在');
+    });
+  });
+
+  describe('validateParsedMatchData - 综合验证', () => {
+    it('当BAN和选手使用英雄都有错误时应返回所有错误', () => {
+      const parsedData = {
+        matchInfo: {} as any,
+        teamStats: [],
+        playerStats: [
+          {
+            side: 'red',
+            position: 'TOP',
+            nickname: 'Bin',
+            championName: '',
+            championNameRaw: '无效英雄',
+            kills: 0,
+            deaths: 0,
+            assists: 0,
+            cs: 0,
+            gold: 0,
+            damageDealt: 0,
+            damageTaken: 0,
+            level: 1,
+            visionScore: 0,
+            wardsPlaced: 0,
+            wardsCleared: 0,
+          },
+        ],
+        bans: {
+          redBans: ['Aatrox'],
+          blueBans: [],
+          errors: ['红方BAN2英雄"无效BAN"不存在，请检查英雄名称'],
+        },
+      };
+
+      const result = validateParsedMatchData(parsedData);
+      expect(result.valid).toBe(false);
+      expect(result.errors).toHaveLength(2);
+      expect(result.errors[0]).toContain('红方BAN2英雄"无效BAN"不存在');
+      expect(result.errors[1]).toContain('选手"Bin"使用的英雄"无效英雄"不存在');
+    });
+
+    it('当所有英雄都有效时应通过验证', () => {
+      const parsedData = {
+        matchInfo: {} as any,
+        teamStats: [],
+        playerStats: [
+          {
+            side: 'red',
+            position: 'TOP',
+            nickname: 'Bin',
+            championName: 'Gwen',
+            championNameRaw: '格温',
+            kills: 2,
+            deaths: 2,
+            assists: 11,
+            cs: 349,
+            gold: 17315,
+            damageDealt: 28500,
+            damageTaken: 32000,
+            level: 18,
+            visionScore: 45,
+            wardsPlaced: 12,
+            wardsCleared: 12,
+          },
+          {
+            side: 'red',
+            position: 'JUNGLE',
+            nickname: 'Xun',
+            championName: 'Pantheon',
+            championNameRaw: '潘森',
+            kills: 4,
+            deaths: 7,
+            assists: 10,
+            cs: 261,
+            gold: 14855,
+            damageDealt: 22000,
+            damageTaken: 28000,
+            level: 16,
+            visionScore: 38,
+            wardsPlaced: 8,
+            wardsCleared: 8,
+          },
+        ],
+        bans: {
+          redBans: ['Aatrox', 'Graves'],
+          blueBans: ['Renekton', 'LeeSin'],
+          errors: [],
+        },
+      };
+
+      const result = validateParsedMatchData(parsedData);
+      expect(result.valid).toBe(true);
+      expect(result.errors).toHaveLength(0);
     });
   });
 });

@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Match, Team } from '@/types';
 import SwissMatchCard from './SwissMatchCard';
 import SwissTeamLogo from './SwissTeamLogo';
 import { SWISS_THEME } from '@/constants/swissTheme';
-import type { SwissRecordConfig } from '@/constants/swissTreeConfig';
+import {
+  type SwissRecordConfig,
+} from '@/constants/swissTreeConfig';
 
 interface SwissRecordSectionProps {
   config: SwissRecordConfig;
@@ -11,6 +13,7 @@ interface SwissRecordSectionProps {
   teams: Team[];
   promotionTeams?: Team[];
   eliminationTeams?: Team[];
+  rankings?: { teamId: string; record: string; rank: number }[];
   onMatchClick?: (match: Match) => void;
   onPositionChange?: (slotId: string, x: number, y: number) => void;
   containerRef?: React.RefObject<HTMLElement | null>;
@@ -27,6 +30,7 @@ const SwissRecordSection: React.FC<SwissRecordSectionProps> = ({
   teams,
   promotionTeams,
   eliminationTeams,
+  rankings,
   onMatchClick,
   onPositionChange,
   containerRef,
@@ -38,7 +42,49 @@ const SwissRecordSection: React.FC<SwissRecordSectionProps> = ({
 }) => {
   const { record, label, type } = config;
 
-  // 晋级名单区域
+  // 将战绩字符串转换为 3:0 格式
+  const formatRecord = (recordStr: string): string => {
+    const parts = recordStr.split('-');
+    return `${parts[0]}:${parts[1]}`;
+  };
+
+  // 根据战绩过滤晋级队伍，并按排名排序
+  const filteredPromotionTeams = useMemo(() => {
+    if (!promotionTeams || promotionTeams.length === 0 || !rankings) return [];
+    // 根据当前列的战绩筛选队伍
+    const teamIdsWithRecord = new Set(
+      rankings
+        .filter(r => r.record === record)
+        .map(r => r.teamId)
+    );
+    return promotionTeams
+      .filter(team => teamIdsWithRecord.has(team.id))
+      .sort((a, b) => {
+        const rankA = rankings.find(r => r.teamId === a.id)?.rank ?? 999;
+        const rankB = rankings.find(r => r.teamId === b.id)?.rank ?? 999;
+        return rankA - rankB;
+      });
+  }, [promotionTeams, rankings, record]);
+
+  // 根据战绩过滤淘汰队伍，并按排名排序
+  const filteredEliminationTeams = useMemo(() => {
+    if (!eliminationTeams || eliminationTeams.length === 0 || !rankings) return [];
+    // 根据当前列的战绩筛选队伍
+    const teamIdsWithRecord = new Set(
+      rankings
+        .filter(r => r.record === record)
+        .map(r => r.teamId)
+    );
+    return eliminationTeams
+      .filter(team => teamIdsWithRecord.has(team.id))
+      .sort((a, b) => {
+        const rankA = rankings.find(r => r.teamId === a.id)?.rank ?? 999;
+        const rankB = rankings.find(r => r.teamId === b.id)?.rank ?? 999;
+        return rankA - rankB;
+      });
+  }, [eliminationTeams, rankings, record]);
+
+  // 晋级名单区域 - 列表形式
   if (type === 'promotion') {
     return (
       <div
@@ -70,30 +116,59 @@ const SwissRecordSection: React.FC<SwissRecordSectionProps> = ({
           </span>
         </div>
 
-        {/* 队伍列表 */}
+        {/* 队伍列表 - 左图标+队名 右侧积分 */}
         <div
-          className="flex flex-wrap items-center justify-center gap-2 p-3"
+          className="flex flex-col"
           style={{
             backgroundColor: SWISS_THEME.qualified.contentBg,
             minHeight: '60px',
           }}
         >
-          {promotionTeams?.map((team, _index) => (
+          {filteredPromotionTeams.map((team) => (
             <div
               key={team.id}
-              className="flex flex-col items-center gap-1"
-              style={{ width: '50px' }}
+              className="flex items-center gap-3 px-4 py-3"
+              style={{
+                borderBottom:
+                  filteredPromotionTeams.indexOf(team) <
+                  filteredPromotionTeams.length - 1
+                    ? '1px solid rgba(255,255,255,0.08)'
+                    : 'none',
+              }}
             >
-              <SwissTeamLogo team={team} size={40} />
+              {/* 队标 */}
+              <SwissTeamLogo team={team} size={30} />
+
+              {/* 队名 */}
               <span
-                className="text-center truncate w-full"
-                style={{ color: SWISS_THEME.textMuted, fontSize: '10px' }}
+                className="truncate flex-1"
+                style={{
+                  color: SWISS_THEME.textDefault,
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  letterSpacing: '0.02em',
+                }}
               >
                 {team.name}
               </span>
+
+              {/* 积分 */}
+              <span
+                style={{
+                  color: '#4ade80',
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  flexShrink: 0,
+                  minWidth: '36px',
+                  textAlign: 'right',
+                  fontVariantNumeric: 'tabular-nums',
+                }}
+              >
+                {formatRecord(record)}
+              </span>
             </div>
           ))}
-          {(!promotionTeams || promotionTeams.length === 0) && (
+          {filteredPromotionTeams.length === 0 && (
             <div
               className="flex flex-col items-center justify-center gap-2 w-full py-4"
               style={{
@@ -111,7 +186,7 @@ const SwissRecordSection: React.FC<SwissRecordSectionProps> = ({
     );
   }
 
-  // 淘汰名单区域
+  // 淘汰名单区域 - 列表形式
   if (type === 'elimination') {
     return (
       <div
@@ -143,30 +218,57 @@ const SwissRecordSection: React.FC<SwissRecordSectionProps> = ({
           </span>
         </div>
 
-        {/* 队伍列表 */}
+        {/* 队伍列表 - 左图标+队名 右侧积分 */}
         <div
-          className="flex flex-wrap items-center justify-center gap-2 p-3"
+          className="flex flex-col"
           style={{
             backgroundColor: SWISS_THEME.eliminated.contentBg,
             minHeight: '60px',
           }}
         >
-          {eliminationTeams?.map((team, _index) => (
+          {filteredEliminationTeams.map((team) => (
             <div
               key={team.id}
-              className="flex flex-col items-center gap-1"
-              style={{ width: '50px' }}
+              className="flex items-center gap-3 px-4 py-2.5"
+              style={{
+                borderBottom:
+                  filteredEliminationTeams.indexOf(team) <
+                  filteredEliminationTeams.length - 1
+                    ? '1px solid rgba(255,255,255,0.08)'
+                    : 'none',
+              }}
             >
-              <SwissTeamLogo team={team} size={40} />
+              {/* 队标 */}
+              <SwissTeamLogo team={team} size={30} />
+              {/* 队名 - 占据剩余空间 */}
               <span
-                className="text-center truncate w-full"
-                style={{ color: SWISS_THEME.textMuted, fontSize: '10px' }}
+                className="truncate flex-1"
+                style={{
+                  color: SWISS_THEME.textDefault,
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  letterSpacing: '0.02em',
+                }}
               >
                 {team.name}
               </span>
+              {/* 积分 - 固定宽度靠右 */}
+              <span
+                style={{
+                  color: '#f87171',
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  flexShrink: 0,
+                  minWidth: '40px',
+                  textAlign: 'right',
+                  fontVariantNumeric: 'tabular-nums',
+                }}
+              >
+                {formatRecord(record)}
+              </span>
             </div>
           ))}
-          {(!eliminationTeams || eliminationTeams.length === 0) && (
+          {filteredEliminationTeams.length === 0 && (
             <div
               className="flex flex-col items-center justify-center gap-2 w-full py-4"
               style={{

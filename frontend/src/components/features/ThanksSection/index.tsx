@@ -1,7 +1,9 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { MarqueeBanner } from './MarqueeBanner';
 import { SpecialAwards } from './SpecialAwards';
 import { StaffThanks } from './StaffThanks';
+import { StarBurst, HeartIcon } from './DecorativeIcons';
 import type { SponsorConfig, StaffConfig, ThanksData } from '@/data/types';
 
 declare global {
@@ -15,16 +17,44 @@ const thanksData: ThanksData = window.THANKS_DATA || { sponsors: [], staff: [] }
 const sponsors: SponsorConfig[] = thanksData.sponsors || [];
 const staff: StaffConfig[] = thanksData.staff || [];
 
+// 动画配置
+const sectionVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.6,
+      staggerChildren: 0.15,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: 'easeOut' as const,
+    },
+  },
+};
+
 export const ThanksSection: React.FC = () => {
   if (sponsors.length === 0 && staff.length === 0) return null;
 
   return (
-    <section
+    <motion.section
       id="thanks"
       data-testid="thanks-section"
-      className="relative min-h-[500px] py-16 md:py-24 bg-gradient-to-b from-black via-gray-950 to-black overflow-hidden"
+      className="relative py-16 md:py-24 bg-gradient-to-b from-black via-gray-950 to-black overflow-hidden"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.1 }}
+      variants={sectionVariants}
     >
-      {/* 背景装饰 - 网格 */}
+      {/* 背景装饰 - 合并为单一装饰层 */}
       <div className="absolute inset-0 opacity-20">
         <div
           className="absolute inset-0"
@@ -55,7 +85,7 @@ export const ThanksSection: React.FC = () => {
 
       <div className="relative container mx-auto px-4">
         {/* 标题区域 */}
-        <div className="text-center mb-10 md:mb-14">
+        <motion.div className="text-center mb-10 md:mb-14" variants={itemVariants}>
           {/* 顶部装饰线 */}
           <div className="flex items-center justify-center gap-4 mb-6">
             <div className="h-px w-16 md:w-24 bg-gradient-to-r from-transparent via-pink-500 to-amber-500" />
@@ -75,7 +105,7 @@ export const ThanksSection: React.FC = () => {
 
           <h2
             data-testid="thanks-section-title"
-            className="text-2xl md:text-4xl font-bold tracking-wider"
+            className="text-2xl md:text-4xl font-bold tracking-wider flex items-center justify-center gap-3"
             style={{
               fontFamily: 'Chakra Petch, sans-serif',
               background: 'linear-gradient(135deg, #F472B6 0%, #FBBF24 50%, #F472B6 100%)',
@@ -85,7 +115,9 @@ export const ThanksSection: React.FC = () => {
               textShadow: '0 0 30px rgba(244, 114, 182, 0.3)',
             }}
           >
-            ✦ 特别鸣谢 ✦
+            <StarBurst size={24} className="text-pink-400 flex-shrink-0" style={{ WebkitTextFillColor: 'initial' }} />
+            特别鸣谢
+            <StarBurst size={24} className="text-amber-400 flex-shrink-0" style={{ WebkitTextFillColor: 'initial' }} />
           </h2>
 
           <p
@@ -106,33 +138,43 @@ export const ThanksSection: React.FC = () => {
             </span>
             <div className="h-px w-12 md:w-20 bg-gradient-to-l from-transparent to-amber-500/50" />
           </div>
-        </div>
+        </motion.div>
 
         {/* 弹幕区域 */}
-        <div className="mb-6">
+        <motion.div className="mb-8 md:mb-10" variants={itemVariants}>
           <MarqueeBanner sponsors={sponsors} />
+        </motion.div>
+
+        {/* 特殊奖项和幕后工作人员左右布局 */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+          {/* 特殊奖项 - 左侧 */}
+          <motion.div variants={itemVariants}>
+            <SpecialAwards sponsors={sponsors} />
+          </motion.div>
+
+          {/* 幕后工作人员 - 右侧 */}
+          <motion.div variants={itemVariants}>
+            <StaffThanks staff={staff} />
+          </motion.div>
         </div>
 
-        {/* 特殊奖项 */}
-        <SpecialAwards sponsors={sponsors} />
-
-        {/* 幕后工作人员 */}
-        {staff.length > 0 && <StaffThanks staff={staff} />}
-
         {/* 底部装饰 */}
-        <div className="mt-12 md:mt-16 flex items-center justify-center">
+        <motion.div
+          className="mt-16 md:mt-20 flex items-center justify-center"
+          variants={itemVariants}
+        >
           <div className="flex items-center gap-3 px-6 py-3 rounded-full border border-pink-500/20 bg-black/40 backdrop-blur-sm">
-            <span className="text-pink-400 text-lg">♥</span>
+            <HeartIcon size={20} className="text-pink-400" />
             <span
               className="text-gray-400 text-sm"
               style={{ fontFamily: 'Chakra Petch, sans-serif' }}
             >
               再次感谢所有支持
             </span>
-            <span className="text-amber-400 text-lg">♥</span>
+            <HeartIcon size={20} className="text-amber-400" />
           </div>
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };

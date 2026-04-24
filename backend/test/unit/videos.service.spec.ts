@@ -4,6 +4,18 @@ import { DatabaseService } from '../../src/database/database.service';
 import { CacheService } from '../../src/cache/cache.service';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
 
+// Mock sqlite3 before any imports that use it
+const mockRun = jest.fn();
+const mockGet = jest.fn();
+const mockAll = jest.fn();
+const mockClose = jest.fn();
+
+jest.mock('sqlite3', () => ({
+  Database: jest.fn().mockImplementation(function () {
+    return { run: mockRun, get: mockGet, all: mockAll, close: mockClose };
+  }),
+}));
+
 jest.mock('fs', () => ({
   existsSync: jest.fn().mockReturnValue(true),
   mkdirSync: jest.fn(),

@@ -19,6 +19,7 @@ import {
 import { matchDataCache } from '@/utils/matchDataCache';
 import MatchDataSkeleton from './MatchDataSkeleton';
 import MatchDataEmptyState from './MatchDataEmptyState';
+import { initChampionMap } from '@/utils/championUtils';
 
 const POSITION_ORDER: PositionType[] = ['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT'];
 
@@ -157,6 +158,11 @@ const MatchDataPage: React.FC = () => {
 
     loadData();
   }, [matchId, currentGameNumber, loadSeriesInfo, loadGameData]);
+
+  // 页面加载时初始化英雄数据
+  useEffect(() => {
+    initChampionMap();
+  }, []);
 
   // 页面浏览追踪
   useEffect(() => {

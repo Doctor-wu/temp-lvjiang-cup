@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import MatchDataImportDialog from '../../components/admin/MatchDataImportDialog';
 import { getMatchSeries } from '@/api/matchData';
 import type { MatchSeriesInfo, GameSummary } from '@/types/matchData';
+import { adminPath } from '@/constants/routes';
 
 interface GameStatus {
   enabled: boolean;
@@ -62,7 +63,7 @@ const MatchDataManagement: React.FC = () => {
   };
 
   const handleEditClick = (gameNumber: number) => {
-    navigate(`/admin/matches/${matchId}/games/${gameNumber}/edit`);
+    navigate(adminPath(`matches/${matchId}/games/${gameNumber}/edit`));
   };
 
   const handleViewClick = (gameNumber: number) => {

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { StarBurst, TrophyIcon } from './DecorativeIcons';
+import { useStaggeredAnimation } from './useScrollAnimation';
 import type { SponsorConfig } from '@/data/types';
 
 interface SpecialAwardsProps {
@@ -23,17 +25,21 @@ export const SpecialAwards: React.FC<SpecialAwardsProps> = ({ sponsors }) => {
   // 筛选有特殊奖项的赞助商
   const awards = sponsors.filter(s => s.specialAward);
 
-  // 如果没有特殊奖项，返回 null
-  if (awards.length === 0) return null;
-
   // 移动端默认只显示前3条
   const displayAwards = isMobile && !isExpanded ? awards.slice(0, 3) : awards;
   const hasMoreAwards = awards.length > 3;
 
+  // Hook 必须在条件判断之前调用
+  const { containerRef, visibleItems } = useStaggeredAnimation(displayAwards.length, 100);
+
+  // 如果没有特殊奖项，返回 null（在 Hook 调用之后）
+  if (awards.length === 0) return null;
+
   return (
     <div
       data-testid="special-awards-container"
-      className="relative mt-6 md:mt-8 p-5 md:p-6 rounded-2xl border border-pink-500/20 bg-gradient-to-br from-pink-900/20 via-black/50 to-amber-900/20 backdrop-blur-md overflow-hidden group"
+      ref={containerRef}
+      className="relative mt-8 md:mt-12 p-5 md:p-6 rounded-2xl border border-pink-500/20 bg-gradient-to-br from-pink-900/20 via-black/50 to-amber-900/20 backdrop-blur-md overflow-hidden group"
     >
       {/* CRT 扫描线效果 */}
       <div className="absolute inset-0 pointer-events-none opacity-5">
@@ -59,7 +65,7 @@ export const SpecialAwards: React.FC<SpecialAwardsProps> = ({ sponsors }) => {
         <div className="w-1 h-6 md:h-7 bg-gradient-to-b from-pink-500 to-amber-500 rounded-full" />
         <h3
           data-testid="special-awards-title"
-          className="text-lg md:text-xl font-bold tracking-wide"
+          className="text-lg md:text-xl font-bold tracking-wide flex items-center gap-2"
           style={{
             fontFamily: 'Chakra Petch, sans-serif',
             background: 'linear-gradient(135deg, #F472B6 0%, #FBBF24 100%)',
@@ -68,24 +74,26 @@ export const SpecialAwards: React.FC<SpecialAwardsProps> = ({ sponsors }) => {
             backgroundClip: 'text',
           }}
         >
-          ✦ 特殊奖项 ✦
+          <StarBurst size={18} className="text-pink-400 flex-shrink-0" style={{ WebkitTextFillColor: 'initial' }} />
+          特殊奖项
+          <StarBurst size={18} className="text-amber-400 flex-shrink-0" style={{ WebkitTextFillColor: 'initial' }} />
         </h3>
         <div className="flex-1 h-px bg-gradient-to-r from-pink-500/50 via-amber-500/30 to-transparent" />
       </div>
 
       {/* 奖项列表 */}
-      <ul className="relative space-y-3">
+      <div ref={containerRef} className="relative space-y-3">
         {displayAwards.map((award, index) => (
           <li
             key={award.id}
-            className="flex items-start gap-3 p-3 rounded-xl bg-black/30 border border-white/5 hover:border-pink-500/30 hover:bg-pink-900/10 transition-all duration-300 group/item"
+            className={`flex items-start gap-3 p-3 rounded-xl bg-black/30 border border-white/5 hover:border-pink-500/30 hover:bg-pink-900/10 transition-all duration-300 group/item min-h-[72px] ${
+              visibleItems.has(index) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
+            }`}
             style={{
-              animationDelay: `${index * 50}ms`,
+              transitionDelay: `${index * 100}ms`,
             }}
           >
-            <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-amber-500 text-black text-xs font-bold">
-              {index + 1}
-            </span>
+            <TrophyIcon className="flex-shrink-0 w-6 h-6 text-amber-400 mt-0.5" />
             <div className="flex-1 min-w-0">
               <strong
                 className="text-pink-400 font-semibold text-sm md:text-base block mb-1"
@@ -93,13 +101,13 @@ export const SpecialAwards: React.FC<SpecialAwardsProps> = ({ sponsors }) => {
               >
                 {award.sponsorName}
               </strong>
-              <p className="text-gray-300 text-xs md:text-sm leading-relaxed">
+              <p className="text-gray-200 text-xs md:text-sm leading-relaxed">
                 {award.specialAward}
               </p>
             </div>
           </li>
         ))}
-      </ul>
+      </div>
 
       {/* 展开/收起按钮 */}
       {isMobile && hasMoreAwards && (

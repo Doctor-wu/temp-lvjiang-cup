@@ -43,6 +43,7 @@ services:
       - UPLOAD_BASE_DIR=/app/uploads
       - CORS_ORIGIN=${CORS_ORIGIN}
       - ENABLE_SWAGGER=false
+      - LOG_LEVEL=warn
     volumes:
       # 数据持久化
       - ../data:/app/data

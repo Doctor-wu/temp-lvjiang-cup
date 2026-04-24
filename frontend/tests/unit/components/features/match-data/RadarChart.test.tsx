@@ -1,17 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import RadarChart from '@/components/features/match-data/RadarChart';
-import type { PlayerStat, TeamGameData } from '@/types/matchData';
 
 vi.mock('echarts/core', () => ({
   __esModule: true,
-  default: {
-    init: vi.fn(() => ({
-      setOption: vi.fn(),
-      resize: vi.fn(),
-      dispose: vi.fn(),
-    })),
-  },
+  use: vi.fn(),
+  init: vi.fn(() => ({
+    setOption: vi.fn(),
+    resize: vi.fn(),
+    dispose: vi.fn(),
+  })),
 }));
 
 vi.mock('echarts/charts', () => ({
@@ -26,6 +22,10 @@ vi.mock('echarts/components', () => ({
 vi.mock('echarts/renderers', () => ({
   CanvasRenderer: {},
 }));
+
+import { render, screen } from '@testing-library/react';
+import RadarChart from '@/components/features/match-data/RadarChart';
+import type { PlayerStat, TeamGameData } from '@/types/matchData';
 
 const createMockPlayer = (
   overrides: Partial<PlayerStat> & { playerName: string; position: string }

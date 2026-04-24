@@ -31,6 +31,7 @@ export interface PlayerStatsData {
   position: string;
   nickname: string;
   championName: string;
+  championNameRaw: string;
   kills: number;
   deaths: number;
   assists: number;
@@ -45,8 +46,9 @@ export interface PlayerStatsData {
 }
 
 export interface BanData {
-  redBans: string[]; // 红方BAN的英雄ID列表
-  blueBans: string[]; // 蓝方BAN的英雄ID列表
+  redBans: string[];
+  blueBans: string[];
+  errors: string[];
 }
 
 export interface ParsedMatchData {
@@ -427,11 +429,16 @@ function parseTeamStatsRow(row: any[], _rowIndex: number): TeamStatsData {
 }
 
 function parsePlayerStatsRow(row: any[], _rowIndex: number): PlayerStatsData {
+  const rawChampionName = extractCellValue(row[3]);
+  // 将中文英雄名转换为英文ID
+  const championId = findChampionId(rawChampionName);
+  
   return {
     side: extractCellValue(row[0]),
     position: extractCellValue(row[1]).toUpperCase(),
     nickname: extractCellValue(row[2]),
-    championName: extractCellValue(row[3]),
+    championName: championId || '',  // 转换为英文ID，找不到则为空字符串
+    championNameRaw: rawChampionName,  // 保留原始值用于错误提示
     kills: extractNumericValue(row[4]),
     deaths: extractNumericValue(row[5]),
     assists: extractNumericValue(row[6]),
@@ -457,11 +464,12 @@ function parsePlayerStatsRow(row: any[], _rowIndex: number): PlayerStatsData {
 function parseBansRow(headerRow: any[] | undefined, dataRow: any[] | undefined): BanData {
   // 如果没有BAN数据行，返回空数组
   if (!dataRow || dataRow.length === 0) {
-    return { redBans: [], blueBans: [] };
+    return { redBans: [], blueBans: [], errors: [] };
   }
 
   const redBans: string[] = [];
   const blueBans: string[] = [];
+  const errors: string[] = [];
 
   // 解析前5列为红方BAN
   for (let i = 0; i < 5; i++) {
@@ -472,8 +480,8 @@ function parseBansRow(headerRow: any[] | undefined, dataRow: any[] | undefined):
       if (championId) {
         redBans.push(championId);
       } else {
-        // 如果找不到映射，使用原始值（假设已是英文ID）
-        redBans.push(ban);
+        // 收集错误，不再直接存储原始值
+        errors.push(`红方BAN${i + 1}英雄"${ban}"不存在，请检查英雄名称`);
       }
     }
   }
@@ -487,11 +495,36 @@ function parseBansRow(headerRow: any[] | undefined, dataRow: any[] | undefined):
       if (championId) {
         blueBans.push(championId);
       } else {
-        // 如果找不到映射，使用原始值（假设已是英文ID）
-        blueBans.push(ban);
+        // 收集错误，不再直接存储原始值
+        errors.push(`蓝方BAN${i - 4}英雄"${ban}"不存在，请检查英雄名称`);
       }
     }
   }
 
-  return { redBans, blueBans };
+  return { redBans, blueBans, errors };
+}
+
+/**
+ * 验证解析后的对战数据中的英雄名称
+ * @param parsedData 解析后的对战数据
+ * @returns 验证结果
+ */
+export function validateParsedMatchData(parsedData: ParsedMatchData): ValidationResult {
+  const errors: string[] = [];
+
+  // 验证BAN英雄
+  if (parsedData.bans.errors && parsedData.bans.errors.length > 0) {
+    errors.push(...parsedData.bans.errors);
+  }
+
+  // 验证选手使用英雄
+  parsedData.playerStats.forEach((ps, index) => {
+    if (!ps.championName && ps.championNameRaw) {
+      errors.push(
+        `第${index + 7}行选手"${ps.nickname}"使用的英雄"${ps.championNameRaw}"不存在，请检查英雄名称`
+      );
+    }
+  });
+
+  return { valid: errors.length === 0, errors };
 }

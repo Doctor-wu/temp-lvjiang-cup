@@ -39,6 +39,11 @@ export function findChampionId(inputName: string): string | null {
     return null;
   }
 
+  // 先检查是否已经是英文ID（精确匹配）
+  if (championMap[normalizedInput]) {
+    return championMap[normalizedInput].id;
+  }
+
   for (const champion of Object.values(championMap)) {
     if (champion.name === normalizedInput || champion.title === normalizedInput) {
       return champion.id;

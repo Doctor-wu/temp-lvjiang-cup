@@ -12,6 +12,7 @@ interface SwissRoundTreeProps {
   advancement?: {
     top8: string[];
     eliminated: string[];
+    rankings?: { teamId: string; record: string; rank: number }[];
   };
   onMatchClick?: (match: Match) => void;
   className?: string;
@@ -148,10 +149,17 @@ const SwissRoundTree: React.FC<SwissRoundTreeProps> = ({
                 config={recordConfig}
                 matches={matchesByRecord[recordConfig.record] || []}
                 teams={teams}
-                promotionTeams={recordConfig.type === 'promotion' ? promotionTeams : undefined}
-                eliminationTeams={
-                  recordConfig.type === 'elimination' ? eliminationTeams : undefined
+                promotionTeams={
+                  recordConfig.type === 'promotion'
+                    ? promotionTeams
+                    : undefined
                 }
+                eliminationTeams={
+                  recordConfig.type === 'elimination'
+                    ? eliminationTeams
+                    : undefined
+                }
+                rankings={advancement?.rankings}
                 onMatchClick={onMatchClick}
                 onPositionChange={_handleMatchCardPositionChange}
                 containerRef={scrollContainerRef}

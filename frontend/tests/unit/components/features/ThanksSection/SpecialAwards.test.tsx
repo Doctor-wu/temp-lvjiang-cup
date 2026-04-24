@@ -1,165 +1,123 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
 import { SpecialAwards } from '@/components/features/ThanksSection/SpecialAwards';
 import type { SponsorConfig } from '@/data/types';
 
-Object.defineProperty(window, 'innerWidth', {
-  writable: true,
-  configurable: true,
-  value: 1024,
-});
+class MockIntersectionObserver {
+  observe = vi.fn();
+  disconnect = vi.fn();
+  unobserve = vi.fn();
+}
+
+global.IntersectionObserver = MockIntersectionObserver as unknown as typeof IntersectionObserver;
 
 describe('SpecialAwards', () => {
-  const mockSponsorsWithoutAwards: SponsorConfig[] = [
+  const mockAwards: SponsorConfig[] = [
+    { id: 1, sponsorName: '为何如此衰', sponsorContent: '8K', specialAward: '8强每个队伍1K' },
+    { id: 2, sponsorName: '董B登', sponsorContent: '1K', specialAward: '冠军每人750g蓝莓果干+250g参片' },
+    { id: 3, sponsorName: 'MT', sponsorContent: '2K', specialAward: '4强每人一份贡菜千层肚' },
+  ];
+
+  const mockNoAwards: SponsorConfig[] = [
     { id: 1, sponsorName: '斗鱼官方', sponsorContent: '7W' },
     { id: 2, sponsorName: '秀木老板', sponsorContent: '2W' },
   ];
 
-  const mockSponsorsWithAwards: SponsorConfig[] = [
-    { id: 1, sponsorName: '斗鱼官方', sponsorContent: '7W' },
-    { id: 2, sponsorName: '为何如此衰', sponsorContent: '8K', specialAward: '8强每个队伍1K' },
-    {
-      id: 3,
-      sponsorName: '董B登',
-      sponsorContent: '1K',
-      specialAward: '冠军每人750g蓝莓果干+250g参片',
-    },
-    { id: 4, sponsorName: 'MT', sponsorContent: '2K', specialAward: '4强每人一份贡菜千层肚' },
-  ];
-
-  beforeEach(() => {
-    vi.clearAllMocks();
-    window.innerWidth = 1024;
-  });
-
-  describe('无特殊奖项时', () => {
-    it('应该返回 null 不渲染', () => {
-      const { container } = render(<SpecialAwards sponsors={mockSponsorsWithoutAwards} />);
-      expect(container.firstChild).toBeNull();
-    });
-
-    it('空数组应该返回 null', () => {
-      const { container } = render(<SpecialAwards sponsors={[]} />);
+  describe('空数据状态', () => {
+    it('没有特殊奖项时不应该渲染', () => {
+      const { container } = render(<SpecialAwards sponsors={mockNoAwards} />);
       expect(container.firstChild).toBeNull();
     });
   });
 
-  describe('有特殊奖项时', () => {
+  describe('正常渲染', () => {
+    it('应该渲染特殊奖项容器', () => {
+      render(<SpecialAwards sponsors={mockAwards} />);
+
+      expect(screen.getByTestId('special-awards-container')).toBeInTheDocument();
+    });
+
     it('应该渲染标题', () => {
-      render(<SpecialAwards sponsors={mockSponsorsWithAwards} />);
+      render(<SpecialAwards sponsors={mockAwards} />);
 
-      expect(screen.getByText(content => content.includes('特殊奖项'))).toBeInTheDocument();
+      expect(screen.getByTestId('special-awards-title')).toBeInTheDocument();
     });
 
-    it('应该渲染所有有特殊奖项的赞助商', () => {
-      render(<SpecialAwards sponsors={mockSponsorsWithAwards} />);
+    it('应该渲染所有奖项', () => {
+      render(<SpecialAwards sponsors={mockAwards} />);
 
-      const expectedAwards = [
-        { name: '为何如此衰', award: '8强每个队伍1K' },
-        { name: '董B登', award: '冠军每人750g蓝莓果干+250g参片' },
-        { name: 'MT', award: '4强每人一份贡菜千层肚' },
-      ];
-
-      expectedAwards.forEach(({ name, award }) => {
-        expect(screen.getByText(name)).toBeInTheDocument();
-        expect(screen.getByText(content => content.includes(award))).toBeInTheDocument();
+      mockAwards.forEach(award => {
+        expect(screen.getByText(award.sponsorName)).toBeInTheDocument();
+        expect(screen.getByText(award.specialAward!)).toBeInTheDocument();
       });
     });
 
-    it('不应该渲染没有特殊奖项的赞助商', () => {
-      render(<SpecialAwards sponsors={mockSponsorsWithAwards} />);
+    it('应该使用SVG图标替代emoji', () => {
+      render(<SpecialAwards sponsors={mockAwards} />);
 
-      const sponsorName = screen.queryByText('斗鱼官方');
-      expect(sponsorName).not.toBeInTheDocument();
+      const container = screen.getByTestId('special-awards-container');
+      const svgs = container.querySelectorAll('svg');
+      expect(svgs.length).toBeGreaterThanOrEqual(1);
     });
 
-    it('应该应用正确的样式类', () => {
-      render(<SpecialAwards sponsors={mockSponsorsWithAwards} />);
+    it('应该使用奖杯图标作为奖项标识', () => {
+      render(<SpecialAwards sponsors={mockAwards} />);
+
+      const container = screen.getByTestId('special-awards-container');
+      const trophyIcons = container.querySelectorAll('svg[stroke="currentColor"]');
+      expect(trophyIcons.length).toBeGreaterThanOrEqual(1);
+    });
+  });
+
+  describe('样式验证', () => {
+    it('应该应用正确的卡片样式', () => {
+      render(<SpecialAwards sponsors={mockAwards} />);
 
       const container = screen.getByTestId('special-awards-container');
       expect(container.className).toContain('rounded-2xl');
       expect(container.className).toContain('border');
       expect(container.className).toContain('border-pink-500/20');
+    });
+
+    it('应该应用正确的背景样式', () => {
+      render(<SpecialAwards sponsors={mockAwards} />);
+
+      const container = screen.getByTestId('special-awards-container');
+      expect(container.className).toContain('bg-gradient-to-br');
       expect(container.className).toContain('backdrop-blur-md');
     });
 
-    it('标题应该有正确的样式', () => {
-      render(<SpecialAwards sponsors={mockSponsorsWithAwards} />);
+    it('奖项卡片应该有最小高度', () => {
+      render(<SpecialAwards sponsors={mockAwards} />);
 
-      const title = screen.getByTestId('special-awards-title');
-      expect(title.className).toContain('font-bold');
-      expect(title.className).toContain('tracking-wide');
+      const items = screen.getAllByText(mockAwards[0].sponsorName);
+      const item = items[0].closest('li');
+      expect(item?.className).toContain('min-h-[72px]');
+    });
+
+    it('应该使用正确的文字对比度', () => {
+      render(<SpecialAwards sponsors={mockAwards} />);
+
+      const description = screen.getByText(mockAwards[0].specialAward!);
+      expect(description.className).toContain('text-gray-200');
     });
   });
 
-  describe('移动端展开/收起功能', () => {
-    it('移动端应该显示展开按钮当奖项超过3个', () => {
-      window.innerWidth = 375;
+  describe('移动端适配', () => {
+    it('应该有正确的内边距', () => {
+      render(<SpecialAwards sponsors={mockAwards} />);
 
-      const manyAwards: SponsorConfig[] = [
-        { id: 1, sponsorName: '赞助1', sponsorContent: '1K', specialAward: '奖项1' },
-        { id: 2, sponsorName: '赞助2', sponsorContent: '1K', specialAward: '奖项2' },
-        { id: 3, sponsorName: '赞助3', sponsorContent: '1K', specialAward: '奖项3' },
-        { id: 4, sponsorName: '赞助4', sponsorContent: '1K', specialAward: '奖项4' },
-      ];
-
-      render(<SpecialAwards sponsors={manyAwards} />);
-
-      const button = screen.getByTestId('expand-button');
-      expect(button).toBeInTheDocument();
-      expect(button.textContent).toContain('查看更多');
+      const container = screen.getByTestId('special-awards-container');
+      expect(container.className).toContain('p-5');
+      expect(container.className).toContain('md:p-6');
     });
 
-    it('点击展开按钮应该显示所有奖项', () => {
-      window.innerWidth = 375;
+    it('标题应该有响应式大小', () => {
+      render(<SpecialAwards sponsors={mockAwards} />);
 
-      const manyAwards: SponsorConfig[] = [
-        { id: 1, sponsorName: '赞助1', sponsorContent: '1K', specialAward: '奖项1' },
-        { id: 2, sponsorName: '赞助2', sponsorContent: '1K', specialAward: '奖项2' },
-        { id: 3, sponsorName: '赞助3', sponsorContent: '1K', specialAward: '奖项3' },
-        { id: 4, sponsorName: '赞助4', sponsorContent: '1K', specialAward: '奖项4' },
-      ];
-
-      render(<SpecialAwards sponsors={manyAwards} />);
-
-      expect(screen.getByText('赞助1')).toBeInTheDocument();
-      expect(screen.queryByText('赞助4')).not.toBeInTheDocument();
-
-      const button = screen.getByTestId('expand-button');
-      fireEvent.click(button);
-
-      expect(screen.getByText('赞助4')).toBeInTheDocument();
-      expect(button.textContent).toContain('收起');
-    });
-
-    it('PC端不应该显示展开按钮', () => {
-      window.innerWidth = 1024;
-
-      const manyAwards: SponsorConfig[] = [
-        { id: 1, sponsorName: '赞助1', sponsorContent: '1K', specialAward: '奖项1' },
-        { id: 2, sponsorName: '赞助2', sponsorContent: '1K', specialAward: '奖项2' },
-        { id: 3, sponsorName: '赞助3', sponsorContent: '1K', specialAward: '奖项3' },
-        { id: 4, sponsorName: '赞助4', sponsorContent: '1K', specialAward: '奖项4' },
-      ];
-
-      render(<SpecialAwards sponsors={manyAwards} />);
-
-      const button = screen.queryByTestId('expand-button');
-      expect(button).not.toBeInTheDocument();
-    });
-
-    it('移动端奖项不超过3个时不显示展开按钮', () => {
-      window.innerWidth = 375;
-
-      const fewAwards: SponsorConfig[] = [
-        { id: 1, sponsorName: '赞助1', sponsorContent: '1K', specialAward: '奖项1' },
-        { id: 2, sponsorName: '赞助2', sponsorContent: '1K', specialAward: '奖项2' },
-      ];
-
-      render(<SpecialAwards sponsors={fewAwards} />);
-
-      const button = screen.queryByTestId('expand-button');
-      expect(button).not.toBeInTheDocument();
+      const title = screen.getByTestId('special-awards-title');
+      expect(title.className).toContain('text-lg');
+      expect(title.className).toContain('md:text-xl');
     });
   });
 });

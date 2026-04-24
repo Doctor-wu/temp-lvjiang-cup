@@ -10,6 +10,32 @@ vi.mock('@/api/matchData', () => ({
   getMatchGameData: vi.fn(),
 }));
 
+vi.mock('@/utils/matchDataCache', () => ({
+  matchDataCache: {
+    getMatchSeriesKey: vi.fn(() => 'cache-key-match1'),
+    getMatchGameDataKey: vi.fn(() => 'cache-key-game1'),
+    getCachedSeries: vi.fn(() => null),
+    getCachedGameData: vi.fn(() => null),
+    cacheSeries: vi.fn(),
+    cacheGameData: vi.fn(),
+    cleanup: vi.fn(),
+  },
+}));
+
+vi.mock('@/store/matchDataStore', () => {
+  const mockStore = {
+    setSeriesInfo: vi.fn(),
+    updateGame: vi.fn(),
+  };
+  return {
+    useMatchDataStore: vi.fn(() => mockStore),
+  };
+});
+
+vi.mock('@/utils/upload', () => ({
+  getUploadUrl: (url: string) => url || '',
+}));
+
 const mockGetMatchSeries = matchDataApi.getMatchSeries as ReturnType<typeof vi.fn>;
 const mockGetMatchGameData = matchDataApi.getMatchGameData as ReturnType<typeof vi.fn>;
 

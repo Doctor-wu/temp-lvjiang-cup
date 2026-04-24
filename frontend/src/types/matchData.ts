@@ -94,6 +94,8 @@ export interface PlayerStat {
   firstBlood: boolean;
   /** 是否 MVP */
   mvp: boolean;
+  /** 选手头像 URL（从 team_members.avatar_url 联表查询获取） */
+  playerAvatarUrl?: string;
 }
 
 /**
@@ -206,6 +208,8 @@ export interface ImportMatchDataResponse {
   playerCount: number;
   /** 失败的选手数量 */
   failedCount?: number;
+  /** 是否为覆盖导入（同一局已有数据） */
+  overwritten?: boolean;
   /** 失败详情列表 */
   failedPlayers?: MatchDataImportError[];
 }

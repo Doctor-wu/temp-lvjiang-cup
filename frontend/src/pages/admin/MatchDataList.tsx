@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/Input';
 import { toast } from 'sonner';
 import { checkMatchDataExists, downloadMatchDataTemplate } from '@/api/matchData';
 import MatchDataImportDialog from '@/components/admin/MatchDataImportDialog';
+import { adminPath } from '@/constants/routes';
 
 interface MatchWithTeams extends Match {
   teamAName?: string;
@@ -120,7 +121,7 @@ const MatchDataList: React.FC = () => {
   };
 
   const handleManageMatchData = (matchId: string) => {
-    navigate(`/admin/matches/${matchId}/games`);
+    navigate(adminPath(`matches/${matchId}/games`));
   };
 
   const handleDownloadTemplate = async () => {

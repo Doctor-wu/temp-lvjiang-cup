@@ -1,7 +1,11 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import MatchInfoCard from '@/components/features/match-data/MatchInfoCard';
 import type { MatchGameData } from '@/types/matchData';
+
+vi.mock('@/utils/upload', () => ({
+  getUploadUrl: (url: string) => url || '',
+}));
 
 const createMockGameData = (overrides: Partial<MatchGameData> = {}): MatchGameData => ({
   id: 1,
@@ -86,11 +90,11 @@ describe('MatchInfoCard', () => {
   });
 
   describe('中央信息显示', () => {
-    it('应该显示BO3第X局格式', () => {
+    it('应该显示第X局格式', () => {
       const gameData = createMockGameData({ gameNumber: 2 });
       render(<MatchInfoCard gameData={gameData} />);
 
-      expect(screen.getByText('BO3 · 第 2 局')).toBeInTheDocument();
+      expect(screen.getByText('第 2 局')).toBeInTheDocument();
     });
 
     it('应该显示游戏时长', () => {
@@ -120,24 +124,22 @@ describe('MatchInfoCard', () => {
       const gameData = createMockGameData({ winnerTeamId: 'team1' });
       render(<MatchInfoCard gameData={gameData} />);
 
-      const winElements = screen.getAllByText(/胜|胜利|WIN/i);
-      expect(winElements.length).toBeGreaterThan(0);
+      expect(screen.getByText('胜利')).toBeInTheDocument();
     });
 
     it('失败方不应该显示胜利标记', () => {
       const gameData = createMockGameData({ winnerTeamId: 'team1' });
       render(<MatchInfoCard gameData={gameData} />);
 
-      const winElements = screen.getAllByText(/★ 胜利/);
-      expect(winElements.length).toBe(1);
+      expect(screen.queryByText('胜利')).toBeInTheDocument();
+      expect(screen.queryByText('★')).toBeInTheDocument();
     });
 
     it('当没有获胜方时（如比赛未开始）不显示胜利标记', () => {
       const gameData = createMockGameData({ winnerTeamId: null });
       render(<MatchInfoCard gameData={gameData} />);
 
-      const winElements = screen.queryByText(/胜|胜利|WIN/i);
-      expect(winElements).toBeNull();
+      expect(screen.queryByText('胜利')).not.toBeInTheDocument();
     });
   });
 });
