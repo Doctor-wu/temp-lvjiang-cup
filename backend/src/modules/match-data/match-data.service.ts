@@ -195,13 +195,13 @@ export class MatchDataService {
       });
     }
 
-    // 获取game数据（包含BAN信息）
+    // 获取game数据（包含BAN信息和BV号）
     const game = await this.databaseService.get<any>(
       `SELECT id, match_id, game_number, winner_team_id, game_duration, game_start_time,
               blue_team_id, red_team_id,
               blue_kills, blue_gold, blue_towers, blue_dragons, blue_barons,
               red_kills, red_gold, red_towers, red_dragons, red_barons,
-              red_ban, blue_ban
+              red_ban, blue_ban, video_bvid
        FROM match_games
        WHERE match_id = ? AND game_number = ? AND status = 1`,
       [matchId, gameNumber],
@@ -311,8 +311,9 @@ export class MatchDataService {
       matchId: game.match_id,
       gameNumber: game.game_number,
       winnerTeamId: game.winner_team_id,
-      gameDuration: game.game_duration,
+      gameDuration: game.game_duration,    // 保留兼容
       gameStartTime: game.game_start_time,
+      videoBvid: game.video_bvid || null,  // 新增
       blueTeam: {
         teamId: game.blue_team_id,
         teamName: blueTeam?.name || '',
@@ -547,21 +548,21 @@ export class MatchDataService {
         const redBanJson = JSON.stringify(parsedData.bans.redBans);
         const blueBanJson = JSON.stringify(parsedData.bans.blueBans);
 
-        // 插入match_games（包含BAN数据）
+        // 插入match_games（包含BAN数据和BV号）
         const gameResult = await this.databaseService.run(
           `INSERT INTO match_games (
             match_id, game_number, winner_team_id, game_duration, game_start_time,
             blue_team_id, red_team_id,
             blue_kills, blue_gold, blue_towers, blue_dragons, blue_barons,
             red_kills, red_gold, red_towers, red_dragons, red_barons,
-            red_ban, blue_ban,
+            red_ban, blue_ban, video_bvid,
             status, created_by
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)`,
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)`,
           [
             matchId,
             parsedData.matchInfo.gameNumber,
             winnerTeamId,
-            parsedData.matchInfo.gameDuration,
+            '',                                      // game_duration 废弃，插入空
             parsedData.matchInfo.gameStartTime || new Date().toISOString(),
             blueTeamId,
             redTeamId,
@@ -577,6 +578,7 @@ export class MatchDataService {
             this.getTeamFieldForSide(parsedData.teamStats, 'barons', 'red'),
             redBanJson,
             blueBanJson,
+            parsedData.matchInfo.videoBvid || null,   // 新增BV号
             adminId,
           ],
         );
@@ -593,9 +595,8 @@ export class MatchDataService {
           message: string;
         }> = [];
 
-        // 从MatchInfo获取MVP选手昵称和一血阵营
+        // 从MatchInfo获取MVP选手昵称
         const mvpNickname = parsedData.matchInfo.mvp;
-        const firstBloodSide = parsedData.matchInfo.firstBlood;
 
         for (let i = 0; i < parsedData.playerStats.length; i++) {
           const ps = parsedData.playerStats[i];
@@ -638,8 +639,7 @@ export class MatchDataService {
 
           // 判断当前选手是否是MVP
           const isMvp = ps.nickname === mvpNickname ? 1 : 0;
-          // 判断当前选手是否获得一血（根据阵营）
-          const isFirstBlood = ps.side === firstBloodSide ? 1 : 0;
+          // 一血字段已废弃，固定设置为0
 
           // 防御性验证：确保英雄名称不为空
           if (!ps.championName) {
@@ -671,7 +671,7 @@ export class MatchDataService {
               ps.visionScore,
               ps.wardsPlaced,
               ps.level,
-              isFirstBlood,
+              0,  // first_blood 废弃，固定为0
               isMvp,
             ],
           );

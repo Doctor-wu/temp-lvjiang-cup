@@ -181,6 +181,20 @@ const PlayerDetailContent: React.FC<PlayerDetailContentProps> = ({ player }) => 
         </div>
       )}
 
+      {player.auctionPrice !== undefined && player.auctionPrice > 0 && (
+        <div
+          className="rounded-xl p-4 mb-4 border border-white/10"
+          style={{
+            background: 'rgba(255, 255, 255, 0.03)',
+          }}
+        >
+          <div className="flex items-center justify-between">
+            <h4 className="text-sm font-medium text-slate-300">拍卖价</h4>
+            <span className="text-sm text-amber-500 font-medium">{player.auctionPrice}</span>
+          </div>
+        </div>
+      )}
+
       {player.liveUrl && (
         <div
           className="rounded-xl p-4 border border-white/10"

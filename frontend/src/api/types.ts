@@ -108,6 +108,7 @@ export interface Player {
   isCaptain?: boolean;
   liveUrl?: string;
   level?: PlayerLevel;
+  auctionPrice?: number;
 }
 
 // 发送到 API 的队员类型 (不包含 teamId)

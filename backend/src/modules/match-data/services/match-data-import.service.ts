@@ -155,16 +155,15 @@ export class MatchDataImportService {
 
     // ========== 第 1-2 行：MatchInfo（对战信息）==========
 
-    // 第 1 行：MatchInfo 表头
+    // 第 1 行：MatchInfo 表头（7列）
     const matchInfoHeaders = [
       '红方战队名',
       '蓝方战队名',
       '局数',
       '比赛时间',
-      '游戏时长',
       '获胜方',
-      '一血',
       'MVP',
+      '视频BV号', // 新增：视频BV号（大小写敏感）
     ];
     matchInfoHeaders.forEach((header, index) => {
       const cell = sheet.getCell(1, index + 1);
@@ -183,13 +182,12 @@ export class MatchDataImportService {
     sheet.getCell('B2').value = 'WBG';
     sheet.getCell('C2').value = 1;
     sheet.getCell('D2').value = '2026-04-16 14:00';
-    sheet.getCell('E2').value = '32:45';
-    sheet.getCell('F2').value = 'red';
-    sheet.getCell('G2').value = 'red';
-    sheet.getCell('H2').value = 'Knight';
+    sheet.getCell('E2').value = 'red';  // 获胜方
+    sheet.getCell('F2').value = 'Knight';  // MVP
+    sheet.getCell('G2').value = 'BV1Ab4y1X7zK';  // 视频BV号
 
-    // 为获胜方和一血添加数据验证（下拉列表）
-    ['F2', 'G2'].forEach((cellAddr) => {
+    // 为获胜方添加数据验证（下拉列表）
+    ['E2'].forEach((cellAddr) => {
       sheet.getCell(cellAddr).dataValidation = {
         type: 'list',
         allowBlank: false,

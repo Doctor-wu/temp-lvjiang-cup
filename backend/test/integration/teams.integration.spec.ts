@@ -80,6 +80,8 @@ describe('Teams Integration Tests', () => {
         is_captain INTEGER DEFAULT 0,
         live_url TEXT,
         sort_order INTEGER,
+        level TEXT CHECK(level IN ('S', 'A', 'B', 'C', 'D')),
+        auction_price INTEGER DEFAULT 0,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE

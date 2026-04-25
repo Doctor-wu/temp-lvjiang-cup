@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsNumber, IsBoolean, IsArray } from 'class-validator';
+import { IsString, IsOptional, IsNumber, IsBoolean, IsArray, IsInt, Min, Max } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateMemberDto {
@@ -56,6 +56,13 @@ export class UpdateMemberDto {
   @IsNumber()
   @IsOptional()
   sortOrder?: number;
+
+  @ApiPropertyOptional({ description: '拍卖价 (0-200的正整数)' })
+  @IsInt()
+  @Min(0)
+  @Max(200)
+  @IsOptional()
+  auctionPrice?: number;
 
   @ApiPropertyOptional({ description: '实力等级', enum: ['S', 'A', 'B', 'C', 'D'] })
   @IsString()

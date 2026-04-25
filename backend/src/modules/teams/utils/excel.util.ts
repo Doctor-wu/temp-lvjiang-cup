@@ -17,6 +17,7 @@ export interface ParsedRow {
   championPoolStr: string;
   liveRoom: string;
   bio: string;
+  auctionPrice: number;
 }
 
 export interface PositionMapping {
@@ -92,6 +93,17 @@ export function parseLevel(level: any): 'S' | 'A' | 'B' | 'C' | 'D' | null {
   return null;
 }
 
+export function parseAuctionPrice(value: any): number {
+  if (value === null || value === undefined || value === '') {
+    return 0;
+  }
+  const num = Number(value);
+  if (isNaN(num) || num < 0 || num > 200 || !Number.isInteger(num)) {
+    return 0;
+  }
+  return num;
+}
+
 export function parseLiveUrl(liveRoom: string): string {
   if (!liveRoom || !liveRoom.trim()) {
     return '';
@@ -139,6 +151,7 @@ export async function parseExcel(filePath: string): Promise<ImportTeamDto[]> {
     const championPoolStr = extractCellValue(rowData[11]);
     const liveRoom = extractCellValue(rowData[12]);
     const bio = extractCellValue(rowData[13]);
+    const auctionPrice = parseAuctionPrice(rowData[14]);
 
     if (teamName) {
       currentTeamName = teamName;
@@ -163,6 +176,7 @@ export async function parseExcel(filePath: string): Promise<ImportTeamDto[]> {
         championPoolStr,
         liveRoom,
         bio,
+        auctionPrice,
       });
     }
   });
@@ -198,6 +212,7 @@ export async function parseExcel(filePath: string): Promise<ImportTeamDto[]> {
       level: parseLevel(row.level) || undefined,
       liveRoom: row.liveRoom,
       personalBio: row.bio || undefined,
+      auctionPrice: row.auctionPrice,
     };
 
     teamMap.get(row.teamName)!.members.push(member);
@@ -246,6 +261,7 @@ export async function validateExcelHeaders(
     '常用英雄',
     '直播间号',
     '个人简介',
+    '拍卖价',
   ];
 
   const missingHeaders: string[] = [];

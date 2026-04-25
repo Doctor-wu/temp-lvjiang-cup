@@ -201,6 +201,7 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
         live_url TEXT,
         sort_order INTEGER,
         level TEXT CHECK(level IN ('S', 'A', 'B', 'C', 'D')),
+        auction_price INTEGER DEFAULT 0,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE
@@ -409,7 +410,49 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
     // 初始化 stream_info 的默认数据
     await this.initDefaultData();
 
+    // 执行数据迁移
+    await this.migrateAuctionPrice();
+    await this.migrateVideoBvid();
+
     this.logger.log('Database tables initialized');
+  }
+
+  /**
+   * 迁移拍卖价字段（为老表添加 auction_price 列）
+   */
+  private async migrateAuctionPrice() {
+    try {
+      const columns = await this.all<any>(`PRAGMA table_info(team_members)`);
+      const hasColumn = columns.some((col: any) => col.name === 'auction_price');
+
+      if (!hasColumn) {
+        await this.run(
+          `ALTER TABLE team_members ADD COLUMN auction_price INTEGER DEFAULT 0`
+        );
+        this.logger.log('已添加 auction_price 字段');
+      }
+    } catch (error) {
+      this.logger.error('添加 auction_price 字段失败:', error.message);
+    }
+  }
+
+  /**
+   * 迁移视频BV号字段（为老表添加 video_bvid 列）
+   */
+  private async migrateVideoBvid() {
+    try {
+      const columns = await this.all<any>(`PRAGMA table_info(match_games)`);
+      const hasColumn = columns.some((col: any) => col.name === 'video_bvid');
+
+      if (!hasColumn) {
+        await this.run(
+          `ALTER TABLE match_games ADD COLUMN video_bvid TEXT`
+        );
+        this.logger.log('已添加 video_bvid 字段');
+      }
+    } catch (error) {
+      this.logger.error('添加 video_bvid 字段失败:', error.message);
+    }
   }
 
   private async initDefaultData() {

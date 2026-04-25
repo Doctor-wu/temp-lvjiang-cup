@@ -117,7 +117,7 @@ export class UpdateMatchDataDto {
   @IsString()
   winnerTeamId?: string;
 
-  @ApiProperty({ description: '游戏时长 (MM:SS格式)' })
+  @ApiProperty({ description: '游戏时长 (MM:SS格式) - 已废弃' })
   @IsOptional()
   @IsString()
   gameDuration?: string;
@@ -126,6 +126,11 @@ export class UpdateMatchDataDto {
   @IsOptional()
   @IsString()
   gameStartTime?: string;
+
+  @ApiProperty({ description: '视频BV号（大小写敏感）' })
+  @IsOptional()
+  @IsString()
+  videoBvid?: string;
 
   @ApiProperty({ description: '蓝色方战队数据' })
   @IsOptional()

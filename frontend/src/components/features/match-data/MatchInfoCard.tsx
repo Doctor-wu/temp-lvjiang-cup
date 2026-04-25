@@ -35,10 +35,13 @@ const getSeriesFormat = (gameNumber: number): string => {
  * 展示单局对局的基本信息：双方队伍、游戏时长、比赛时间等
  */
 const MatchInfoCard: React.FC<MatchInfoCardProps> = ({ gameData }) => {
-  const { blueTeam, redTeam, gameNumber, gameDuration, gameStartTime, winnerTeamId } = gameData;
+  const { blueTeam, redTeam, gameNumber, gameStartTime, winnerTeamId, videoBvid } = gameData;
 
   const isBlueWinner = winnerTeamId !== null && winnerTeamId === blueTeam.teamId;
   const isRedWinner = winnerTeamId !== null && winnerTeamId === redTeam.teamId;
+
+  // 构建B站视频链接
+  const bilibiliUrl = videoBvid ? `https://www.bilibili.com/video/${videoBvid}` : null;
 
   return (
     <div className="bg-[rgba(255,255,255,0.03)] border border-white/5 rounded-xl p-6 max-w-5xl mx-auto mt-4">
@@ -84,10 +87,18 @@ const MatchInfoCard: React.FC<MatchInfoCardProps> = ({ gameData }) => {
           <span className="text-xs text-[#c49f58] font-bold tracking-wider">
             {getSeriesFormat(gameNumber)}
           </span>
-          <span className="text-4xl font-bold text-white font-mono tracking-wider">
-            {gameDuration}
-          </span>
           <span className="text-xs text-gray-500">{formatGameStartTime(gameStartTime)}</span>
+          {/* 新增视频链接 */}
+          {bilibiliUrl && (
+            <a
+              href={bilibiliUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-[#00bcd4] hover:text-[#00bcd4]/80 transition-colors"
+            >
+              📺 观看视频
+            </a>
+          )}
         </div>
 
         {/* 右侧：蓝色方 */}

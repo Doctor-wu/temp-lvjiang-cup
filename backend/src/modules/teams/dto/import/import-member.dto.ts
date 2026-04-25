@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsOptional, IsNumber, IsBoolean, IsEnum, IsInt } from 'class-validator';
+import { IsString, IsOptional, IsNumber, IsBoolean, IsEnum, IsInt, Min, Max } from 'class-validator';
 
 export class ImportMemberDto {
   @ApiPropertyOptional({ description: 'Excel 原始行号' })
@@ -55,6 +55,13 @@ export class ImportMemberDto {
   @IsEnum(['S', 'A', 'B', 'C', 'D'])
   @IsOptional()
   level?: 'S' | 'A' | 'B' | 'C' | 'D';
+
+  @ApiPropertyOptional({ description: '拍卖价 (0-200的正整数)' })
+  @IsInt()
+  @Min(0)
+  @Max(200)
+  @IsOptional()
+  auctionPrice?: number;
 
   @ApiPropertyOptional({ description: '直播间号（纯数字）' })
   @IsString()

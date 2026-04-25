@@ -179,6 +179,7 @@ const MatchDataEditPage: React.FC = () => {
         winnerTeamId: gameData.winnerTeamId,
         gameDuration: gameData.gameDuration,
         gameStartTime: gameData.gameStartTime,
+        videoBvid: gameData.videoBvid,
         blueTeam: {
           teamId: gameData.blueTeam.teamId,
           side: gameData.blueTeam.side,

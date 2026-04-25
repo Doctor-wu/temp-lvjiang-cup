@@ -26,6 +26,7 @@ export interface TeamMember {
   liveUrl?: string;
   sortOrder?: number;
   level?: 'S' | 'A' | 'B' | 'C' | 'D';
+  auctionPrice?: number;
 }
 
 export interface Team {
@@ -250,7 +251,7 @@ export class TeamsService extends BaseCachedService<Team, string> {
       if (updateTeamDto.members.length > 0) {
         for (const member of updateTeamDto.members) {
           await this.databaseService.run(
-            `INSERT INTO team_members (id, user_id, nickname, avatar_url, position, team_id, game_id, bio, champion_pool, rating, is_captain, live_url, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO team_members (id, user_id, nickname, avatar_url, position, team_id, game_id, bio, champion_pool, rating, is_captain, live_url, sort_order, auction_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
               member.id || `${id}_${member.position}`,
               member.userId || null,
@@ -265,6 +266,7 @@ export class TeamsService extends BaseCachedService<Team, string> {
               member.isCaptain ? 1 : 0,
               member.liveUrl || null,
               member.sortOrder || null,
+              (member as any).auctionPrice || 0,
             ],
           );
         }
@@ -388,7 +390,7 @@ export class TeamsService extends BaseCachedService<Team, string> {
     }
 
     await this.databaseService.run(
-      `INSERT INTO team_members (id, user_id, nickname, avatar_url, position, team_id, game_id, bio, champion_pool, rating, is_captain, live_url, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO team_members (id, user_id, nickname, avatar_url, position, team_id, game_id, bio, champion_pool, rating, is_captain, live_url, sort_order, auction_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         memberId,
         createMemberDto.userId || null,
@@ -403,6 +405,7 @@ export class TeamsService extends BaseCachedService<Team, string> {
         createMemberDto.isCaptain ? 1 : 0,
         createMemberDto.liveUrl || null,
         createMemberDto.sortOrder || null,
+        createMemberDto.auctionPrice || 0,
       ],
     );
 
@@ -583,6 +586,7 @@ export class TeamsService extends BaseCachedService<Team, string> {
       liveUrl: m.live_url,
       sortOrder: m.sort_order,
       level: m.level,
+      auctionPrice: m.auction_price || 0,
     };
   }
 }

@@ -69,7 +69,7 @@ export class TeamsImportService {
     sheet.getCell('A2').value =
       '说明：每支战队占5行，分别对应5个位置（上单、打野、中单、ADC、辅助）。请按顺序填写，同一战队只需在第1行填写战队信息。';
     sheet.getCell('A2').font = { size: 10, color: { argb: 'FF666666' } };
-    sheet.mergeCells('A2:M2');
+    sheet.mergeCells('A2:N2');
 
     sheet.getCell('A3').value = '战队名称';
     sheet.getCell('B3').value = '队标URL';
@@ -84,6 +84,7 @@ export class TeamsImportService {
     sheet.getCell('K3').value = '常用英雄';
     sheet.getCell('L3').value = '直播间号';
     sheet.getCell('M3').value = '个人简介';
+    sheet.getCell('N3').value = '拍卖价';
 
     const headerRow = sheet.getRow(3);
     headerRow.font = { bold: true };
@@ -106,6 +107,7 @@ export class TeamsImportService {
     sheet.getCell('K4').value = '亚索,盲僧';
     sheet.getCell('L4').value = '123456';
     sheet.getCell('M4').value = '我是上单选手';
+    sheet.getCell('N4').value = 100;
 
     for (let i = 5; i <= 8; i++) {
       const positionMap: { [key: number]: string } = {
@@ -114,11 +116,18 @@ export class TeamsImportService {
         7: 'ADC',
         8: '辅助',
       };
+      const auctionPriceMap: { [key: number]: number } = {
+        5: 80,
+        6: 90,
+        7: 110,
+        8: 70,
+      };
       sheet.getCell(`D${i}`).value = positionMap[i];
       sheet.getCell(`E${i}`).value = `队员${i - 3}`;
       sheet.getCell(`H${i}`).value = 75;
       sheet.getCell(`I${i}`).value = '否';
       sheet.getCell(`J${i}`).value = 'B';
+      sheet.getCell(`N${i}`).value = auctionPriceMap[i];
     }
 
     sheet.getCell('D4').dataValidation = {
@@ -345,7 +354,7 @@ export class TeamsImportService {
       const championPool = member.championPoolStr ? parseChampionPool(member.championPoolStr) : [];
 
       await this.databaseService.run(
-        `INSERT INTO team_members (id, nickname, avatar_url, position, team_id, game_id, bio, champion_pool, rating, is_captain, live_url, level, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+        `INSERT INTO team_members (id, nickname, avatar_url, position, team_id, game_id, bio, champion_pool, rating, is_captain, live_url, level, auction_price, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
         [
           memberId,
           member.nickname || null,
@@ -359,6 +368,7 @@ export class TeamsImportService {
           member.isCaptain ? 1 : 0,
           member.liveRoom ? parseLiveUrl(member.liveRoom) : null,
           member.level || null,
+          member.auctionPrice || 0,
         ],
       );
     }
@@ -394,7 +404,7 @@ export class TeamsImportService {
       const championPool = member.championPoolStr ? parseChampionPool(member.championPoolStr) : [];
 
       await this.databaseService.run(
-        `INSERT INTO team_members (id, nickname, avatar_url, position, team_id, game_id, bio, champion_pool, rating, is_captain, live_url, level, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+        `INSERT INTO team_members (id, nickname, avatar_url, position, team_id, game_id, bio, champion_pool, rating, is_captain, live_url, level, auction_price, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
         [
           memberId,
           member.nickname || null,
@@ -408,6 +418,7 @@ export class TeamsImportService {
           member.isCaptain ? 1 : 0,
           member.liveRoom ? parseLiveUrl(member.liveRoom) : null,
           member.level || null,
+          member.auctionPrice || 0,
         ],
       );
     }

@@ -8,10 +8,11 @@ export interface MatchInfoData {
   blueTeamName: string;
   gameNumber: number;
   gameStartTime: string;
-  gameDuration: string;
+  gameDuration: string;         // 保留（向后兼容，标记废弃）
   winner: string;
-  firstBlood: string;
+  firstBlood: string;           // 保留（向后兼容，标记废弃）
   mvp: string;
+  videoBvid?: string;           // 新增：视频BV号（大小写敏感）
 }
 
 export interface TeamStatsData {
@@ -107,18 +108,23 @@ export function validateMatchInfo(data: MatchInfoData): ValidationResult {
   if (!data.gameStartTime) {
     errors.push('游戏开始时间不能为空');
   }
-  if (!data.gameDuration) {
-    errors.push('游戏时长不能为空');
-  } else if (!isValidDurationFormat(data.gameDuration)) {
-    errors.push('游戏时长格式错误，应为 MM:SS 格式');
-  }
+  // 移除游戏时长验证（已废弃）
   if (!data.winner) {
     errors.push('获胜方不能为空');
   } else if (!['red', 'blue', 'Red', 'Blue', '红方', '蓝方'].includes(data.winner)) {
     errors.push('获胜方必须是 red 或 blue');
   }
-
+  // 新增BV号格式验证（如果填写）
+  if (data.videoBvid && !isValidBVId(data.videoBvid)) {
+    errors.push('视频BV号格式错误，应为 BVxxxxxxxxxx 格式');
+  }
   return { valid: errors.length === 0, errors };
+}
+
+// 新增BV号验证函数
+function isValidBVId(bvid: string): boolean {
+  // BV号格式：以BV开头，后接10位大小写字母和数字
+  return /^BV[a-zA-Z0-9]{10}$/.test(bvid);
 }
 
 export function validateTeamStats(data: TeamStatsData, rowIndex: number): ValidationResult {
@@ -407,10 +413,11 @@ function parseMatchInfoRow(row: any[]): MatchInfoData {
     blueTeamName: extractCellValue(row[1]),
     gameNumber: extractNumericValue(row[2]),
     gameStartTime: extractCellValue(row[3]),
-    gameDuration: extractCellValue(row[4]),
-    winner: extractCellValue(row[5]),
-    firstBlood: extractCellValue(row[6]),
-    mvp: extractCellValue(row[7]),
+    gameDuration: extractCellValue(row[4]),       // 保留兼容（原E列，现废弃）
+    winner: extractCellValue(row[5]),             // 原F列
+    firstBlood: '',                                // 废弃，返回空
+    mvp: extractCellValue(row[6]),                 // 原H列，现F列
+    videoBvid: extractCellValue(row[7]),           // 新增：G列
   };
 }
 

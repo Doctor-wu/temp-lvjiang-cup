@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsNumber, IsBoolean, IsArray, IsNotEmpty } from 'class-validator';
+import { IsString, IsOptional, IsNumber, IsBoolean, IsArray, IsNotEmpty, IsInt, Min, Max } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateMemberDto {
@@ -60,4 +60,11 @@ export class CreateMemberDto {
   @IsNumber()
   @IsOptional()
   sortOrder?: number;
+
+  @ApiPropertyOptional({ description: '拍卖价 (0-200的正整数)' })
+  @IsInt()
+  @Min(0)
+  @Max(200)
+  @IsOptional()
+  auctionPrice?: number;
 }

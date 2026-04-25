@@ -14,7 +14,8 @@
         "level": "S",
         "championPool": "暗裔剑魔",
         "liveRoom": "138243",
-        "bio": "斗鱼138243"
+        "bio": "斗鱼138243",
+        "auctionPrice": 120
       },
       {
         "position": "打野",
@@ -26,7 +27,8 @@
         "level": "A",
         "championPool": "盲僧,千珏,格雷福斯",
         "liveRoom": "138243",
-        "bio": "斗鱼138243"
+        "bio": "斗鱼138243",
+        "auctionPrice": 100
       },
       {
         "position": "中单",
@@ -38,7 +40,8 @@
         "level": "S",
         "championPool": "离群之刺,解脱者,暮光星灵",
         "liveRoom": "138243",
-        "bio": "操作细腻"
+        "bio": "操作细腻",
+        "auctionPrice": 100
       },
       {
         "position": "ADC",
@@ -50,7 +53,8 @@
         "level": "A",
         "championPool": "厄斐琉斯,金克丝,卡莎",
         "liveRoom": "138243",
-        "bio": "输出稳定"
+        "bio": "输出稳定",
+        "auctionPrice": 97
       },
       {
         "position": "辅助",
@@ -62,7 +66,8 @@
         "level": "A",
         "championPool": "锤石,诺提勒斯,洛",
         "liveRoom": "8981206",
-        "bio": "斗鱼8981206"
+        "bio": "斗鱼8981206",
+        "auctionPrice": 96
       }
     ]
   },
@@ -81,7 +86,8 @@
         "level": "A",
         "championPool": "卡蜜尔",
         "liveRoom": "1126960",
-        "bio": "斗鱼1126960"
+        "bio": "斗鱼1126960",
+        "auctionPrice": 120
       },
       {
         "position": "打野",
@@ -93,7 +99,8 @@
         "level": "B",
         "championPool": "蔚,瑟庄妮,斯卡纳",
         "liveRoom": "1126960",
-        "bio": "斗鱼1126960"
+        "bio": "斗鱼1126960",
+        "auctionPrice": 97
       },
       {
         "position": "中单",
@@ -105,7 +112,8 @@
         "level": "A",
         "championPool": "奥莉安娜,维克托,辛德拉",
         "liveRoom": "1126960",
-        "bio": "中路核心"
+        "bio": "中路核心",
+        "auctionPrice": 94
       },
       {
         "position": "ADC",
@@ -117,7 +125,8 @@
         "level": "S",
         "championPool": "德莱文,卢锡安,莎弥拉",
         "liveRoom": "1126960",
-        "bio": "激进射手"
+        "bio": "激进射手",
+        "auctionPrice": 100
       },
       {
         "position": "辅助",
@@ -129,7 +138,8 @@
         "level": "A",
         "championPool": "娜美,迦娜,璐璐",
         "liveRoom": "1126960",
-        "bio": "团队大脑"
+        "bio": "团队大脑",
+        "auctionPrice": 92
       }
     ]
   },
@@ -148,7 +158,8 @@
         "level": "B",
         "championPool": "墨菲特,赛恩,茂凯",
         "liveRoom": "4452132",
-        "bio": "稳健上路"
+        "bio": "稳健上路",
+        "auctionPrice": 120
       },
       {
         "position": "打野",
@@ -160,7 +171,8 @@
         "level": "B",
         "championPool": "赫卡里姆,魔腾,卡兹克",
         "liveRoom": "4452132",
-        "bio": "节奏掌控"
+        "bio": "节奏掌控",
+        "auctionPrice": 87
       },
       {
         "position": "中单",
@@ -172,7 +184,8 @@
         "level": "B",
         "championPool": "瑞兹,卡西奥佩娅,玛尔扎哈",
         "liveRoom": "4452132",
-        "bio": "斗鱼4452132"
+        "bio": "斗鱼4452132",
+        "auctionPrice": 92
       },
       {
         "position": "ADC",
@@ -184,7 +197,8 @@
         "level": "B",
         "championPool": "希维尔,图奇,克格莫",
         "liveRoom": "4452132",
-        "bio": "后期大核"
+        "bio": "后期大核",
+        "auctionPrice": 95
       },
       {
         "position": "辅助",
@@ -196,7 +210,8 @@
         "level": "C",
         "championPool": "布隆",
         "liveRoom": "8690608",
-        "bio": "斗鱼8690608"
+        "bio": "斗鱼8690608",
+        "auctionPrice": 80
       }
     ]
   },
@@ -215,7 +230,8 @@
         "level": "A",
         "championPool": "艾瑞莉娅,菲奥娜,贾克斯",
         "liveRoom": "251783",
-        "bio": "上路猛男"
+        "bio": "上路猛男",
+        "auctionPrice": 120
       },
       {
         "position": "打野",
@@ -227,7 +243,8 @@
         "level": "A",
         "championPool": "奈德丽,伊莉丝,艾克",
         "liveRoom": "251783",
-        "bio": "经验丰富"
+        "bio": "经验丰富",
+        "auctionPrice": 97
       },
       {
         "position": "中单",
@@ -239,7 +256,8 @@
         "level": "A",
         "championPool": "亚索,永恩,劫",
         "liveRoom": "251783",
-        "bio": "斗鱼251783"
+        "bio": "斗鱼251783",
+        "auctionPrice": 96
       },
       {
         "position": "ADC",
@@ -251,7 +269,8 @@
         "level": "B",
         "championPool": "霞,薇恩,凯特琳",
         "liveRoom": "251783",
-        "bio": "稳定输出"
+        "bio": "稳定输出",
+        "auctionPrice": 95
       },
       {
         "position": "辅助",
@@ -263,7 +282,8 @@
         "level": "B",
         "championPool": "布隆,慎,塔姆",
         "liveRoom": "251783",
-        "bio": "保护型辅助"
+        "bio": "保护型辅助",
+        "auctionPrice": 94
       }
     ]
   },
@@ -282,7 +302,8 @@
         "level": "A",
         "championPool": "锐雯,兰博,纳尔",
         "liveRoom": "2057760",
-        "bio": "上路法王"
+        "bio": "上路法王",
+        "auctionPrice": 120
       },
       {
         "position": "打野",
@@ -294,7 +315,8 @@
         "level": "B",
         "championPool": "扎克,拉莫斯,奥拉夫",
         "liveRoom": "2057760",
-        "bio": "肉盾型打野"
+        "bio": "肉盾型打野",
+        "auctionPrice": 86
       },
       {
         "position": "中单",
@@ -306,7 +328,8 @@
         "level": "B",
         "championPool": "崔斯特,加里奥,塔莉垭",
         "liveRoom": "2057760",
-        "bio": "斗鱼2057760"
+        "bio": "斗鱼2057760",
+        "auctionPrice": 97
       },
       {
         "position": "ADC",
@@ -318,7 +341,8 @@
         "level": "B",
         "championPool": "厄运小姐,烬,艾希",
         "liveRoom": "2057760",
-        "bio": "技术流"
+        "bio": "技术流",
+        "auctionPrice": 91
       },
       {
         "position": "辅助",
@@ -330,7 +354,8 @@
         "level": "B",
         "championPool": "布里茨,锤石,布兰德",
         "liveRoom": "12619385",
-        "bio": "斗鱼12619385"
+        "bio": "斗鱼12619385",
+        "auctionPrice": 92
       }
     ]
   },
@@ -349,7 +374,8 @@
         "level": "B",
         "championPool": "弗拉基米尔,凯南,慎",
         "liveRoom": "3863752",
-        "bio": "夜猫子选手"
+        "bio": "夜猫子选手",
+        "auctionPrice": 120
       },
       {
         "position": "打野",
@@ -361,7 +387,8 @@
         "level": "C",
         "championPool": "嘉文四世,古拉加斯,雷克塞",
         "liveRoom": "3863752",
-        "bio": "斗鱼3863752"
+        "bio": "斗鱼3863752",
+        "auctionPrice": 80
       },
       {
         "position": "中单",
@@ -373,7 +400,8 @@
         "level": "C",
         "championPool": "基兰,卡尔萨斯,维迦",
         "liveRoom": "3863752",
-        "bio": "温柔打法"
+        "bio": "温柔打法",
+        "auctionPrice": 80
       },
       {
         "position": "ADC",
@@ -385,7 +413,8 @@
         "level": "C",
         "championPool": "希维尔,赛娜,伊泽瑞尔",
         "liveRoom": "1580850",
-        "bio": "斗鱼1580850"
+        "bio": "斗鱼1580850",
+        "auctionPrice": 80
       },
       {
         "position": "辅助",
@@ -397,7 +426,8 @@
         "level": "C",
         "championPool": "索拉卡,娑娜,妮蔻",
         "liveRoom": "12661677",
-        "bio": "斗鱼12661677"
+        "bio": "斗鱼12661677",
+        "auctionPrice": 80
       }
     ]
   },
@@ -416,7 +446,8 @@
         "level": "C",
         "championPool": "茂凯,波比,慎",
         "liveRoom": "10902240",
-        "bio": "导师型选手"
+        "bio": "导师型选手",
+        "auctionPrice": 120
       },
       {
         "position": "打野",
@@ -428,7 +459,8 @@
         "level": "D",
         "championPool": "易,赵信,泰达米尔",
         "liveRoom": "10902240",
-        "bio": "幽默担当"
+        "bio": "幽默担当",
+        "auctionPrice": 50
       },
       {
         "position": "中单",
@@ -440,7 +472,8 @@
         "level": "D",
         "championPool": "亚索,普朗克,泰隆",
         "liveRoom": "10902240",
-        "bio": "快乐游戏"
+        "bio": "快乐游戏",
+        "auctionPrice": 50
       },
       {
         "position": "ADC",
@@ -452,7 +485,8 @@
         "level": "D",
         "championPool": "提莫,萨科,薇恩",
         "liveRoom": "10902240",
-        "bio": "斗鱼10902240"
+        "bio": "斗鱼10902240",
+        "auctionPrice": 50
       },
       {
         "position": "辅助",
@@ -464,7 +498,8 @@
         "level": "D",
         "championPool": "盖伦,赵信,蒙多",
         "liveRoom": "10902240",
-        "bio": "稳健辅助"
+        "bio": "稳健辅助",
+        "auctionPrice": 50
       }
     ]
   },
@@ -483,7 +518,8 @@
         "level": "C",
         "championPool": "辛吉德,提莫,薇恩",
         "liveRoom": "9779433",
-        "bio": "社交达人"
+        "bio": "社交达人",
+        "auctionPrice": 120
       },
       {
         "position": "打野",
@@ -495,7 +531,8 @@
         "level": "C",
         "championPool": "图奇,艾翁,努努",
         "liveRoom": "9779433",
-        "bio": "宝藏选手"
+        "bio": "宝藏选手",
+        "auctionPrice": 80
       },
       {
         "position": "中单",
@@ -507,7 +544,8 @@
         "level": "C",
         "championPool": "茂凯,艾翁,努努",
         "liveRoom": "9779433",
-        "bio": "森林之子"
+        "bio": "森林之子",
+        "auctionPrice": 80
       },
       {
         "position": "ADC",
@@ -519,7 +557,8 @@
         "level": "C",
         "championPool": "卢锡安,薇恩,德莱文",
         "liveRoom": "9779433",
-        "bio": "斗鱼9779433"
+        "bio": "斗鱼9779433",
+        "auctionPrice": 80
       },
       {
         "position": "辅助",
@@ -531,7 +570,8 @@
         "level": "C",
         "championPool": "迦娜,璐璐,娑娜",
         "liveRoom": "317422",
-        "bio": "斗鱼317422"
+        "bio": "斗鱼317422",
+        "auctionPrice": 80
       }
     ]
   },
@@ -550,7 +590,8 @@
         "level": "A",
         "championPool": "凯尔",
         "liveRoom": "",
-        "bio": "星光上路"
+        "bio": "星光上路",
+        "auctionPrice": 120
       },
       {
         "position": "打野",
@@ -562,7 +603,8 @@
         "level": "B",
         "championPool": "格雷福斯,卡兹克,雷恩加尔",
         "liveRoom": "",
-        "bio": "打野新星"
+        "bio": "打野新星",
+        "auctionPrice": 96
       },
       {
         "position": "中单",
@@ -574,7 +616,8 @@
         "level": "A",
         "championPool": "奥瑞利安,玛尔扎哈,维克托",
         "liveRoom": "",
-        "bio": "中单新秀"
+        "bio": "中单新秀",
+        "auctionPrice": 97
       },
       {
         "position": "ADC",
@@ -586,7 +629,8 @@
         "level": "B",
         "championPool": "韦鲁斯,艾希,凯特琳",
         "liveRoom": "",
-        "bio": "精准射手"
+        "bio": "精准射手",
+        "auctionPrice": 94
       },
       {
         "position": "辅助",
@@ -598,7 +642,8 @@
         "level": "B",
         "championPool": "洛,娜美,卡尔玛",
         "liveRoom": "",
-        "bio": "夜空守护"
+        "bio": "夜空守护",
+        "auctionPrice": 91
       }
     ]
   },
@@ -617,7 +662,8 @@
         "level": "A",
         "championPool": "兰博",
         "liveRoom": "",
-        "bio": "烈焰上路"
+        "bio": "烈焰上路",
+        "auctionPrice": 120
       },
       {
         "position": "打野",
@@ -629,7 +675,8 @@
         "level": "B",
         "championPool": "布兰德,费德提克,魔腾",
         "liveRoom": "",
-        "bio": "燃烧打野"
+        "bio": "燃烧打野",
+        "auctionPrice": 92
       },
       {
         "position": "中单",
@@ -641,7 +688,8 @@
         "level": "B",
         "championPool": "安妮,瑞兹",
         "liveRoom": "",
-        "bio": "中单强者"
+        "bio": "中单强者",
+        "auctionPrice": 98
       },
       {
         "position": "ADC",
@@ -653,7 +701,8 @@
         "level": "B",
         "championPool": "厄运小姐,烬",
         "liveRoom": "",
-        "bio": "火焰射手"
+        "bio": "火焰射手",
+        "auctionPrice": 88
       },
       {
         "position": "辅助",
@@ -665,7 +714,8 @@
         "level": "C",
         "championPool": "布兰德,兰博,尼菈",
         "liveRoom": "",
-        "bio": "辅助新星"
+        "bio": "辅助新星",
+        "auctionPrice": 80
       }
     ]
   },
@@ -684,7 +734,8 @@
         "level": "B",
         "championPool": "丽桑卓,波比,诺提勒斯",
         "liveRoom": "",
-        "bio": "冰封上路"
+        "bio": "冰封上路",
+        "auctionPrice": 120
       },
       {
         "position": "打野",
@@ -696,7 +747,8 @@
         "level": "C",
         "championPool": "艾希,艾尼维亚,茂凯",
         "liveRoom": "",
-        "bio": "雪花打野"
+        "bio": "雪花打野",
+        "auctionPrice": 80
       },
       {
         "position": "中单",
@@ -708,7 +760,8 @@
         "level": "B",
         "championPool": "艾尼维亚,奥莉安娜,维克托",
         "liveRoom": "",
-        "bio": "寒冰中单"
+        "bio": "寒冰中单",
+        "auctionPrice": 95
       },
       {
         "position": "ADC",
@@ -720,7 +773,8 @@
         "level": "B",
         "championPool": "艾希,韦鲁斯",
         "liveRoom": "",
-        "bio": "冰川射手"
+        "bio": "冰川射手",
+        "auctionPrice": 90
       },
       {
         "position": "辅助",
@@ -732,7 +786,8 @@
         "level": "B",
         "championPool": "丽桑卓,迦娜,璐璐",
         "liveRoom": "",
-        "bio": "极光守护"
+        "bio": "极光守护",
+        "auctionPrice": 91
       }
     ]
   },
@@ -751,7 +806,8 @@
         "level": "B",
         "championPool": "艾瑞莉娅,卡蜜尔,沃利贝尔",
         "liveRoom": "",
-        "bio": "闪电上路"
+        "bio": "闪电上路",
+        "auctionPrice": 120
       },
       {
         "position": "打野",
@@ -763,7 +819,8 @@
         "level": "B",
         "championPool": "雷恩加尔,卡兹克,雷克塞",
         "liveRoom": "",
-        "bio": "雷鸣打野"
+        "bio": "雷鸣打野",
+        "auctionPrice": 91
       },
       {
         "position": "中单",
@@ -775,7 +832,8 @@
         "level": "B",
         "championPool": "维克托,佐伊,辛德拉",
         "liveRoom": "",
-        "bio": "电场中单"
+        "bio": "电场中单",
+        "auctionPrice": 88
       },
       {
         "position": "ADC",
@@ -787,7 +845,8 @@
         "level": "B",
         "championPool": "金克丝,厄运小姐,库奇",
         "liveRoom": "",
-        "bio": "电荷射手"
+        "bio": "电荷射手",
+        "auctionPrice": 92
       },
       {
         "position": "辅助",
@@ -799,7 +858,8 @@
         "level": "C",
         "championPool": "沃利贝尔,迦娜,璐璐",
         "liveRoom": "",
-        "bio": "云端辅助"
+        "bio": "云端辅助",
+        "auctionPrice": 80
       }
     ]
   },
@@ -818,7 +878,8 @@
         "level": "B",
         "championPool": "泰隆,劫,格雷福斯",
         "liveRoom": "",
-        "bio": "暗影上路"
+        "bio": "暗影上路",
+        "auctionPrice": 120
       },
       {
         "position": "打野",
@@ -830,7 +891,8 @@
         "level": "B",
         "championPool": "魔腾,图奇,雷恩加尔",
         "liveRoom": "",
-        "bio": "幽灵打野"
+        "bio": "幽灵打野",
+        "auctionPrice": 95
       },
       {
         "position": "中单",
@@ -842,7 +904,8 @@
         "level": "B",
         "championPool": "辛德拉,劫,卡萨丁",
         "liveRoom": "",
-        "bio": "黑夜中单"
+        "bio": "黑夜中单",
+        "auctionPrice": 94
       },
       {
         "position": "ADC",
@@ -854,7 +917,8 @@
         "level": "B",
         "championPool": "薇恩,卡莎,卢锡安",
         "liveRoom": "",
-        "bio": "暗夜射手"
+        "bio": "暗夜射手",
+        "auctionPrice": 89
       },
       {
         "position": "辅助",
@@ -866,7 +930,8 @@
         "level": "C",
         "championPool": "派克,诺提勒斯,德莱厄斯",
         "liveRoom": "",
-        "bio": "迷雾守护"
+        "bio": "迷雾守护",
+        "auctionPrice": 80
       }
     ]
   },
@@ -885,7 +950,8 @@
         "level": "A",
         "championPool": "亚索,永恩",
         "liveRoom": "",
-        "bio": "风暴上路"
+        "bio": "风暴上路",
+        "auctionPrice": 120
       },
       {
         "position": "打野",
@@ -897,7 +963,8 @@
         "level": "B",
         "championPool": "蔚,赵信,贾克斯",
         "liveRoom": "",
-        "bio": "飓风打野"
+        "bio": "飓风打野",
+        "auctionPrice": 93
       },
       {
         "position": "中单",
@@ -909,7 +976,8 @@
         "level": "B",
         "championPool": "亚索,劫,永恩",
         "liveRoom": "",
-        "bio": "微风中单"
+        "bio": "微风中单",
+        "auctionPrice": 97
       },
       {
         "position": "ADC",
@@ -921,7 +989,8 @@
         "level": "B",
         "championPool": "卡莉丝塔,薇恩,卢锡安",
         "liveRoom": "",
-        "bio": "狂风射手"
+        "bio": "狂风射手",
+        "auctionPrice": 91
       },
       {
         "position": "辅助",
@@ -933,7 +1002,8 @@
         "level": "C",
         "championPool": "迦娜,娜美,洛",
         "liveRoom": "",
-        "bio": "清风辅助"
+        "bio": "清风辅助",
+        "auctionPrice": 80
       }
     ]
   },
@@ -952,7 +1022,8 @@
         "level": "C",
         "championPool": "墨菲特,奥恩,茂凯",
         "liveRoom": "",
-        "bio": "岩石上路"
+        "bio": "岩石上路",
+        "auctionPrice": 120
       },
       {
         "position": "打野",
@@ -964,7 +1035,8 @@
         "level": "C",
         "championPool": "扎克,拉莫斯,阿木木",
         "liveRoom": "",
-        "bio": "山岳打野"
+        "bio": "山岳打野",
+        "auctionPrice": 80
       },
       {
         "position": "中单",
@@ -976,7 +1048,8 @@
         "level": "C",
         "championPool": "玛尔扎哈,瑞兹,崔斯特",
         "liveRoom": "",
-        "bio": "砂石中单"
+        "bio": "砂石中单",
+        "auctionPrice": 80
       },
       {
         "position": "ADC",
@@ -988,7 +1061,8 @@
         "level": "C",
         "championPool": "希维尔,韦鲁斯,艾希",
         "liveRoom": "",
-        "bio": "碎石射手"
+        "bio": "碎石射手",
+        "auctionPrice": 80
       },
       {
         "position": "辅助",
@@ -1000,7 +1074,8 @@
         "level": "D",
         "championPool": "诺提勒斯,布隆,阿利斯塔",
         "liveRoom": "",
-        "bio": "岩壁辅助"
+        "bio": "岩壁辅助",
+        "auctionPrice": 50
       }
     ]
   },
@@ -1019,7 +1094,8 @@
         "level": "A",
         "championPool": "普朗克,俄洛伊",
         "liveRoom": "",
-        "bio": "海浪上路"
+        "bio": "海浪上路",
+        "auctionPrice": 120
       },
       {
         "position": "打野",
@@ -1031,7 +1107,8 @@
         "level": "B",
         "championPool": "菲兹,伊莉丝",
         "liveRoom": "",
-        "bio": "潮汐打野"
+        "bio": "潮汐打野",
+        "auctionPrice": 91
       },
       {
         "position": "中单",
@@ -1043,7 +1120,8 @@
         "level": "B",
         "championPool": "菲兹,卡萨丁,艾克",
         "liveRoom": "",
-        "bio": "珊瑚中单"
+        "bio": "珊瑚中单",
+        "auctionPrice": 95
       },
       {
         "position": "ADC",
@@ -1055,7 +1133,8 @@
         "level": "B",
         "championPool": "尼菈,希维尔,崔丝塔娜",
         "liveRoom": "",
-        "bio": "海龟射手"
+        "bio": "海龟射手",
+        "auctionPrice": 86
       },
       {
         "position": "辅助",
@@ -1067,7 +1146,8 @@
         "level": "C",
         "championPool": "娜美,洛,迦娜",
         "liveRoom": "",
-        "bio": "珍珠辅助"
+        "bio": "珍珠辅助",
+        "auctionPrice": 80
       }
     ]
   }

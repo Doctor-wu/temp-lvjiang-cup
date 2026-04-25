@@ -18,18 +18,17 @@ describe('match-excel.util', () => {
     // 创建一个有效的Excel文件用于测试
     const workbook = xlsx.utils.book_new();
 
-    // MatchInfo 表头和数据（新增一血和MVP字段）
+    // MatchInfo 表头和数据（新增视频BV号字段，移除游戏时长和一血）
     const matchInfoHeaders = [
       '红方战队名',
       '蓝方战队名',
       '局数',
       '比赛时间',
-      '游戏时长',
       '获胜方',
-      '一血',
       'MVP',
+      '视频BV号',
     ];
-    const matchInfoData = ['BLG', 'WBG', 1, '2026-04-16 14:00', '32:45', 'red', 'red', 'Knight'];
+    const matchInfoData = ['BLG', 'WBG', 1, '2026-04-16 14:00', 'red', 'Knight', 'BV1Ab4y1X7zK'];
 
     // TeamStats 表头和数据（移除一血字段）
     const teamStatsHeaders = [
@@ -146,10 +145,10 @@ describe('match-excel.util', () => {
       expect(result.matchInfo.blueTeamName).toBe('WBG');
       expect(result.matchInfo.gameNumber).toBe(1);
       expect(result.matchInfo.gameStartTime).toBe('2026-04-16 14:00');
-      expect(result.matchInfo.gameDuration).toBe('32:45');
       expect(result.matchInfo.winner).toBe('red');
-      expect(result.matchInfo.firstBlood).toBe('red');
+      expect(result.matchInfo.firstBlood).toBe('');  // 已废弃，返回空
       expect(result.matchInfo.mvp).toBe('Knight');
+      expect(result.matchInfo.videoBvid).toBe('BV1Ab4y1X7zK');
     });
 
     it('应该正确解析TeamStats数据（2行）', () => {
@@ -236,12 +235,11 @@ describe('match-excel.util', () => {
         '蓝方战队名',
         '局数',
         '比赛时间',
-        '游戏时长',
         '获胜方',
-        '一血',
         'MVP',
+        '视频BV号',
       ];
-      const matchInfoData = ['BLG', 'WBG', 1, '2026-04-16 14:00', '32:45', 'red', 'red', 'Knight'];
+      const matchInfoData = ['BLG', 'WBG', 1, '2026-04-16 14:00', 'red', 'Knight', 'BV1Ab4y1X7zK'];
       const teamStatsHeaders = [
         '阵营',
         '战队名',
@@ -330,12 +328,11 @@ describe('match-excel.util', () => {
         '蓝方战队名',
         '局数',
         '比赛时间',
-        '游戏时长',
         '获胜方',
-        '一血',
         'MVP',
+        '视频BV号',
       ];
-      const matchInfoData = ['BLG', 'WBG', 1, '2026-04-16 14:00', '32:45', 'red', 'red', 'Knight'];
+      const matchInfoData = ['BLG', 'WBG', 1, '2026-04-16 14:00', 'red', 'Knight', 'BV1Ab4y1X7zK'];
       const teamStatsHeaders = [
         '阵营',
         '战队名',
@@ -422,10 +419,11 @@ describe('match-excel.util', () => {
         blueTeamName: 'WBG',
         gameNumber: 1,
         gameStartTime: '2026-04-16 14:00',
-        gameDuration: '32:45',
+        gameDuration: '',  // 已废弃
         winner: 'red',
-        firstBlood: 'red',
+        firstBlood: '',  // 已废弃
         mvp: 'Knight',
+        videoBvid: 'BV1Ab4y1X7zK',
       };
 
       const result = validateMatchInfo(validData);
@@ -439,10 +437,11 @@ describe('match-excel.util', () => {
         blueTeamName: 'WBG',
         gameNumber: 1,
         gameStartTime: '2026-04-16 14:00',
-        gameDuration: '32:45',
+        gameDuration: '',
         winner: 'red',
-        firstBlood: 'red',
+        firstBlood: '',
         mvp: 'Knight',
+        videoBvid: '',
       };
 
       const result = validateMatchInfo(invalidData);
@@ -456,10 +455,11 @@ describe('match-excel.util', () => {
         blueTeamName: 'WBG',
         gameNumber: 1,
         gameStartTime: '2026-04-16 14:00',
-        gameDuration: '32:45',
+        gameDuration: '',
         winner: 'invalid',
-        firstBlood: 'red',
+        firstBlood: '',
         mvp: 'Knight',
+        videoBvid: '',
       };
 
       const result = validateMatchInfo(invalidData);
@@ -469,18 +469,99 @@ describe('match-excel.util', () => {
 
     it('应该支持中文获胜方', () => {
       const validData = {
-        redTeamName: 'BL局G',
+        redTeamName: 'BLG',
         blueTeamName: 'WBG',
         gameNumber: 1,
         gameStartTime: '2026-04-16 14:00',
-        gameDuration: '32:45',
+        gameDuration: '',
         winner: '红方',
-        firstBlood: '红方',
+        firstBlood: '',
         mvp: 'Knight',
+        videoBvid: '',
       };
 
       const result = validateMatchInfo(validData);
       expect(result.valid).toBe(true);
+    });
+
+    it('应该验证有效的BV号', () => {
+      const validData = {
+        redTeamName: 'BLG',
+        blueTeamName: 'WBG',
+        gameNumber: 1,
+        gameStartTime: '2026-04-16 14:00',
+        gameDuration: '',
+        winner: 'red',
+        firstBlood: '',
+        mvp: 'Knight',
+        videoBvid: 'BV1Ab4y1X7zK',
+      };
+
+      const result = validateMatchInfo(validData);
+      expect(result.valid).toBe(true);
+    });
+
+    it('应该拒绝无效的BV号', () => {
+      const invalidData = {
+        redTeamName: 'BLG',
+        blueTeamName: 'WBG',
+        gameNumber: 1,
+        gameStartTime: '2026-04-16 14:00',
+        gameDuration: '',
+        winner: 'red',
+        firstBlood: '',
+        mvp: 'Knight',
+        videoBvid: 'invalid-bvid',
+      };
+
+      const result = validateMatchInfo(invalidData);
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain('视频BV号格式错误');
+    });
+
+    it('BV号字段为空时应通过验证', () => {
+      const validData = {
+        redTeamName: 'BLG',
+        blueTeamName: 'WBG',
+        gameNumber: 1,
+        gameStartTime: '2026-04-16 14:00',
+        gameDuration: '',
+        winner: 'red',
+        firstBlood: '',
+        mvp: 'Knight',
+        videoBvid: '',
+      };
+
+      const result = validateMatchInfo(validData);
+      expect(result.valid).toBe(true);
+    });
+
+    it('BV号大小写敏感', () => {
+      const validData1 = {
+        redTeamName: 'BLG',
+        blueTeamName: 'WBG',
+        gameNumber: 1,
+        gameStartTime: '2026-04-16 14:00',
+        gameDuration: '',
+        winner: 'red',
+        firstBlood: '',
+        mvp: 'Knight',
+        videoBvid: 'BV1Ab4y1X7zK',
+      };
+      const validData2 = {
+        redTeamName: 'BLG',
+        blueTeamName: 'WBG',
+        gameNumber: 1,
+        gameStartTime: '2026-04-16 14:00',
+        gameDuration: '',
+        winner: 'red',
+        firstBlood: '',
+        mvp: 'Knight',
+        videoBvid: 'BV1aB4Y1x7Zk',
+      };
+      expect(validateMatchInfo(validData1).valid).toBe(true);
+      expect(validateMatchInfo(validData2).valid).toBe(true);
+      expect(validData1.videoBvid).not.toBe(validData2.videoBvid);
     });
   });
 

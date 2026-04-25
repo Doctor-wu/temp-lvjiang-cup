@@ -12,8 +12,9 @@ const createMockGameData = (overrides: Partial<MatchGameData> = {}): MatchGameDa
   matchId: 'match1',
   gameNumber: 2,
   winnerTeamId: 'team1',
-  gameDuration: '32:45',
+  gameDuration: '32:45',  // 保留兼容
   gameStartTime: '2026-04-16T14:00:00',
+  videoBvid: 'BV1Ab4y1X7zK',  // 新增
   blueTeam: {
     teamId: 'team1',
     teamName: 'BLG',
@@ -97,11 +98,27 @@ describe('MatchInfoCard', () => {
       expect(screen.getByText('第 2 局')).toBeInTheDocument();
     });
 
-    it('应该显示游戏时长', () => {
+    it('不应该显示游戏时长', () => {
       const gameData = createMockGameData({ gameDuration: '32:45' });
       render(<MatchInfoCard gameData={gameData} />);
 
-      expect(screen.getByText('32:45')).toBeInTheDocument();
+      expect(screen.queryByText('32:45')).not.toBeInTheDocument();
+    });
+
+    it('应该显示视频链接当有BV号时', () => {
+      const gameData = createMockGameData({ videoBvid: 'BV1Ab4y1X7zK' });
+      render(<MatchInfoCard gameData={gameData} />);
+
+      const videoLink = screen.getByText('📺 观看视频');
+      expect(videoLink).toBeInTheDocument();
+      expect(videoLink.closest('a')).toHaveAttribute('href', 'https://www.bilibili.com/video/BV1Ab4y1X7zK');
+    });
+
+    it('不应该显示视频链接当没有BV号时', () => {
+      const gameData = createMockGameData({ videoBvid: null });
+      render(<MatchInfoCard gameData={gameData} />);
+
+      expect(screen.queryByText('📺 观看视频')).not.toBeInTheDocument();
     });
 
     it('应该显示比赛时间', () => {

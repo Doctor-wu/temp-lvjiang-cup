@@ -40,21 +40,22 @@ async function createTestExcel() {
 
   sheet.getCell('A2').value = '说明：每支战队占5行，分别对应5个位置（上单、打野、中单、ADC、辅助）。请按顺序填写，同一战队只需在第1行填写战队信息。';
   sheet.getCell('A2').font = { size: 10, color: { argb: 'FF666666' } };
-  sheet.mergeCells('A2:M2');
+  sheet.mergeCells('A2:N2');
 
-  sheet.getCell('A3').value = '战队名称';
-  sheet.getCell('B3').value = '队标URL';
-  sheet.getCell('C3').value = '参赛宣言';
-  sheet.getCell('D3').value = '位置';
-  sheet.getCell('E3').value = '队员昵称';
-  sheet.getCell('F3').value = '队员游戏ID';
-  sheet.getCell('G3').value = '队员头像URL';
-  sheet.getCell('H3').value = '评分';
-  sheet.getCell('I3').value = '是否队长';
-  sheet.getCell('J3').value = '实力等级';
-  sheet.getCell('K3').value = '常用英雄';
-  sheet.getCell('L3').value = '直播间号';
-  sheet.getCell('M3').value = '个人简介';
+    sheet.getCell('A3').value = '战队名称';
+    sheet.getCell('B3').value = '队标URL';
+    sheet.getCell('C3').value = '参赛宣言';
+    sheet.getCell('D3').value = '位置';
+    sheet.getCell('E3').value = '队员昵称';
+    sheet.getCell('F3').value = '队员游戏ID';
+    sheet.getCell('G3').value = '队员头像URL';
+    sheet.getCell('H3').value = '评分';
+    sheet.getCell('I3').value = '是否队长';
+    sheet.getCell('J3').value = '实力等级';
+    sheet.getCell('K3').value = '常用英雄';
+    sheet.getCell('L3').value = '直播间号';
+    sheet.getCell('M3').value = '个人简介';
+    sheet.getCell('N3').value = '拍卖价';
 
   const headerRow = sheet.getRow(3);
   headerRow.font = { bold: true };
@@ -95,8 +96,9 @@ async function createTestExcel() {
       sheet.getCell(rowNum, 9).value = member.isCaptain || '否';
       sheet.getCell(rowNum, 10).value = member.level || 'B';
       sheet.getCell(rowNum, 11).value = championPool;
-      sheet.getCell(rowNum, 12).value = member.liveRoom || '';
+      sheet.getCell(rowNum, 12).value = member.liveRoom || '000000';
       sheet.getCell(rowNum, 13).value = member.bio || '';
+      sheet.getCell(rowNum, 14).value = member.auctionPrice || 0;
 
       sheet.getCell(`D${rowNum}`).dataValidation = {
         type: 'list',
@@ -120,7 +122,7 @@ async function createTestExcel() {
     }
   }
 
-  for (let col = 1; col <= 13; col++) {
+  for (let col = 1; col <= 14; col++) {
     sheet.getColumn(col).width = 15;
   }
   sheet.getColumn(3).width = 20;

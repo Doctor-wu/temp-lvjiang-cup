@@ -128,6 +128,8 @@ export interface MatchGameData {
   gameDuration: string;
   /** 本局开始时间 (ISO 8601) */
   gameStartTime: string | null;
+  /** 视频BV号 */
+  videoBvid?: string | null;
   /** 蓝色方战队数据 */
   blueTeam: TeamGameData;
   /** 红色方战队数据 */

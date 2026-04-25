@@ -76,6 +76,7 @@ test.describe('【P1】对战数据展示 - 页面访问与加载', () => {
             gameNumber: 1,
             gameDuration: '32:45',
             gameStartTime: '2026-04-16 14:00',
+            videoBvid: matchDataFixture.videoBvid,
             winner: 'red',
             blueTeam: {
               name: matchDataFixture.teamBName,
@@ -296,6 +297,118 @@ test.describe('【P1】对战数据展示 - 页面访问与加载', () => {
     await matchDataPage.expectPlayerStatsVisible();
 
     console.log('✅ 对战数据页面加载成功');
+  });
+
+  /**
+   * TEST-MD-001.5: 视频链接显示与跳转
+   * 验证当有BV号时，页面显示视频链接并支持跳转
+   */
+  test('TEST-MD-001.5: 视频链接显示与跳转 @P1', async ({ page }) => {
+    await page.route('**/api/matches/*/games/check', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: true,
+          code: 20000,
+          data: { hasData: true, gameCount: 3 },
+        }),
+      });
+    });
+
+    await page.route('**/api/matches/*/series', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: true,
+          code: 20000,
+          data: {
+            matchId: matchDataFixture.matchId,
+            teamA: { name: matchDataFixture.teamAName, id: 'team-a' },
+            teamB: { name: matchDataFixture.teamBName, id: 'team-b' },
+            boFormat: matchDataFixture.boFormat,
+            games: [
+              { gameNumber: 1, winner: 'red', duration: '32:45', status: 1 },
+              { gameNumber: 2, winner: 'blue', duration: '28:10', status: 1 },
+              { gameNumber: 3, winner: 'red', duration: '35:20', status: 1 },
+            ],
+          },
+        }),
+      });
+    });
+
+    await page.route('**/api/matches/*/games/1', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: true,
+          code: 20000,
+          data: {
+            matchId: matchDataFixture.matchId,
+            gameNumber: 1,
+            gameDuration: '32:45',
+            gameStartTime: '2026-04-16 14:00',
+            videoBvid: 'BV1Ab4y1X7zK',
+            winner: 'red',
+            blueTeam: {
+              name: matchDataFixture.teamBName,
+              kills: 18,
+              deaths: 25,
+              assists: 35,
+              gold: 58000,
+              towers: 3,
+              dragons: 1,
+              barons: 0,
+            },
+            redTeam: {
+              name: matchDataFixture.teamAName,
+              kills: 25,
+              deaths: 18,
+              assists: 47,
+              gold: 65000,
+              towers: 9,
+              dragons: 3,
+              barons: 1,
+            },
+            playerStats: [
+              {
+                id: 1,
+                side: 'red',
+                position: 'TOP',
+                nickname: 'Bin',
+                championName: '格温',
+                kills: 2,
+                deaths: 2,
+                assists: 11,
+                cs: 349,
+                gold: 17315,
+                damageDealt: 28500,
+                damageTaken: 32000,
+                level: 18,
+                visionScore: 45,
+                wardsPlaced: 12,
+                mvp: false,
+              },
+            ],
+          },
+        }),
+      });
+    });
+
+    await matchDataPage.goto(matchDataFixture.matchId);
+    await matchDataPage.expectPageLoaded();
+
+    // 验证视频链接存在
+    const videoLink = page.locator('a', { hasText: '📺 观看视频' });
+    await expect(videoLink).toBeVisible();
+
+    // 验证链接地址正确
+    const href = await videoLink.getAttribute('href');
+    expect(href).toBe('https://www.bilibili.com/video/BV1Ab4y1X7zK');
+
+    console.log('✅ 视频链接正确显示');
   });
 
   /**
