@@ -4,8 +4,8 @@ import { findChampionId } from '../teams/utils/champion-map.util';
 // ============= 接口定义 =============
 
 export interface MatchInfoData {
-  redTeamName: string;
-  blueTeamName: string;
+  teamAName: string;
+  teamBName: string;
   gameNumber: number;
   gameStartTime: string;
   gameDuration: string; // 保留（向后兼容，标记废弃）
@@ -96,11 +96,11 @@ function extractNumericValue(cellValue: any): number {
 export function validateMatchInfo(data: MatchInfoData): ValidationResult {
   const errors: string[] = [];
 
-  if (!data.redTeamName) {
-    errors.push('红方战队名称不能为空');
+  if (!data.teamAName) {
+    errors.push('teamA战队名称不能为空');
   }
-  if (!data.blueTeamName) {
-    errors.push('蓝方战队名称不能为空');
+  if (!data.teamBName) {
+    errors.push('teamB战队名称不能为空');
   }
   if (data.gameNumber < 1 || data.gameNumber > 5) {
     errors.push('局数必须在1-5之间');
@@ -112,7 +112,7 @@ export function validateMatchInfo(data: MatchInfoData): ValidationResult {
   if (!data.gameDuration) {
     errors.push('游戏时长不能为空');
   } else if (!isValidDurationFormat(data.gameDuration)) {
-    errors.push('游戏时长格式错误，应为 MM:SS 格式');
+    errors.push('游戏时长格式错误，应为 MM:SS 或 HH:MM:SS 格式');
   }
   if (!data.winner) {
     errors.push('获胜方不能为空');
@@ -519,11 +519,22 @@ export function validatePlayerStats(data: PlayerStatsData, rowIndex: number): Va
 
 export function isValidDurationFormat(duration: string): boolean {
   if (!duration) return false;
-  const match = duration.match(/^(\d{1,2}):(\d{2})$/);
-  if (!match) return false;
-  const minutes = parseInt(match[1], 10);
-  const seconds = parseInt(match[2], 10);
-  return minutes >= 0 && seconds >= 0 && seconds < 60;
+  // 支持 MM:SS 格式
+  const mmssMatch = duration.match(/^(\d{1,2}):(\d{2})$/);
+  if (mmssMatch) {
+    const minutes = parseInt(mmssMatch[1], 10);
+    const seconds = parseInt(mmssMatch[2], 10);
+    return minutes >= 0 && seconds >= 0 && seconds < 60;
+  }
+  // 支持 HH:MM:SS 格式
+  const hhmmssMatch = duration.match(/^(\d{1,2}):(\d{2}):(\d{2})$/);
+  if (hhmmssMatch) {
+    const hours = parseInt(hhmmssMatch[1], 10);
+    const minutes = parseInt(hhmmssMatch[2], 10);
+    const seconds = parseInt(hhmmssMatch[3], 10);
+    return hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60 && seconds >= 0 && seconds < 60;
+  }
+  return false;
 }
 
 export function isValidPosition(position: string): boolean {
@@ -569,15 +580,15 @@ export function matchChampionName(championName: string): string | null {
 
 /**
  * 验证Excel中的战队名称是否与所选对战中的战队名称一致
- * @param excelRedTeamName Excel中的红方战队名
- * @param excelBlueTeamName Excel中的蓝方战队名
+ * @param excelTeamAName Excel中的teamA战队名
+ * @param excelTeamBName Excel中的teamB战队名
  * @param matchTeamNameA 对战中战队A的名称
  * @param matchTeamNameB 对战中战队B的名称
  * @returns 验证结果
  */
 export function validateTeamNamesMatch(
-  excelRedTeamName: string,
-  excelBlueTeamName: string,
+  excelTeamAName: string,
+  excelTeamBName: string,
   matchTeamNameA: string,
   matchTeamNameB: string,
 ): ValidationResult {
@@ -586,48 +597,48 @@ export function validateTeamNamesMatch(
   // 标准化战队名称（去除空格，统一大小写）
   const normalize = (name: string) => name.trim().toLowerCase();
 
-  const excelRed = normalize(excelRedTeamName);
-  const excelBlue = normalize(excelBlueTeamName);
+  const excelA = normalize(excelTeamAName);
+  const excelB = normalize(excelTeamBName);
   const matchA = normalize(matchTeamNameA);
   const matchB = normalize(matchTeamNameB);
 
-  // 验证Excel中的红方战队名是否匹配对战中的某个战队
-  const redMatchesA = excelRed === matchA;
-  const redMatchesB = excelRed === matchB;
+  // 验证Excel中的teamA战队名是否匹配对战中的某个战队
+  const aMatchesA = excelA === matchA;
+  const aMatchesB = excelA === matchB;
 
-  if (!redMatchesA && !redMatchesB) {
+  if (!aMatchesA && !aMatchesB) {
     errors.push(
-      `Excel中的红方战队名"${excelRedTeamName}"与所选对战中的战队名称不匹配。所选对战为：${matchTeamNameA} vs ${matchTeamNameB}`,
+      `Excel中的teamA战队名"${excelTeamAName}"与所选对战中的战队名称不匹配。所选对战为：${matchTeamNameA} vs ${matchTeamNameB}`,
     );
   }
 
-  // 验证Excel中的蓝方战队名是否匹配对战中的某个战队
-  const blueMatchesA = excelBlue === matchA;
-  const blueMatchesB = excelBlue === matchB;
+  // 验证Excel中的teamB战队名是否匹配对战中的某个战队
+  const bMatchesA = excelB === matchA;
+  const bMatchesB = excelB === matchB;
 
-  if (!blueMatchesA && !blueMatchesB) {
+  if (!bMatchesA && !bMatchesB) {
     errors.push(
-      `Excel中的蓝方战队名"${excelBlueTeamName}"与所选对战中的战队名称不匹配。所选对战为：${matchTeamNameA} vs ${matchTeamNameB}`,
+      `Excel中的teamB战队名"${excelTeamBName}"与所选对战中的战队名称不匹配。所选对战为：${matchTeamNameA} vs ${matchTeamNameB}`,
     );
   }
 
-  // 验证红方和蓝方不能是同一个战队
-  if (excelRed === excelBlue) {
-    errors.push('Excel中的红方战队名和蓝方战队名不能相同');
+  // 验证teamA和teamB不能是同一个战队
+  if (excelA === excelB) {
+    errors.push('Excel中的teamA战队名和teamB战队名不能相同');
   }
 
-  // 验证红方和蓝方必须分别匹配对战中的两个不同战队
-  const redValid = redMatchesA || redMatchesB;
-  const blueValid = blueMatchesA || blueMatchesB;
+  // 验证teamA和teamB必须分别匹配对战中的两个不同战队
+  const aValid = aMatchesA || aMatchesB;
+  const bValid = bMatchesA || bMatchesB;
 
-  if (redValid && blueValid) {
-    // 检查是否红方和蓝方匹配了同一个战队
-    const bothMatchA = redMatchesA && blueMatchesA;
-    const bothMatchB = redMatchesB && blueMatchesB;
+  if (aValid && bValid) {
+    // 检查是否teamA和teamB匹配了同一个战队
+    const bothMatchA = aMatchesA && bMatchesA;
+    const bothMatchB = aMatchesB && bMatchesB;
 
     if (bothMatchA || bothMatchB) {
       errors.push(
-        `Excel中的红方战队名"${excelRedTeamName}"和蓝方战队名"${excelBlueTeamName}"不能同时匹配同一个战队。所选对战为：${matchTeamNameA} vs ${matchTeamNameB}`,
+        `Excel中的teamA战队名"${excelTeamAName}"和teamB战队名"${excelTeamBName}"不能同时匹配同一个战队。所选对战为：${matchTeamNameA} vs ${matchTeamNameB}`,
       );
     }
   }
@@ -706,24 +717,26 @@ export function parseMatchDataExcel(buffer: Buffer): ParsedMatchData {
 }
 
 function parseMatchInfoRow(row: any[]): MatchInfoData {
-  // 检测格式：7列新模板（无游戏时长）vs 8列旧模板（含游戏时长）
-  // 7列: [红方战队名, 蓝方战队名, 局数, 比赛时间, 获胜方, MVP, 视频BV号]
-  // 8列: [红方战队名, 蓝方战队名, 局数, 比赛时间, 游戏时长, 获胜方, MVP, 视频BV号]
+  // 检测格式：
+  // 7列新模板（无游戏时长）: [teamA, teamB, 局数, 比赛时间, 获胜方, MVP, 视频BV号]
+  // 8列新模板（含游戏时长）: [teamA, teamB, 局数, 比赛时间, 游戏时长, 获胜方, MVP, 视频BV号]
+  // 8列旧模板（含游戏时长）: [红方战队名, 蓝方战队名, 局数, 比赛时间, 游戏时长, 获胜方, MVP, 视频BV号]
+  // 7列旧模板（无游戏时长）: [红方战队名, 蓝方战队名, 局数, 比赛时间, 获胜方, MVP, 视频BV号]
   // 判断依据：
   //   1. 8列格式: row[4]是时长格式(含":"), row[5]是获胜方("red"/"blue")
   //   2. 7列格式: row[4]直接是获胜方("red"/"blue")
   const row4 = extractCellValue(row[4]);
   const row5 = extractCellValue(row[5]);
 
-  const isOldFormat =
+  const is8ColumnFormat =
     row4.includes(':') &&
     ['red', 'blue', '红方', '蓝方'].some((v) => row5.toLowerCase().includes(v));
 
-  if (isOldFormat) {
-    // 8列旧模板格式（含游戏时长，用于雷达图维度计算）
+  if (is8ColumnFormat) {
+    // 8列格式（含游戏时长，用于雷达图维度计算）
     return {
-      redTeamName: extractCellValue(row[0]),
-      blueTeamName: extractCellValue(row[1]),
+      teamAName: extractCellValue(row[0]),
+      teamBName: extractCellValue(row[1]),
       gameNumber: extractNumericValue(row[2]),
       gameStartTime: extractCellValue(row[3]),
       gameDuration: row4, // E列: 游戏时长
@@ -733,10 +746,10 @@ function parseMatchInfoRow(row: any[]): MatchInfoData {
       videoBvid: extractCellValue(row[7]), // H列: 视频BV号
     };
   } else {
-    // 7列新模板格式（无游戏时长，雷达图计算将异常）
+    // 7列格式（无游戏时长）
     return {
-      redTeamName: extractCellValue(row[0]),
-      blueTeamName: extractCellValue(row[1]),
+      teamAName: extractCellValue(row[0]),
+      teamBName: extractCellValue(row[1]),
       gameNumber: extractNumericValue(row[2]),
       gameStartTime: extractCellValue(row[3]),
       gameDuration: '', // 新格式无游戏时长（验证会失败）

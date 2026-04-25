@@ -549,8 +549,8 @@ export class MatchDataService {
 
     // 验证Excel中的战队名称是否与所选对战中的战队名称一致
     const teamNamesValidation = validateTeamNamesMatch(
-      parsedData.matchInfo.redTeamName,
-      parsedData.matchInfo.blueTeamName,
+      parsedData.matchInfo.teamAName,
+      parsedData.matchInfo.teamBName,
       teamA.name,
       teamB.name,
     );
@@ -621,8 +621,8 @@ export class MatchDataService {
 
     try {
       // 确定蓝色方和红色方
-      const blueTeamName = this.normalizeTeamName(parsedData.matchInfo.blueTeamName);
-      const redTeamName = this.normalizeTeamName(parsedData.matchInfo.redTeamName);
+      const blueTeamName = this.normalizeTeamName(parsedData.matchInfo.teamBName);
+      const redTeamName = this.normalizeTeamName(parsedData.matchInfo.teamAName);
 
       // 匹配战队ID
       let blueTeamId = await this.matchTeamName(blueTeamName);
@@ -918,19 +918,23 @@ export class MatchDataService {
    * 解析MatchInfo行数据
    */
   private parseMatchInfoRow(row: any[]): MatchInfoData {
-    // 检测格式：7列新模板（无游戏时长）vs 8列旧模板（含游戏时长）
+    // 检测格式：
+    // 7列新模板（无游戏时长）: [teamA, teamB, 局数, 比赛时间, 获胜方, MVP, 视频BV号]
+    // 8列新模板（含游戏时长）: [teamA, teamB, 局数, 比赛时间, 游戏时长, 获胜方, MVP, 视频BV号]
+    // 8列旧模板（含游戏时长）: [红方战队名, 蓝方战队名, 局数, 比赛时间, 游戏时长, 获胜方, MVP, 视频BV号]
+    // 7列旧模板（无游戏时长）: [红方战队名, 蓝方战队名, 局数, 比赛时间, 获胜方, MVP, 视频BV号]
     const row4 = this.extractCellValue(row[4]);
     const row5 = this.extractCellValue(row[5]);
 
-    const isOldFormat =
+    const is8ColumnFormat =
       row4.includes(':') &&
       ['red', 'blue', '红方', '蓝方'].some((v) => row5.toLowerCase().includes(v));
 
-    if (isOldFormat) {
-      // 8列旧模板格式（含游戏时长，用于雷达图维度计算）
+    if (is8ColumnFormat) {
+      // 8列格式（含游戏时长，用于雷达图维度计算）
       return {
-        redTeamName: this.extractCellValue(row[0]),
-        blueTeamName: this.extractCellValue(row[1]),
+        teamAName: this.extractCellValue(row[0]),
+        teamBName: this.extractCellValue(row[1]),
         gameNumber: this.extractNumericValue(row[2]),
         gameStartTime: this.extractCellValue(row[3]),
         gameDuration: row4, // E列: 游戏时长
@@ -940,10 +944,10 @@ export class MatchDataService {
         videoBvid: this.extractCellValue(row[7]), // H列: 视频BV号
       };
     } else {
-      // 7列新模板格式（无游戏时长，雷达图计算将异常）
+      // 7列格式（无游戏时长）
       return {
-        redTeamName: this.extractCellValue(row[0]),
-        blueTeamName: this.extractCellValue(row[1]),
+        teamAName: this.extractCellValue(row[0]),
+        teamBName: this.extractCellValue(row[1]),
         gameNumber: this.extractNumericValue(row[2]),
         gameStartTime: this.extractCellValue(row[3]),
         gameDuration: '', // 新格式无游戏时长（验证会失败）

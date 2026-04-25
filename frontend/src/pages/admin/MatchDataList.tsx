@@ -148,10 +148,18 @@ const MatchDataList: React.FC = () => {
 
     setDownloadingMatchId(matchId);
     try {
-      const blob = await downloadMatchDataTemplate(matchId);
+      const result = await downloadMatchDataTemplate(matchId);
+      const blob = result.blob;
 
-      // 尝试从响应头获取文件名，否则使用默认文件名
-      const fileName = `驴酱杯对战数据导入模板_${new Date().toISOString().slice(0, 10).replace(/-/g, '')}.xlsx`;
+      // 尝试从响应头获取文件名
+      let fileName = result.fileName;
+      if (!fileName) {
+        // 如果无法从响应头获取，使用默认命名规则构造文件名
+        const teamA = match.teamAName || '未知';
+        const teamB = match.teamBName || '未知';
+        const boFormat = match.boFormat || 'BO3';
+        fileName = `驴酱杯对战信息_${teamA}_vs_${teamB}_${boFormat}.xlsx`;
+      }
 
       // 创建临时链接触发下载
       const url = window.URL.createObjectURL(blob);

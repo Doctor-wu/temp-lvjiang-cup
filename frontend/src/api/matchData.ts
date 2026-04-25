@@ -156,13 +156,26 @@ export async function deleteMatchGameData(
 /**
  * 下载对战数据导入模板
  * @param matchId 比赛 ID
- * @returns 模板文件 Blob
+ * @returns 模板文件 Blob 和文件名
  */
-export async function downloadMatchDataTemplate(matchId: string): Promise<Blob> {
+export async function downloadMatchDataTemplate(
+  matchId: string
+): Promise<{ blob: Blob; fileName: string | null }> {
   const response = await apiClient.get<Blob>(`/admin/matches/${matchId}/import/template`, {
     responseType: 'blob',
   });
-  return response.data;
+
+  // 从 Content-Disposition 响应头中提取文件名
+  const contentDisposition = response.headers['content-disposition'];
+  let fileName: string | null = null;
+  if (contentDisposition) {
+    const fileNameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+    if (fileNameMatch && fileNameMatch[1]) {
+      fileName = decodeURIComponent(fileNameMatch[1].replace(/['"]/g, ''));
+    }
+  }
+
+  return { blob: response.data, fileName };
 }
 
 /**

@@ -23,12 +23,14 @@ export interface MatchDataImportError {
  * 模板预填充数据接口
  */
 interface TemplatePrefilledData {
-  /** 红方战队名 */
-  redTeamName: string;
-  /** 蓝方战队名 */
-  blueTeamName: string;
+  /** teamA战队名 */
+  teamAName: string;
+  /** teamB战队名 */
+  teamBName: string;
   /** 局数 */
   gameNumber: number;
+  /** 比赛开始时间 */
+  matchStartTime?: string;
 }
 
 @Injectable()
@@ -48,7 +50,7 @@ export class MatchDataImportService {
     const match = await (
       this.databaseService.get as <T = any>(sql: string, params: any[]) => Promise<T>
     )(
-      `SELECT m.id, m.bo_format, m.score_a, m.score_b, m.status,
+      `SELECT m.id, m.bo_format, m.score_a, m.score_b, m.status, m.start_time,
               ta.name as team_a_name, tb.name as team_b_name
        FROM matches m
        LEFT JOIN teams ta ON m.team_a_id = ta.id
@@ -83,9 +85,10 @@ export class MatchDataImportService {
     for (let i = 1; i <= sheetCount; i++) {
       const sheetName = `第${NUMBER_TO_CHINESE[i]}局`;
       await this.createMatchDataSheet(workbook, sheetName, {
-        redTeamName: match.team_a_name,
-        blueTeamName: match.team_b_name,
+        teamAName: match.team_a_name,
+        teamBName: match.team_b_name,
         gameNumber: i,
+        matchStartTime: match.start_time,
       });
     }
 
@@ -160,6 +163,27 @@ export class MatchDataImportService {
   }
 
   /**
+   * 格式化比赛开始时间
+   * @param startTime 数据库中的开始时间字符串或Date
+   * @returns 格式化后的时间字符串 YYYY-MM-DD HH:mm
+   */
+  private formatMatchStartTime(startTime: string | Date | null | undefined): string {
+    if (!startTime) {
+      return '';
+    }
+    const date = typeof startTime === 'string' ? new Date(startTime) : startTime;
+    if (isNaN(date.getTime())) {
+      return '';
+    }
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+  }
+
+  /**
    * 创建对战数据 Sheet
    * 固定 18 行结构：
    * - 第 1 行：MatchInfo 表头
@@ -193,8 +217,8 @@ export class MatchDataImportService {
 
     // 第 1 行：MatchInfo 表头（8列）
     const matchInfoHeaders = [
-      '红方战队名',
-      '蓝方战队名',
+      'teamA',
+      'teamB',
       '局数',
       '比赛时间',
       '游戏时长',
@@ -215,11 +239,17 @@ export class MatchDataImportService {
     });
 
     // 第 2 行：MatchInfo 数据 - 预填充已知字段，未知字段留空
-    sheet.getCell('A2').value = prefilledData.redTeamName; // 红方战队名 - 填充
-    sheet.getCell('B2').value = prefilledData.blueTeamName; // 蓝方战队名 - 填充
+    sheet.getCell('A2').value = prefilledData.teamAName; // teamA - 填充
+    sheet.getCell('B2').value = prefilledData.teamBName; // teamB - 填充
     sheet.getCell('C2').value = prefilledData.gameNumber; // 局数 - 填充
-    sheet.getCell('D2').value = ''; // 比赛时间 - 留空
-    sheet.getCell('E2').value = ''; // 游戏时长 - 留空
+    // 比赛时间 - 如果有则预填充，否则留空
+    sheet.getCell('D2').value = prefilledData.matchStartTime
+      ? this.formatMatchStartTime(prefilledData.matchStartTime)
+      : '';
+    // 游戏时长 - 留空，格式设置为文本防止Excel自动转换
+    const durationCell = sheet.getCell('E2');
+    durationCell.value = '';
+    durationCell.numFmt = '@';
     sheet.getCell('F2').value = ''; // 获胜方 - 留空
     sheet.getCell('G2').value = ''; // MVP - 留空
     sheet.getCell('H2').value = ''; // 视频BV号 - 留空

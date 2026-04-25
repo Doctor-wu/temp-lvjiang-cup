@@ -20,8 +20,8 @@ describe('match-excel.util', () => {
 
     // MatchInfo 表头和数据（8列，含游戏时长用于雷达图维度计算）
     const matchInfoHeaders = [
-      '红方战队名',
-      '蓝方战队名',
+      'teamA',
+      'teamB',
       '局数',
       '比赛时间',
       '游戏时长',
@@ -151,8 +151,8 @@ describe('match-excel.util', () => {
     it('应该正确解析MatchInfo数据', () => {
       const result = parseMatchDataExcel(validExcelBuffer);
 
-      expect(result.matchInfo.redTeamName).toBe('BLG');
-      expect(result.matchInfo.blueTeamName).toBe('WBG');
+      expect(result.matchInfo.teamAName).toBe('BLG');
+      expect(result.matchInfo.teamBName).toBe('WBG');
       expect(result.matchInfo.gameNumber).toBe(1);
       expect(result.matchInfo.gameStartTime).toBe('2026-04-16 14:00');
       expect(result.matchInfo.gameDuration).toBe('32:45'); // 恢复
@@ -426,8 +426,8 @@ describe('match-excel.util', () => {
   describe('validateMatchInfo', () => {
     it('应该验证有效的MatchInfo', () => {
       const validData = {
-        redTeamName: 'BLG',
-        blueTeamName: 'WBG',
+        teamAName: 'BLG',
+        teamBName: 'WBG',
         gameNumber: 1,
         gameStartTime: '2026-04-16 14:00',
         gameDuration: '32:45', // 恢复
@@ -444,8 +444,8 @@ describe('match-excel.util', () => {
 
     it('应该拒绝空的战队名称', () => {
       const invalidData = {
-        redTeamName: '',
-        blueTeamName: 'WBG',
+        teamAName: '',
+        teamBName: 'WBG',
         gameNumber: 1,
         gameStartTime: '2026-04-16 14:00',
         gameDuration: '32:45',
@@ -457,13 +457,13 @@ describe('match-excel.util', () => {
 
       const result = validateMatchInfo(invalidData);
       expect(result.valid).toBe(false);
-      expect(result.errors).toContain('红方战队名称不能为空');
+      expect(result.errors).toContain('teamA战队名称不能为空');
     });
 
     it('应该拒绝无效的获胜方', () => {
       const invalidData = {
-        redTeamName: 'BLG',
-        blueTeamName: 'WBG',
+        teamAName: 'BLG',
+        teamBName: 'WBG',
         gameNumber: 1,
         gameStartTime: '2026-04-16 14:00',
         gameDuration: '32:45',
@@ -480,8 +480,8 @@ describe('match-excel.util', () => {
 
     it('应该支持中文获胜方', () => {
       const validData = {
-        redTeamName: 'BLG',
-        blueTeamName: 'WBG',
+        teamAName: 'BLG',
+        teamBName: 'WBG',
         gameNumber: 1,
         gameStartTime: '2026-04-16 14:00',
         gameDuration: '32:45',
@@ -497,8 +497,8 @@ describe('match-excel.util', () => {
 
     it('应该验证有效的BV号', () => {
       const validData = {
-        redTeamName: 'BLG',
-        blueTeamName: 'WBG',
+        teamAName: 'BLG',
+        teamBName: 'WBG',
         gameNumber: 1,
         gameStartTime: '2026-04-16 14:00',
         gameDuration: '32:45',
@@ -514,8 +514,8 @@ describe('match-excel.util', () => {
 
     it('应该拒绝无效的BV号', () => {
       const invalidData = {
-        redTeamName: 'BLG',
-        blueTeamName: 'WBG',
+        teamAName: 'BLG',
+        teamBName: 'WBG',
         gameNumber: 1,
         gameStartTime: '2026-04-16 14:00',
         gameDuration: '32:45',
@@ -532,8 +532,8 @@ describe('match-excel.util', () => {
 
     it('BV号字段为空时应通过验证', () => {
       const validData = {
-        redTeamName: 'BLG',
-        blueTeamName: 'WBG',
+        teamAName: 'BLG',
+        teamBName: 'WBG',
         gameNumber: 1,
         gameStartTime: '2026-04-16 14:00',
         gameDuration: '32:45',
@@ -549,8 +549,8 @@ describe('match-excel.util', () => {
 
     it('BV号大小写敏感', () => {
       const validData1 = {
-        redTeamName: 'BLG',
-        blueTeamName: 'WBG',
+        teamAName: 'BLG',
+        teamBName: 'WBG',
         gameNumber: 1,
         gameStartTime: '2026-04-16 14:00',
         gameDuration: '32:45',
@@ -560,8 +560,8 @@ describe('match-excel.util', () => {
         videoBvid: 'BV1Ab4y1X7zK',
       };
       const validData2 = {
-        redTeamName: 'BLG',
-        blueTeamName: 'WBG',
+        teamAName: 'BLG',
+        teamBName: 'WBG',
         gameNumber: 1,
         gameStartTime: '2026-04-16 14:00',
         gameDuration: '32:45',
@@ -716,19 +716,19 @@ describe('match-excel.util', () => {
       expect(result.errors).toHaveLength(0);
     });
 
-    it('当红方战队名不匹配时应返回错误', () => {
+    it('当teamA战队名不匹配时应返回错误', () => {
       const result = validateTeamNamesMatch('T1', 'WBG', 'BLG', 'WBG');
       expect(result.valid).toBe(false);
       expect(result.errors).toContain(
-        'Excel中的红方战队名"T1"与所选对战中的战队名称不匹配。所选对战为：BLG vs WBG',
+        'Excel中的teamA战队名"T1"与所选对战中的战队名称不匹配。所选对战为：BLG vs WBG',
       );
     });
 
-    it('当蓝方战队名不匹配时应返回错误', () => {
+    it('当teamB战队名不匹配时应返回错误', () => {
       const result = validateTeamNamesMatch('BLG', 'T1', 'BLG', 'WBG');
       expect(result.valid).toBe(false);
       expect(result.errors).toContain(
-        'Excel中的蓝方战队名"T1"与所选对战中的战队名称不匹配。所选对战为：BLG vs WBG',
+        'Excel中的teamB战队名"T1"与所选对战中的战队名称不匹配。所选对战为：BLG vs WBG',
       );
     });
 
@@ -736,17 +736,17 @@ describe('match-excel.util', () => {
       const result = validateTeamNamesMatch('T1', 'GEN', 'BLG', 'WBG');
       expect(result.valid).toBe(false);
       expect(result.errors).toHaveLength(2);
-      expect(result.errors[0]).toContain('红方战队名');
-      expect(result.errors[1]).toContain('蓝方战队名');
+      expect(result.errors[0]).toContain('teamA战队名');
+      expect(result.errors[1]).toContain('teamB战队名');
     });
 
-    it('当红方和蓝方战队名相同时应返回错误', () => {
+    it('当teamA和teamB战队名相同时应返回错误', () => {
       const result = validateTeamNamesMatch('BLG', 'BLG', 'BLG', 'WBG');
       expect(result.valid).toBe(false);
-      expect(result.errors).toContain('Excel中的红方战队名和蓝方战队名不能相同');
+      expect(result.errors).toContain('Excel中的teamA战队名和teamB战队名不能相同');
     });
 
-    it('当红方和蓝方都匹配同一个战队时应返回错误', () => {
+    it('当teamA和teamB都匹配同一个战队时应返回错误', () => {
       const result = validateTeamNamesMatch('BLG', 'BLG', 'BLG', 'WBG');
       expect(result.valid).toBe(false);
       expect(result.errors.some((e) => e.includes('不能同时匹配同一个战队'))).toBe(true);
@@ -762,7 +762,7 @@ describe('match-excel.util', () => {
       const result = validateTeamNamesMatch('BLG', 'WBG', '驴酱', 'IC');
       expect(result.valid).toBe(false);
       expect(result.errors).toHaveLength(2);
-      expect(result.errors[0]).toContain('红方战队名');
+      expect(result.errors[0]).toContain('teamA战队名');
       expect(result.errors[0]).toContain('驴酱 vs IC');
     });
   });
