@@ -258,7 +258,15 @@ describe('MatchDataImportDialog', () => {
           playerCount: 0,
           failedCount: 1,
           overwritten: false,
-          failedPlayers: [{ row: 5, nickname: '测试选手', side: 'red', type: 'parse_error' as const, message: '选手数据不完整' }],
+          failedPlayers: [
+            {
+              row: 5,
+              nickname: '测试选手',
+              side: 'red',
+              type: 'parse_error' as const,
+              message: '选手数据不完整',
+            },
+          ],
         },
       ],
     };

@@ -262,7 +262,17 @@ const MatchDataList: React.FC = () => {
                     </td>
                     <td className="px-4 py-4">
                       <div className="flex items-center justify-end gap-2">
-                        {/* 下载模板按钮：位于管理数据之前，样式与导入数据一致 */}
+                        {!match.checkingMatchData && match.hasMatchData && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-secondary text-secondary hover:bg-secondary/20"
+                            onClick={() => handleManageMatchData(match.id)}
+                          >
+                            管理数据
+                          </Button>
+                        )}
+                        {/* 下载模板按钮：位于管理数据之后，样式与导入数据一致 */}
                         <Button
                           size="sm"
                           variant="outline"
@@ -275,16 +285,6 @@ const MatchDataList: React.FC = () => {
                           />
                           {downloadingMatchId === match.id ? '下载中...' : '下载模板'}
                         </Button>
-                        {!match.checkingMatchData && match.hasMatchData && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="border-secondary text-secondary hover:bg-secondary/20"
-                            onClick={() => handleManageMatchData(match.id)}
-                          >
-                            管理数据
-                          </Button>
-                        )}
                         <Button
                           size="sm"
                           variant="outline"

@@ -130,7 +130,7 @@ const EditableStatItem: React.FC<{
   onFieldChange,
   redColor = 'text-[#f44336]',
   blueColor = 'text-[#00bcd4]',
-  formatValue,
+  formatValue: _formatValue,
 }) => {
   const redFieldKey = `red.${field}`;
   const blueFieldKey = `blue.${field}`;
