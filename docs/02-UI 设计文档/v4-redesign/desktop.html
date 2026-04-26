@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#050508" />
+<title>驴酱杯 · v4 桌面端设计稿</title>
+<style>
+  :root {
+    --color-background-primary: #FFFFFF;
+    --color-background-secondary: #15151B;
+    --color-background-tertiary: #0E0E14;
+    --color-text-primary: #F5F5F7;
+    --color-text-secondary: rgba(245,245,247,0.7);
+    --color-text-tertiary: rgba(245,245,247,0.5);
+    --color-border-tertiary: rgba(255,255,255,0.10);
+    --color-border-secondary: rgba(255,255,255,0.20);
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+  }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(80,90,140,0.10), transparent 55%),
+      radial-gradient(ellipse 60% 50% at 100% 100%, rgba(150,90,160,0.06), transparent 60%),
+      #08080C;
+    min-height: 100vh;
+    padding: 28px 16px 64px;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Helvetica Neue", system-ui, sans-serif;
+    color: var(--color-text-primary);
+    -webkit-font-smoothing: antialiased;
+  }
+  .preview-host { width: 100%; max-width: 740px; margin: 0 auto; }
+  .preview-meta { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11px; color: var(--color-text-tertiary); text-align: center; margin-bottom: 18px; letter-spacing: 0.04em; }
+  .preview-meta a { color: rgba(168,224,255,0.85); text-decoration: none; }
+
+  .lj4 *  { box-sizing: border-box; }
+  .lj4    { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Helvetica Neue", system-ui, sans-serif; -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; color: #F5F5F7; }
+  .lj4 .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-feature-settings: "tnum"; letter-spacing: 0; }
+  .lj4 .hair { background: rgba(255,255,255,0.07); height: 0.5px; width: 100%; }
+  .lj4 .hairv { background: rgba(255,255,255,0.07); width: 0.5px; }
+  .lj4 .pulse { animation: lj4Pulse 2.4s ease-in-out infinite; }
+  .lj4 .marquee-track { animation: lj4Marquee 80s linear infinite; }
+  @keyframes lj4Pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .55; transform: scale(.85); } }
+  @keyframes lj4Marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+  .lj4 .link { color: rgba(245,245,247,0.55); transition: color .3s ease; cursor: pointer; }
+  .lj4 .link:hover { color: rgba(245,245,247,1); }
+  .lj4 .cta { transition: transform .25s ease, background .3s ease, border-color .3s ease, color .3s ease; cursor: pointer; }
+  .lj4 .cta-fill:hover { transform: translateY(-1px); background: #FFFFFF; }
+  .lj4 .cta-line:hover { transform: translateY(-1px); border-color: rgba(245,245,247,0.55); color: #FFFFFF; }
+  .lj4 .tile { transition: transform .4s cubic-bezier(.2,.7,.2,1), border-color .3s; cursor: pointer; }
+  .lj4 .tile:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.18) !important; }
+  .lj4 .team { position: relative; transition: transform .5s cubic-bezier(.2,.7,.2,1), border-color .3s; cursor: pointer; }
+  .lj4 .team:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.22) !important; z-index: 10; }
+  .lj4 .team .pop { position: absolute; left: 0; right: 0; top: 100%; margin-top: 6px; opacity: 0; pointer-events: none; transform: translateY(4px); transition: opacity .35s ease, transform .35s ease; z-index: 30; }
+  .lj4 .team:hover .pop { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  .lj4 .mem { transition: background .25s ease; cursor: pointer; }
+  .lj4 .mem:hover { background: rgba(255,255,255,0.04); }
+  .lj4 .mem:hover .arrow { opacity: 1; transform: translateX(2px); }
+  .lj4 .arrow { opacity: 0; transition: opacity .25s, transform .25s; }
+  .lj4 .seg-on  { background: rgba(245,245,247,0.95); color: #08080B; }
+  .lj4 .seg-off { color: rgba(245,245,247,0.55); }
+  .lj4 .pill-out { border: 0.5px solid rgba(255,255,255,0.18); border-radius: 999px; }
+  .lj4 .play-btn { transition: transform .3s ease, background .3s ease; }
+  .lj4 .video:hover .play-btn { transform: scale(1.06); background: rgba(255,255,255,0.95); }
+  .lj4 .video:hover .play-btn svg { fill: #08080B; }
+  .lj4 .streamer { transition: transform .5s cubic-bezier(.2,.7,.2,1); cursor: pointer; }
+  .lj4 .streamer:hover { transform: translateY(-3px); }
+  .lj4 .streamer:hover .liveroom { opacity: 1; transform: translateY(0); }
+  .lj4 .liveroom { opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .35s; }
+  .lj4 .award-row { transition: background .25s ease; }
+  .lj4 .award-row:hover { background: rgba(255,255,255,0.025); }
+</style>
+</head>
+<body>
+<div class="preview-host">
+<div class="preview-meta">驴酱杯 · v4 redesign · desktop · 直接用浏览器打开预览</div>
+
+<div class="lj4" style="background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 12px;">
+
+  <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 6px 12px; font-size: 11px; color: var(--color-text-tertiary);">
+    <span>驴酱杯 · v4 · 完整页面</span>
+    <span class="mono">hero · videos · streamers · teams · schedule · thanks</span>
+  </div>
+
+  <div style="border-radius: 12px; overflow: hidden; border: 0.5px solid var(--color-border-tertiary); background: #050508;">
+
+    <div style="padding: 9px 14px; display: flex; align-items: center; gap: 7px; background: #030305; border-bottom: 0.5px solid rgba(255,255,255,0.05);">
+      <span style="width: 10px; height: 10px; border-radius: 50%; background: #2A2A33;"></span>
+      <span style="width: 10px; height: 10px; border-radius: 50%; background: #2A2A33;"></span>
+      <span style="width: 10px; height: 10px; border-radius: 50%; background: #2A2A33;"></span>
+      <div style="margin-left: 14px; padding: 4px 12px; border-radius: 4px; background: rgba(255,255,255,0.03); font-size: 11px; color: rgba(245,245,247,0.45);" class="mono">lvjiang.icu</div>
+    </div>
+
+    <div style="position: relative; height: 540px; overflow: hidden; background: #050508;">
+      <div id="lj4Carousel" style="position: absolute; inset: 0;">
+        <img class="lj4-cover" data-i="0" src="https://cdn.jsdelivr.net/gh/forzenfox/lvjiang-cup@main/frontend/public/assets/cover_01.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 1; transition: opacity 1.4s ease-in-out;" />
+        <img class="lj4-cover" data-i="1" src="https://cdn.jsdelivr.net/gh/forzenfox/lvjiang-cup@main/frontend/public/assets/cover_02.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.4s ease-in-out;" />
+        <img class="lj4-cover" data-i="2" src="https://cdn.jsdelivr.net/gh/forzenfox/lvjiang-cup@main/frontend/public/assets/cover_03.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.4s ease-in-out;" />
+        <img class="lj4-cover" data-i="3" src="https://cdn.jsdelivr.net/gh/forzenfox/lvjiang-cup@main/frontend/public/assets/cover_04.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.4s ease-in-out;" />
+      </div>
+      <svg viewBox="0 0 680 540" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;">
+        <defs>
+          <linearGradient id="lj4Top" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(5,5,8,0.7)"/><stop offset="55%" stop-color="rgba(5,5,8,0.05)"/><stop offset="100%" stop-color="rgba(5,5,8,0)"/></linearGradient>
+          <linearGradient id="lj4Btm" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(5,5,8,0)"/><stop offset="55%" stop-color="rgba(5,5,8,0.6)"/><stop offset="100%" stop-color="rgba(5,5,8,1)"/></linearGradient>
+          <linearGradient id="lj4Lft" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="rgba(5,5,8,0.55)"/><stop offset="50%" stop-color="rgba(5,5,8,0.05)"/><stop offset="100%" stop-color="rgba(5,5,8,0)"/></linearGradient>
+        </defs>
+        <rect width="680" height="160" fill="url(#lj4Top)"/>
+        <rect y="240" width="680" height="300" fill="url(#lj4Btm)"/>
+        <rect width="380" height="540" fill="url(#lj4Lft)"/>
+      </svg>
+
+      <div style="position: absolute; top: 0; left: 0; right: 0; padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; z-index: 5; background: linear-gradient(180deg, rgba(5,5,8,0.55) 0%, rgba(5,5,8,0) 100%); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
+        <div style="display: flex; align-items: baseline; gap: 9px;">
+          <span style="font-size: 16px; font-weight: 500; letter-spacing: -0.02em;">驴酱杯</span>
+          <span class="mono" style="font-size: 10px; color: rgba(245,245,247,0.4);">S2 · 2026</span>
+        </div>
+        <nav style="display: flex; gap: 22px; font-size: 12.5px;">
+          <span class="link" style="color: #F5F5F7;">总览</span>
+          <span class="link">视频</span>
+          <span class="link">主播</span>
+          <span class="link">战队</span>
+          <span class="link">赛程</span>
+          <span class="link">鸣谢</span>
+        </nav>
+        <div class="pill-out" style="display: flex; align-items: center; gap: 8px; padding: 5px 11px; border-color: rgba(255,59,48,0.5); background: rgba(255,59,48,0.08);">
+          <span class="pulse" style="display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: #FF3B30;"></span>
+          <span style="font-size: 11px;">直播中</span>
+        </div>
+      </div>
+
+      <div id="lj4Hero" style="position: absolute; left: 36px; right: 36px; bottom: 38px; z-index: 4; display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 28px;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+            <span style="width: 22px; height: 0.5px; background: rgba(245,245,247,0.4);"></span>
+            <span class="mono" style="font-size: 10px; color: rgba(245,245,247,0.7); letter-spacing: 0.18em;">DRIVING GUILD · SEASON 02</span>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 16px; margin-bottom: 14px;">
+            <h1 style="font-size: 64px; line-height: 0.95; font-weight: 500; letter-spacing: -0.04em; margin: 0; color: #FFFFFF;">驴酱杯</h1>
+            <span class="mono" style="font-size: 12px; color: rgba(245,245,247,0.5); padding-bottom: 6px;">/ ULTIMATE</span>
+          </div>
+          <p style="font-size: 15px; color: rgba(245,245,247,0.78); margin: 0 0 8px; line-height: 1.5; max-width: 380px;">十六支战队 · 五轮瑞士 · 一夜决出归属</p>
+          <p class="mono" style="font-size: 11px; color: rgba(245,245,247,0.5); margin: 0 0 22px; letter-spacing: 0.04em;">May 1, 2026 · powered by 斗鱼</p>
+          <div style="display: flex; gap: 9px;">
+            <button class="cta cta-fill lj4" style="background: rgba(245,245,247,0.95); color: #08080B; border: none; padding: 11px 20px; font-size: 13px; font-weight: 500; border-radius: 999px; display: inline-flex; align-items: center; gap: 7px; font-family: inherit;">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="#08080B"><polygon points="6 4 20 12 6 20"/></svg>
+              观看直播
+            </button>
+            <button class="cta cta-line lj4" style="background: rgba(0,0,0,0.25); color: rgba(245,245,247,0.85); border: 0.5px solid rgba(245,245,247,0.3); padding: 11px 20px; font-size: 13px; border-radius: 999px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); font-family: inherit;">
+              查看赛程
+            </button>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px;">
+          <div style="padding: 10px 14px; border: 0.5px solid rgba(255,255,255,0.18); border-radius: 10px; background: rgba(0,0,0,0.35); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); display: flex; flex-direction: column; gap: 4px; min-width: 180px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span class="pulse" style="display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: #FF3B30;"></span>
+              <span class="mono" style="font-size: 10px; color: rgba(245,245,247,0.55); letter-spacing: 0.18em;">NOW STREAMING</span>
+            </div>
+            <div style="font-size: 13px; font-weight: 500;">洞主 · 主舞台</div>
+            <div style="font-size: 11px; color: rgba(245,245,247,0.55);">驴酱队 vs IC 队 · 第三轮</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="lj4Dots" style="position: absolute; left: 36px; bottom: 14px; z-index: 5; display: flex; gap: 6px;">
+        <span class="lj4-dot" data-i="0" style="width: 22px; height: 2px; border-radius: 2px; background: rgba(245,245,247,0.95); transition: all .4s ease; cursor: pointer;"></span>
+        <span class="lj4-dot" data-i="1" style="width: 8px; height: 2px; border-radius: 2px; background: rgba(245,245,247,0.3); transition: all .4s ease; cursor: pointer;"></span>
+        <span class="lj4-dot" data-i="2" style="width: 8px; height: 2px; border-radius: 2px; background: rgba(245,245,247,0.3); transition: all .4s ease; cursor: pointer;"></span>
+        <span class="lj4-dot" data-i="3" style="width: 8px; height: 2px; border-radius: 2px; background: rgba(245,245,247,0.3); transition: all .4s ease; cursor: pointer;"></span>
+      </div>
+    </div>
+
+    <div style="position: relative; padding: 28px 36px 24px;">
+      <svg viewBox="0 0 680 100" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;">
+        <defs><radialGradient id="lj4G1" cx="50%" cy="0%" r="55%"><stop offset="0%" stop-color="rgba(80,90,140,0.18)"/><stop offset="100%" stop-color="rgba(80,90,140,0)"/></radialGradient></defs>
+        <rect width="680" height="100" fill="url(#lj4G1)"/>
+      </svg>
+      <div style="position: relative; z-index: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;">
+        <div style="border-right: 0.5px solid rgba(255,255,255,0.07); padding-right: 16px;">
+          <div class="mono" style="font-size: 10px; color: rgba(245,245,247,0.45); letter-spacing: 0.16em; margin-bottom: 8px;">TEAMS</div>
+          <div class="mono" style="font-size: 30px; font-weight: 500; letter-spacing: -0.04em;">16</div>
+        </div>
+        <div style="border-right: 0.5px solid rgba(255,255,255,0.07); padding: 0 16px;">
+          <div class="mono" style="font-size: 10px; color: rgba(245,245,247,0.45); letter-spacing: 0.16em; margin-bottom: 8px;">STREAMERS</div>
+          <div class="mono" style="font-size: 30px; font-weight: 500; letter-spacing: -0.04em;">8<span style="font-size: 16px; color: rgba(245,245,247,0.45); margin-left: 6px;">+ 嘉宾</span></div>
+        </div>
+        <div style="border-right: 0.5px solid rgba(255,255,255,0.07); padding: 0 16px;">
+          <div class="mono" style="font-size: 10px; color: rgba(245,245,247,0.45); letter-spacing: 0.16em; margin-bottom: 8px;">PRIZE POOL</div>
+          <div class="mono" style="font-size: 30px; font-weight: 500; letter-spacing: -0.04em;">¥13<span style="font-size: 16px; color: rgba(245,245,247,0.45); margin-left: 4px;">万+</span></div>
+        </div>
+        <div style="padding-left: 16px;">
+          <div class="mono" style="font-size: 10px; color: rgba(245,245,247,0.45); letter-spacing: 0.16em; margin-bottom: 8px;">COUNTDOWN</div>
+          <div class="mono" style="font-size: 30px; font-weight: 500; letter-spacing: -0.04em;"><span id="lj4Cd">005</span><span style="font-size: 16px; color: rgba(245,245,247,0.45); margin-left: 6px;">天</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="hair"></div>
+
+    <div style="position: relative; padding: 50px 36px 38px;">
+      <svg viewBox="0 0 680 80" preserveAspectRatio="none" style="position: absolute; left: 0; right: 0; top: 0; width: 100%; height: 80px; pointer-events: none;">
+        <defs><radialGradient id="lj4G2" cx="50%" cy="0%" r="55%"><stop offset="0%" stop-color="rgba(70,140,180,0.13)"/><stop offset="100%" stop-color="rgba(70,140,180,0)"/></radialGradient></defs>
+        <rect width="680" height="80" fill="url(#lj4G2)"/>
+      </svg>
+
+      <div style="position: relative; display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 22px;">
+        <div>
+          <div class="mono" style="font-size: 10px; color: rgba(245,245,247,0.4); letter-spacing: 0.32em; margin-bottom: 8px;">— 02 / VIDEOS</div>
+          <h2 style="font-size: 26px; font-weight: 500; letter-spacing: -0.02em; margin: 0;">赛事视频</h2>
+        </div>
+        <span class="link" style="font-size: 12px; display: inline-flex; align-items: center; gap: 6px;">前往 B 站
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+        </span>
+      </div>
+
+      <div class="video tile" style="position: relative; border-radius: 12px; overflow: hidden; border: 0.5px solid rgba(255,255,255,0.09); aspect-ratio: 16/9; margin-bottom: 16px; background: #08080C;">
+        <img src="https://cdn.jsdelivr.net/gh/forzenfox/lvjiang-cup@main/frontend/public/assets/驴酱双人组.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.6;" onerror="this.style.display='none'"/>
+        <svg viewBox="0 0 680 380" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;">
+          <defs><linearGradient id="lj4Vid" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(5,5,8,0.2)"/><stop offset="100%" stop-color="rgba(5,5,8,0.85)"/></linearGradient></defs>
+          <rect width="680" height="380" fill="url(#lj4Vid)"/>
+        </svg>
+        <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;">
+          <div class="play-btn" style="width: 60px; height: 60px; border-radius: 50%; background: rgba(245,245,247,0.18); border: 0.5px solid rgba(255,255,255,0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="rgba(245,245,247,0.95)"><polygon points="6 4 20 12 6 20"/></svg>
+          </div>
+        </div>
+        <div class="pill-out mono" style="position: absolute; top: 14px; left: 14px; font-size: 10px; padding: 4px 9px; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); letter-spacing: 0.1em;">FEATURED · BV1xxxxxxxxx</div>
+        <div class="mono" style="position: absolute; bottom: 14px; right: 14px; font-size: 11px; padding: 3px 8px; background: rgba(0,0,0,0.55); border-radius: 3px;">10:42</div>
+        <div style="position: absolute; left: 18px; right: 18px; bottom: 18px; display: flex; align-items: end; justify-content: space-between; gap: 12px;">
+          <div>
+            <div style="font-size: 16px; font-weight: 500; line-height: 1.3; margin-bottom: 5px; max-width: 440px;">驴酱杯 S2 战火重燃！16 位队长谁能加冕为王？</div>
+            <div style="display: flex; align-items: center; gap: 10px; font-size: 11px; color: rgba(245,245,247,0.65);">
+              <span>胡凯利_洞主</span>
+              <span style="width: 2px; height: 2px; border-radius: 50%; background: rgba(245,245,247,0.4);"></span>
+              <span class="mono">5,490 赞</span>
+              <span style="width: 2px; height: 2px; border-radius: 50%; background: rgba(245,245,247,0.4);"></span>
+              <span class="mono">669 投币</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;" id="lj4Thumbs"></div>
+    </div>
+    <div class="hair"></div>
+
+    <div style="position: relative; padding: 50px 36px 38px;">
+      <svg viewBox="0 0 680 80" preserveAspectRatio="none" style="position: absolute; left: 0; right: 0; top: 0; width: 100%; height: 80px; pointer-events: none;">
+        <defs><radialGradient id="lj4G3" cx="50%" cy="0%" r="55%"><stop offset="0%" stop-color="rgba(150,90,160,0.14)"/><stop offset="100%" stop-color="rgba(150,90,160,0)"/></radialGradient></defs>
+        <rect width="680" height="80" fill="url(#lj4G3)"/>
+      </svg>
+
+      <div style="position: relative; display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 18px;">
+        <div>
+          <div class="mono" style="font-size: 10px; color: rgba(245,245,247,0.4); letter-spacing: 0.32em; margin-bottom: 8px;">— 03 / STREAMERS</div>
+          <h2 style="font-size: 26px; font-weight: 500; letter-spacing: -0.02em; margin: 0;">参赛主播</h2>
+        </div>
+        <div style="display: flex; gap: 4px; padding: 3px; background: rgba(255,255,255,0.04); border-radius: 999px;">
+          <span class="seg-on mono" style="padding: 5px 12px; font-size: 11px; border-radius: 999px; letter-spacing: 0.04em;">驴酱主播 · 5</span>
+          <span class="seg-off" style="padding: 5px 12px; font-size: 11px;">嘉宾主播 · 3</span>
+        </div>
+      </div>
+
+      <div id="lj4Streamers" style="position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;"></div>
+    </div>
+    <div class="hair"></div>
+
+    <div style="position: relative; padding: 50px 36px 14px;">
+      <svg viewBox="0 0 680 80" preserveAspectRatio="none" style="position: absolute; left: 0; right: 0; top: 0; width: 100%; height: 80px; pointer-events: none;">
+        <defs><radialGradient id="lj4G4" cx="50%" cy="0%" r="55%"><stop offset="0%" stop-color="rgba(120,90,180,0.13)"/><stop offset="100%" stop-color="rgba(120,90,180,0)"/></radialGradient></defs>
+        <rect width="680" height="80" fill="url(#lj4G4)"/>
+      </svg>
+
+      <div style="position: relative; display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 6px;">
+        <div>
+          <div class="mono" style="font-size: 10px; color: rgba(245,245,247,0.4); letter-spacing: 0.32em; margin-bottom: 8px;">— 04 / TEAMS</div>
+          <h2 style="font-size: 26px; font-weight: 500; letter-spacing: -0.02em; margin: 0;">十六支战队</h2>
+        </div>
+        <div style="font-size: 12px; color: rgba(245,245,247,0.5); max-width: 280px; text-align: right; line-height: 1.5;">悬停查看每位选手个人评级<br/>点击直接进入其直播间</div>
+      </div>
+    </div>
+    <div id="lj4Teams" style="position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 8px 36px 38px;"></div>
+    <div class="hair"></div>
+
+    <div style="position: relative; padding: 50px 36px 38px;">
+      <svg viewBox="0 0 680 80" preserveAspectRatio="none" style="position: absolute; left: 0; right: 0; top: 0; width: 100%; height: 80px; pointer-events: none;">
+        <defs><radialGradient id="lj4G5" cx="50%" cy="0%" r="55%"><stop offset="0%" stop-color="rgba(80,160,140,0.13)"/><stop offset="100%" stop-color="rgba(80,160,140,0)"/></radialGradient></defs>
+        <rect width="680" height="80" fill="url(#lj4G5)"/>
+      </svg>
+
+      <div style="position: relative; display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 18px;">
+        <div>
+          <div class="mono" style="font-size: 10px; color: rgba(245,245,247,0.4); letter-spacing: 0.32em; margin-bottom: 8px;">— 05 / SCHEDULE</div>
+          <h2 style="font-size: 26px; font-weight: 500; letter-spacing: -0.02em; margin: 0;">赛程</h2>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="display: flex; gap: 4px; padding: 3px; background: rgba(255,255,255,0.04); border-radius: 999px;">
+            <span class="seg-on mono" style="padding: 5px 12px; font-size: 11px; border-radius: 999px; letter-spacing: 0.04em;">瑞士轮</span>
+            <span class="seg-off" style="padding: 5px 12px; font-size: 11px;">淘汰赛</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="lj4Schedule" style="position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px;"></div>
+
+      <div style="position: relative; margin-top: 16px; display: flex; align-items: center; justify-content: space-between; font-size: 11px;">
+        <div style="display: flex; align-items: center; gap: 16px; color: rgba(245,245,247,0.55);">
+          <span style="display: inline-flex; align-items: center; gap: 6px;"><span style="width: 7px; height: 7px; border-radius: 2px; background: rgba(60,210,140,0.85);"></span>晋级</span>
+          <span style="display: inline-flex; align-items: center; gap: 6px;"><span style="width: 7px; height: 7px; border-radius: 2px; background: rgba(255,59,48,0.7);"></span>淘汰</span>
+          <span style="display: inline-flex; align-items: center; gap: 6px;"><span class="pulse" style="width: 7px; height: 7px; border-radius: 50%; background: #FF3B30;"></span>正在直播</span>
+        </div>
+        <span class="mono" style="color: rgba(245,245,247,0.45); letter-spacing: 0.06em;">BO1 → BO3 · 总 39 场</span>
+      </div>
+    </div>
+    <div class="hair"></div>
+
+    <div style="position: relative; padding: 50px 36px 28px;">
+      <svg viewBox="0 0 680 80" preserveAspectRatio="none" style="position: absolute; left: 0; right: 0; top: 0; width: 100%; height: 80px; pointer-events: none;">
+        <defs><radialGradient id="lj4G6" cx="50%" cy="0%" r="55%"><stop offset="0%" stop-color="rgba(220,180,90,0.12)"/><stop offset="100%" stop-color="rgba(220,180,90,0)"/></radialGradient></defs>
+        <rect width="680" height="80" fill="url(#lj4G6)"/>
+      </svg>
+
+      <div style="position: relative; display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 22px;">
+        <div>
+          <div class="mono" style="font-size: 10px; color: rgba(245,245,247,0.4); letter-spacing: 0.32em; margin-bottom: 8px;">— 06 / THANKS</div>
+          <h2 style="font-size: 26px; font-weight: 500; letter-spacing: -0.02em; margin: 0;">特别鸣谢</h2>
+          <p style="font-size: 13px; color: rgba(245,245,247,0.55); margin: 8px 0 0;">感谢每一位支持者的信任与陪伴</p>
+        </div>
+        <span class="mono" style="font-size: 10px; color: rgba(245,245,247,0.45); letter-spacing: 0.32em;">SPONSORS · STAFF</span>
+      </div>
+
+      <div style="position: relative; height: 38px; overflow: hidden; border: 0.5px solid rgba(255,255,255,0.08); border-radius: 999px; margin-bottom: 26px; background: rgba(255,255,255,0.015);">
+        <svg viewBox="0 0 680 38" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2;">
+          <defs>
+            <linearGradient id="lj4MqL" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#050508"/><stop offset="100%" stop-color="rgba(5,5,8,0)"/></linearGradient>
+            <linearGradient id="lj4MqR" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="rgba(5,5,8,0)"/><stop offset="100%" stop-color="#050508"/></linearGradient>
+          </defs>
+          <rect width="60" height="38" fill="url(#lj4MqL)"/>
+          <rect x="620" width="60" height="38" fill="url(#lj4MqR)"/>
+        </svg>
+        <div class="marquee-track" id="lj4Marquee" style="position: absolute; top: 0; left: 0; height: 38px; display: flex; align-items: center; white-space: nowrap; gap: 32px; padding: 0 16px; z-index: 1;"></div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1.15fr 1fr; gap: 14px;">
+        <div style="border: 0.5px solid rgba(255,255,255,0.09); border-radius: 12px; padding: 16px 18px; background: linear-gradient(180deg, rgba(220,180,90,0.045) 0%, rgba(220,180,90,0) 100%);">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,213,106,0.95)" stroke-width="1.6"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+            <span style="font-size: 13px; font-weight: 500; letter-spacing: -0.005em;">特殊奖项</span>
+            <span class="mono" style="margin-left: auto; font-size: 10px; color: rgba(245,245,247,0.4);">11 项</span>
+          </div>
+          <div id="lj4Awards" style="display: flex; flex-direction: column;"></div>
+        </div>
+
+        <div style="border: 0.5px solid rgba(255,255,255,0.09); border-radius: 12px; padding: 16px 18px; background: linear-gradient(180deg, rgba(120,140,200,0.04) 0%, rgba(120,140,200,0) 100%);">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(168,224,255,0.95)" stroke-width="1.6"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
+            <span style="font-size: 13px; font-weight: 500;">幕后工作人员</span>
+            <span class="mono" style="margin-left: auto; font-size: 10px; color: rgba(245,245,247,0.4);">名单待补</span>
+          </div>
+          <div id="lj4Staff" style="display: flex; flex-direction: column; gap: 4px;"></div>
+        </div>
+      </div>
+
+      <div style="margin-top: 26px; display: flex; justify-content: center;">
+        <div class="pill-out" style="display: inline-flex; align-items: center; gap: 9px; padding: 9px 18px; font-size: 12px; color: rgba(245,245,247,0.85); background: rgba(255,255,255,0.025);">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="rgba(255,124,168,0.95)"><path d="M12 21s-7-4.35-7-10a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 5.65-7 10-7 10z"/></svg>
+          再次感谢所有支持
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="rgba(255,213,106,0.95)"><path d="M12 21s-7-4.35-7-10a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 5.65-7 10-7 10z"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="hair"></div>
+
+    <div style="padding: 22px 36px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; background: #030305;">
+      <div style="display: flex; align-items: center; gap: 14px; font-size: 11px; color: rgba(245,245,247,0.5);">
+        <span class="mono" style="letter-spacing: 0.18em;">© 2026 LVJIANG.ICU</span>
+        <span class="link">合作邮箱 · lvjiangshangwu@163.com</span>
+        <span class="link">B 站 · 胡凯利_洞主</span>
+        <span class="link">公众号 · 驴驴电竞</span>
+      </div>
+      <span class="mono" style="font-size: 10px; color: rgba(245,245,247,0.3);">鄂 ICP 备 2026017374 号-1</span>
+    </div>
+
+  </div>
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/motion@10.18.0/dist/motion.umd.js"></script>
+<script>
+(function () {
+  var POS_ICONS = {
+    TOP:     'https://cdn.jsdelivr.net/gh/forzenfox/lvjiang-cup@main/frontend/public/top.png',
+    JUNGLE:  'https://cdn.jsdelivr.net/gh/forzenfox/lvjiang-cup@main/frontend/public/jungle.png',
+    MID:     'https://cdn.jsdelivr.net/gh/forzenfox/lvjiang-cup@main/frontend/public/mid.png',
+    ADC:     'https://cdn.jsdelivr.net/gh/forzenfox/lvjiang-cup@main/frontend/public/bot.png',
+    SUPPORT: 'https://cdn.jsdelivr.net/gh/forzenfox/lvjiang-cup@main/frontend/public/support.png'
+  };
+  var LV = { S: '#FFD56A', A: '#A8E0FF', B: '#9DD5B1', C: '#C8B8E0', D: '#9C9C9C' };
+
+  var thumbs = [
+    { t: '辰林队濒临解散，一众主播水友前来围观吃瓜！', d: '10:05' },
+    { t: '余小C阿亮看《驴酱杯宣传片》：剑君 Faker 既视感', d: '05:47' },
+    { t: '银剑君看《驴酱杯宣传片》：给鼻哥搞这么帅！', d: '02:45' },
+    { t: '《YMCA驴酱版》：洞主凯哥驴酱杯皇帝应援曲', d: '01:34' }
+  ];
+  var thumbsEl = document.getElementById('lj4Thumbs');
+  thumbs.forEach(function (v, i) {
+    var el = document.createElement('div');
+    el.className = 'video tile';
+    el.style.cssText = 'position: relative; border: 0.5px solid rgba(255,255,255,0.08); border-radius: 8px; overflow: hidden; aspect-ratio: 16/10; background: ' + ['#1a1a26','#22202a','#1f242c','#241e22'][i] + ';';
+    el.innerHTML =
+      '<svg viewBox="0 0 200 125" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%;">' +
+        '<defs><linearGradient id="lj4Th' + i + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(5,5,8,0.3)"/><stop offset="100%" stop-color="rgba(5,5,8,0.92)"/></linearGradient></defs>' +
+        '<rect width="200" height="125" fill="url(#lj4Th' + i + ')"/>' +
+      '</svg>' +
+      '<div class="mono" style="position: absolute; top: 8px; right: 8px; font-size: 10px; padding: 2px 6px; background: rgba(0,0,0,0.55); border-radius: 3px;">' + v.d + '</div>' +
+      '<div style="position: absolute; bottom: 8px; left: 10px; right: 10px; font-size: 11px; line-height: 1.35; color: rgba(245,245,247,0.92); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">' + v.t + '</div>';
+    thumbsEl.appendChild(el);
+  });
+
+  var streamers = [
+    { name: '咬人鹅',    bio: 'S1 荣誉选手', tag: '驴酱', tone: ['#3a2a4a','#5a3a6a'], url: 'https://www.douyu.com/138243' },
+    { name: 'BBBB 脸',  bio: 'S2 队长',     tag: '驴酱', tone: ['#1f3a5a','#2a4a6a'], url: 'https://www.douyu.com/10902240' },
+    { name: '年年酱牛肉', bio: 'S2 主持',    tag: '驴酱', tone: ['#4a2a2a','#6a3a3a'], url: 'https://www.douyu.com/12619385' },
+    { name: '驴酱·辰林', bio: 'S2 队长',     tag: '驴酱', tone: ['#2a3a4a','#3a4a5a'], url: 'https://www.douyu.com/9779433' },
+    { name: '澈心',     bio: 'S2 嘉宾解说', tag: '驴酱', tone: ['#3a3a2a','#5a4a2a'], url: 'https://www.douyu.com/8690608' }
+  ];
+  var streamersEl = document.getElementById('lj4Streamers');
+  streamers.forEach(function (s, i) {
+    var el = document.createElement('div');
+    el.className = 'streamer tile';
+    var c1 = s.tone[0], c2 = s.tone[1];
+    el.style.cssText = 'border: 0.5px solid rgba(255,255,255,0.09); border-radius: 10px; overflow: hidden; aspect-ratio: 3/4; position: relative; background: linear-gradient(160deg, ' + c1 + ' 0%, ' + c2 + ' 100%);';
+    el.innerHTML =
+      '<svg viewBox="0 0 100 134" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%;">' +
+        '<defs><linearGradient id="lj4St' + i + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(0,0,0,0.05)"/><stop offset="100%" stop-color="rgba(0,0,0,0.85)"/></linearGradient></defs>' +
+        '<circle cx="50" cy="46" r="20" fill="rgba(255,255,255,0.1)"/>' +
+        '<path d="M 22 132 C 22 100, 78 100, 78 132 Z" fill="rgba(255,255,255,0.08)"/>' +
+        '<rect width="100" height="134" fill="url(#lj4St' + i + ')"/>' +
+      '</svg>' +
+      '<div class="pill-out mono" style="position: absolute; top: 8px; left: 8px; font-size: 9px; padding: 2px 7px; background: rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.25); letter-spacing: 0.06em;">' + s.tag + '</div>' +
+      '<div style="position: absolute; left: 10px; right: 10px; bottom: 10px;">' +
+        '<div style="font-size: 13px; font-weight: 500; letter-spacing: -0.005em; line-height: 1.2; margin-bottom: 3px;">' + s.name + '</div>' +
+        '<div style="font-size: 10.5px; color: rgba(245,245,247,0.6); margin-bottom: 8px;">' + s.bio + '</div>' +
+        '<div class="liveroom" style="display: inline-flex; align-items: center; gap: 5px; font-size: 10px; color: rgba(245,245,247,0.95); border: 0.5px solid rgba(255,255,255,0.4); padding: 3px 8px; border-radius: 999px; background: rgba(0,0,0,0.4); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);">' +
+          '进入直播间' +
+          '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>' +
+        '</div>' +
+      '</div>';
+    el.addEventListener('click', function () { window.open(s.url, '_blank'); });
+    streamersEl.appendChild(el);
+  });
+
+  var teams = [
+    { name: '驴酱队', record: '3-0', members: [
+      { n: '洞主',   p: 'TOP',     l: 'S', cap: true,  url: 'https://www.douyu.com/138243' },
+      { n: '凯哥',   p: 'JUNGLE',  l: 'A', url: 'https://www.douyu.com/138243' },
+      { n: '啧啧',   p: 'MID',     l: 'S', url: 'https://www.douyu.com/138243' },
+      { n: '伏羲',   p: 'ADC',     l: 'A', url: 'https://www.douyu.com/138243' },
+      { n: '小溪',   p: 'SUPPORT', l: 'A', url: 'https://www.douyu.com/8981206' }
+    ]},
+    { name: 'IC 队', record: '3-1', members: [
+      { n: '余小C',  p: 'TOP',     l: 'A', cap: true,  url: 'https://www.douyu.com/1126960' },
+      { n: '阿亮',   p: 'JUNGLE',  l: 'B', url: 'https://www.douyu.com/1126960' },
+      { n: '二泽',   p: 'MID',     l: 'A', url: 'https://www.douyu.com/1126960' },
+      { n: '恶意',   p: 'ADC',     l: 'S', url: 'https://www.douyu.com/1126960' },
+      { n: '阿瓜',   p: 'SUPPORT', l: 'A', url: 'https://www.douyu.com/1126960' }
+    ]},
+    { name: '小熊队', record: '3-1', members: [
+      { n: '小达',     p: 'TOP',     l: 'A', cap: true, url: 'https://www.douyu.com/251783' },
+      { n: '老佳阳',   p: 'JUNGLE',  l: 'A', url: 'https://www.douyu.com/251783' },
+      { n: '银剑君',   p: 'MID',     l: 'A', url: 'https://www.douyu.com/251783' },
+      { n: '秃秃',     p: 'ADC',     l: 'B', url: 'https://www.douyu.com/251783' },
+      { n: '皮皮核桃', p: 'SUPPORT', l: 'B', url: 'https://www.douyu.com/251783' }
+    ]},
+    { name: '星辰队', record: '3-0', members: [
+      { n: '星河', p: 'TOP', l: 'A', cap: true }, { n: '闪烁', p: 'JUNGLE', l: 'B' },
+      { n: '流星', p: 'MID', l: 'A' }, { n: '彗星', p: 'ADC', l: 'B' }, { n: '夜空', p: 'SUPPORT', l: 'B' }
+    ]},
+    { name: '搓搓鸟队', record: '2-2', members: [
+      { n: '法环',   p: 'TOP',     l: 'A', cap: true, url: 'https://www.douyu.com/2057760' },
+      { n: '大本猪', p: 'JUNGLE',  l: 'B', url: 'https://www.douyu.com/2057760' },
+      { n: '格局',   p: 'MID',     l: 'B', url: 'https://www.douyu.com/2057760' },
+      { n: 'xlbos',  p: 'ADC',     l: 'B', url: 'https://www.douyu.com/2057760' },
+      { n: '年年',   p: 'SUPPORT', l: 'B', url: 'https://www.douyu.com/12619385' }
+    ]},
+    { name: 'PLG 队', record: '2-3', members: [
+      { n: '泰妍', p: 'TOP', l: 'B', cap: true, url: 'https://www.douyu.com/4452132' },
+      { n: '查理', p: 'JUNGLE', l: 'B', url: 'https://www.douyu.com/4452132' },
+      { n: '二抛', p: 'MID', l: 'B', url: 'https://www.douyu.com/4452132' },
+      { n: '芬达', p: 'ADC', l: 'B', url: 'https://www.douyu.com/4452132' },
+      { n: '小唯', p: 'SUPPORT', l: 'C', url: 'https://www.douyu.com/8690608' }
+    ]},
+    { name: '雨酱队', record: '2-3', members: [
+      { n: '想和哥俩玩', p: 'TOP', l: 'C', cap: true, url: 'https://www.douyu.com/9779433' },
+      { n: '慧琳宝',     p: 'JUNGLE', l: 'C', url: 'https://www.douyu.com/9779433' },
+      { n: '辰林',       p: 'MID', l: 'C', url: 'https://www.douyu.com/9779433' },
+      { n: '暴龙战士',   p: 'ADC', l: 'C', url: 'https://www.douyu.com/9779433' },
+      { n: '冯雨',       p: 'SUPPORT', l: 'C', url: 'https://www.douyu.com/317422' }
+    ]},
+    { name: '深海队', record: '2-3', members: [
+      { n: '海浪', p: 'TOP', l: 'A', cap: true }, { n: '潮汐', p: 'JUNGLE', l: 'B' },
+      { n: '珊瑚', p: 'MID', l: 'B' }, { n: '海龟', p: 'ADC', l: 'B' }, { n: '珍珠', p: 'SUPPORT', l: 'C' }
+    ]},
+    { name: '100J 队', record: '1-3', members: [
+      { n: '十六夜',   p: 'TOP', l: 'B', cap: true, url: 'https://www.douyu.com/3863752' },
+      { n: '小甜椒',   p: 'JUNGLE', l: 'C', url: 'https://www.douyu.com/3863752' },
+      { n: '温柔遍野', p: 'MID', l: 'C', url: 'https://www.douyu.com/3863752' },
+      { n: '团子',     p: 'ADC', l: 'C', url: 'https://www.douyu.com/1580850' },
+      { n: '柚柚子',   p: 'SUPPORT', l: 'C', url: 'https://www.douyu.com/12661677' }
+    ]},
+    { name: '雷霆队', record: '1-3', members: [
+      { n: '闪电', p: 'TOP', l: 'B', cap: true }, { n: '雷鸣', p: 'JUNGLE', l: 'B' },
+      { n: '电场', p: 'MID', l: 'B' }, { n: '电荷', p: 'ADC', l: 'B' }, { n: '云端', p: 'SUPPORT', l: 'C' }
+    ]},
+    { name: '暗影队', record: '1-3', members: [
+      { n: '影子', p: 'TOP', l: 'B', cap: true }, { n: '幽灵', p: 'JUNGLE', l: 'B' },
+      { n: '黑夜', p: 'MID', l: 'B' }, { n: '暗夜', p: 'ADC', l: 'B' }, { n: '迷雾', p: 'SUPPORT', l: 'C' }
+    ]},
+    { name: '疾风队', record: '1-3', members: [
+      { n: '风暴', p: 'TOP', l: 'A', cap: true }, { n: '飓风', p: 'JUNGLE', l: 'B' },
+      { n: '微风', p: 'MID', l: 'B' }, { n: '狂风', p: 'ADC', l: 'B' }, { n: '清风', p: 'SUPPORT', l: 'C' }
+    ]},
+    { name: '寒冰队', record: '0-3', members: [
+      { n: '冰霜', p: 'TOP', l: 'B', cap: true }, { n: '雪花', p: 'JUNGLE', l: 'C' },
+      { n: '寒流', p: 'MID', l: 'B' }, { n: '冰川', p: 'ADC', l: 'B' }, { n: '极光', p: 'SUPPORT', l: 'B' }
+    ]},
+    { name: '69 队', record: '0-3', members: [
+      { n: '尊师HKL', p: 'TOP', l: 'C', cap: true, url: 'https://www.douyu.com/10902240' },
+      { n: '大B脸',   p: 'JUNGLE', l: 'D', url: 'https://www.douyu.com/10902240' },
+      { n: '可乐',     p: 'MID', l: 'D', url: 'https://www.douyu.com/10902240' },
+      { n: '咬人鹅',   p: 'ADC', l: 'D', url: 'https://www.douyu.com/10902240' },
+      { n: '阿松',     p: 'SUPPORT', l: 'D', url: 'https://www.douyu.com/10902240' }
+    ]},
+    { name: '巨石队', record: '0-3', members: [
+      { n: '岩石', p: 'TOP', l: 'C', cap: true }, { n: '山岳', p: 'JUNGLE', l: 'C' },
+      { n: '砂石', p: 'MID', l: 'C' }, { n: '碎石', p: 'ADC', l: 'C' }, { n: '岩壁', p: 'SUPPORT', l: 'D' }
+    ]},
+    { name: '烈焰队', record: '0-3', members: [
+      { n: '火焰', p: 'TOP', l: 'A', cap: true }, { n: '燃烧', p: 'JUNGLE', l: 'B' },
+      { n: '炽热', p: 'MID', l: 'B' }, { n: '烈焰', p: 'ADC', l: 'B' }, { n: '灰烬', p: 'SUPPORT', l: 'C' }
+    ]}
+  ];
+
+  var grid = document.getElementById('lj4Teams');
+  teams.forEach(function (t) {
+    var card = document.createElement('div');
+    card.className = 'team';
+    card.style.cssText = 'border: 0.5px solid rgba(255,255,255,0.09); border-radius: 8px; padding: 11px 12px 12px; background: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, rgba(255,255,255,0.005) 100%); display: flex; flex-direction: column; gap: 9px; min-height: 92px;';
+    var capName = (t.members[0] && t.members[0].n) || '';
+    var dots = t.members.map(function (m) {
+      return '<span style="width:7px;height:7px;border-radius:50%;background:' + LV[m.l] + ';opacity:0.85;"></span>';
+    }).join('');
+    var pop = t.members.map(function (m) {
+      var arrow = m.url ? '<svg class="arrow" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(245,245,247,0.85)" stroke-width="2"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>' : '<span style="width:10px;"></span>';
+      var capPill = m.cap ? '<span style="font-size:9px;color:rgba(255,213,106,0.95);border:0.5px solid rgba(255,213,106,0.5);padding:0 4px;border-radius:3px;letter-spacing:0.06em;">队长</span>' : '';
+      var rowAttrs = m.url ? 'data-url="' + m.url + '"' : '';
+      return '<div class="mem" ' + rowAttrs + ' style="display:grid;grid-template-columns:14px 1fr auto auto;align-items:center;gap:8px;padding:6px 7px;border-radius:6px;">' +
+               '<img src="' + (POS_ICONS[m.p] || '') + '" alt="" style="width:14px;height:14px;object-fit:contain;opacity:0.8;" onerror="this.style.display=\'none\'"/>' +
+               '<div style="display:flex;align-items:center;gap:6px;min-width:0;">' +
+                 '<span style="font-size:11.5px;color:#F5F5F7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + m.n + '</span>' +
+                 capPill +
+               '</div>' +
+               '<span class="mono" style="font-size:9.5px;font-weight:500;color:' + LV[m.l] + ';border:0.5px solid ' + LV[m.l] + '40;padding:1px 5px;border-radius:3px;letter-spacing:0.04em;">' + m.l + '</span>' +
+               arrow +
+             '</div>';
+    }).join('');
+    card.innerHTML =
+      '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+        '<div style="font-size:13px;font-weight:500;letter-spacing:-0.01em;">' + t.name + '</div>' +
+        '<span class="mono" style="font-size:10px;color:rgba(245,245,247,0.5);">' + t.record + '</span>' +
+      '</div>' +
+      '<div style="font-size:10.5px;color:rgba(245,245,247,0.45);">队长 · ' + capName + '</div>' +
+      '<div style="display:flex;gap:5px;align-items:center;margin-top:auto;">' + dots + '</div>' +
+      '<div class="pop" style="border:0.5px solid rgba(255,255,255,0.18);border-radius:10px;background:rgba(15,15,22,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:8px;box-shadow:0 14px 40px rgba(0,0,0,0.55);">' + pop + '</div>';
+    grid.appendChild(card);
+    card.querySelectorAll('.mem[data-url]').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        e.stopPropagation();
+        window.open(el.getAttribute('data-url'), '_blank');
+      });
+    });
+  });
+
+  var rounds = [
+    { title: '第一轮', meta: 'BO1 · 完赛', groups: [
+      { rec: '0-0', matches: [
+        { a: '驴酱', b: 'IC',   sa: 1, sb: 0, w: 'a' },
+        { a: '小熊', b: 'PLG',  sa: 1, sb: 0, w: 'a' },
+        { a: '搓搓鸟', b: '100J', sa: 1, sb: 0, w: 'a' },
+        { a: '雨酱', b: '69',   sa: 1, sb: 0, w: 'a' },
+        { a: '星辰', b: '烈焰', sa: 1, sb: 0, w: 'a' },
+        { a: '雷霆', b: '寒冰', sa: 1, sb: 0, w: 'a' },
+        { a: '暗影', b: '疾风', sa: 1, sb: 0, w: 'a' },
+        { a: '深海', b: '巨石', sa: 1, sb: 0, w: 'a' }
+      ]}
+    ]},
+    { title: '第二轮', meta: 'BO1 · 完赛', groups: [
+      { rec: '1-0', matches: [
+        { a: '驴酱', b: '搓搓鸟', sa: 1, sb: 0, w: 'a' },
+        { a: '小熊', b: '雨酱', sa: 1, sb: 0, w: 'a' },
+        { a: '星辰', b: '暗影', sa: 1, sb: 0, w: 'a' },
+        { a: '雷霆', b: '深海', sa: 1, sb: 0, w: 'a' }
+      ]},
+      { rec: '0-1', matches: [
+        { a: 'IC',   b: '100J', sa: 1, sb: 0, w: 'a' },
+        { a: 'PLG',  b: '69',   sa: 1, sb: 0, w: 'a' },
+        { a: '烈焰', b: '疾风', sa: 0, sb: 1, w: 'b' },
+        { a: '寒冰', b: '巨石', sa: 0, sb: 1, w: 'b' }
+      ]}
+    ]},
+    { title: '第三轮', meta: 'BO1 · 进行中', groups: [
+      { rec: '2-0', matches: [
+        { a: '驴酱', b: '小熊', sa: 1, sb: 0, w: 'a' },
+        { a: '星辰', b: '雷霆', sa: 0, sb: 0, live: true }
+      ]},
+      { rec: '1-1', matches: [
+        { a: '搓搓鸟', b: '雨酱', sa: 0, sb: 0 },
+        { a: 'IC',   b: 'PLG',  sa: 0, sb: 0 },
+        { a: '暗影', b: '深海', sa: 0, sb: 0 },
+        { a: '疾风', b: '巨石', sa: 0, sb: 0 }
+      ]},
+      { rec: '0-2', matches: [
+        { a: '100J', b: '69', sa: 0, sb: 0 },
+        { a: '烈焰', b: '寒冰', sa: 0, sb: 0 }
+      ]}
+    ]},
+    { title: '第四轮', meta: 'BO3 · 待赛', groups: [
+      { rec: '2-1', adv: true, count: 3 },
+      { rec: '1-2', elim: true, count: 3 }
+    ]},
+    { title: '第五轮', meta: 'BO3 · 待赛', groups: [
+      { rec: '2-2', count: 3, decisive: true }
+    ]}
+  ];
+
+  var sched = document.getElementById('lj4Schedule');
+  rounds.forEach(function (r) {
+    var col = document.createElement('div');
+    col.style.cssText = 'border: 0.5px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px 9px; background: linear-gradient(180deg, rgba(255,255,255,0.018) 0%, rgba(255,255,255,0) 100%); display: flex; flex-direction: column; gap: 8px; min-height: 200px;';
+    var head =
+      '<div style="display:flex;align-items:center;justify-content:space-between;padding:0 2px 4px;border-bottom:0.5px solid rgba(255,255,255,0.06);">' +
+        '<span style="font-size:11.5px;font-weight:500;">' + r.title + '</span>' +
+        '<span class="mono" style="font-size:9px;color:rgba(245,245,247,0.4);letter-spacing:0.04em;">' + r.meta + '</span>' +
+      '</div>';
+    var body = r.groups.map(function (g) {
+      var barColor = g.adv ? 'rgba(60,210,140,0.6)' : g.elim ? 'rgba(255,59,48,0.55)' : 'rgba(255,255,255,0.18)';
+      var groupHead = '<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 4px 4px;">' +
+                        '<span class="mono" style="font-size:9.5px;color:rgba(245,245,247,0.55);letter-spacing:0.06em;">' + g.rec + (g.decisive ? ' · 生死战' : '') + '</span>' +
+                        (g.adv ? '<span class="mono" style="font-size:8.5px;color:rgba(60,210,140,0.85);">→ 晋级</span>' : g.elim ? '<span class="mono" style="font-size:8.5px;color:rgba(255,59,48,0.85);">→ 淘汰</span>' : '') +
+                      '</div>' +
+                      '<div style="height:0.5px;background:' + barColor + ';"></div>';
+      var matchList = '';
+      if (g.matches) {
+        matchList = g.matches.map(function (m) {
+          var aColor = m.live ? '#F5F5F7' : (m.w === 'a' ? '#F5F5F7' : 'rgba(245,245,247,0.45)');
+          var bColor = m.live ? '#F5F5F7' : (m.w === 'b' ? '#F5F5F7' : 'rgba(245,245,247,0.45)');
+          var aWeight = m.w === 'a' ? '500' : '400';
+          var bWeight = m.w === 'b' ? '500' : '400';
+          var liveBadge = m.live ? '<span class="pulse" style="display:inline-block;width:5px;height:5px;border-radius:50%;background:#FF3B30;margin-right:5px;"></span>' : '';
+          return '<div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:5px;padding:5px 4px;font-size:10.5px;">' +
+                   '<div style="text-align:right;color:' + aColor + ';font-weight:' + aWeight + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + m.a + '</div>' +
+                   '<div class="mono" style="display:inline-flex;align-items:center;justify-content:center;min-width:42px;font-size:10px;color:rgba(245,245,247,0.85);background:rgba(255,255,255,0.05);border-radius:3px;padding:2px 0;">' + liveBadge + m.sa + ' : ' + m.sb + '</div>' +
+                   '<div style="color:' + bColor + ';font-weight:' + bWeight + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + m.b + '</div>' +
+                 '</div>';
+        }).join('');
+      } else {
+        matchList = Array(g.count || 0).fill(0).map(function () {
+          return '<div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:5px;padding:5px 4px;font-size:10.5px;color:rgba(245,245,247,0.3);">' +
+                   '<div style="text-align:right;">待定</div>' +
+                   '<div class="mono" style="background:rgba(255,255,255,0.025);border-radius:3px;padding:2px 6px;">- : -</div>' +
+                   '<div>待定</div>' +
+                 '</div>';
+        }).join('');
+      }
+      return '<div style="display:flex;flex-direction:column;">' + groupHead + matchList + '</div>';
+    }).join('');
+    col.innerHTML = head + body;
+    sched.appendChild(col);
+  });
+
+  var sponsors = [
+    ['斗鱼官方', '7W'], ['秀木老板', '2W'], ['为何如此衰', '8K'], ['神秘老板', '5K'],
+    ['洞庭湖里的平头老板', '3K'], ['尊师 hkl', '2K'], ['深红', '2K'], ['MT', '2K'],
+    ['热心市民小曹', '2K'], ['玩一下鼓励员', '2K'], ['董 B 登', '1K'],
+    ['只会打炉石的 SteveD', '1K'], ['不减到 75kg 不改名', '1K'], ['直播间最漂亮的寡妇', '1K'],
+    ['斗驴启动', '1K'], ['苏唐', '1K'], ['人生梦想', '1K'], ['c 酱的骚刚', '600'],
+    ['你真的是厉害', '500'], ['小金拉黑属实不行', '500']
+  ];
+  var marquee = document.getElementById('lj4Marquee');
+  function buildMarqueeNode(s) {
+    var node = document.createElement('div');
+    node.style.cssText = 'display:inline-flex;align-items:center;gap:8px;font-size:11.5px;color:rgba(245,245,247,0.7);';
+    node.innerHTML = '<svg width="9" height="9" viewBox="0 0 24 24" fill="rgba(255,213,106,0.85)"><polygon points="12 2 14.5 9 22 9 16 13.5 18 21 12 16.5 6 21 8 13.5 2 9 9.5 9"/></svg>' +
+                     '<span>' + s[0] + '</span>' +
+                     '<span class="mono" style="color:rgba(255,213,106,0.85);font-size:10.5px;">¥' + s[1] + '</span>';
+    return node;
+  }
+  sponsors.forEach(function (s) { marquee.appendChild(buildMarqueeNode(s)); });
+  sponsors.forEach(function (s) { marquee.appendChild(buildMarqueeNode(s)); });
+
+  var awards = [
+    { who: '为何如此衰',          what: '8强每个队伍 1K' },
+    { who: '董 B 登',              what: '冠军每人 750g 蓝莓果干 + 250g 参片' },
+    { who: 'MT',                  what: '4强每人一份贡菜千层肚' },
+    { who: '不减到 75kg 不改名',   what: '最佳 C/D 级（参赛选手评）' },
+    { who: '你真的是厉害（天谎星）', what: '爆种奖' },
+    { who: '直播间最漂亮的寡妇',   what: '最拉辅助 + 最强辅助' },
+    { who: '斗驴启动',            what: '亚军 SVP' },
+    { who: '苏唐',                what: '瑞士轮第一个淘汰队伍 5 人平分' },
+    { who: 'c 酱的骚刚',           what: '弹幕票选最差 A/S · 300R/人' },
+    { who: '人生梦想',            what: '冠军打野' },
+    { who: '小金拉黑属实不行',     what: '爆种奖' }
+  ];
+  var awardsEl = document.getElementById('lj4Awards');
+  awards.forEach(function (a) {
+    var row = document.createElement('div');
+    row.className = 'award-row';
+    row.style.cssText = 'display:grid;grid-template-columns:1fr auto;align-items:start;gap:10px;padding:7px 4px;border-bottom:0.5px solid rgba(255,255,255,0.04);';
+    row.innerHTML =
+      '<div style="font-size:11.5px;line-height:1.4;color:rgba(245,245,247,0.85);">' + a.what + '</div>' +
+      '<div class="mono" style="font-size:9.5px;color:rgba(255,213,106,0.85);white-space:nowrap;letter-spacing:0.04em;text-align:right;">— ' + a.who + '</div>';
+    awardsEl.appendChild(row);
+  });
+
+  var staff = [
+    { role: '赛事策划', name: '名单待补' },
+    { role: '导播 / 技术', name: '名单待补' },
+    { role: '运营 / 推广', name: '名单待补' },
+    { role: '数据统计', name: '名单待补' },
+    { role: '弹幕主持', name: '名单待补' },
+    { role: '海报设计', name: '名单待补' },
+    { role: '剪辑 / 视频', name: '名单待补' }
+  ];
+  var staffEl = document.getElementById('lj4Staff');
+  staff.forEach(function (s) {
+    var row = document.createElement('div');
+    row.className = 'award-row';
+    row.style.cssText = 'display:grid;grid-template-columns:auto 1fr;align-items:center;gap:12px;padding:7px 4px;border-bottom:0.5px solid rgba(255,255,255,0.04);';
+    row.innerHTML =
+      '<span class="mono" style="font-size:9.5px;color:rgba(168,224,255,0.85);letter-spacing:0.06em;min-width:64px;">' + s.role + '</span>' +
+      '<span style="font-size:11.5px;color:rgba(245,245,247,0.5);">' + s.name + '</span>';
+    staffEl.appendChild(row);
+  });
+
+  var imgs = document.querySelectorAll('.lj4-cover');
+  var dots = document.querySelectorAll('.lj4-dot');
+  var idx = 0;
+  function showCover(i) {
+    imgs.forEach(function (im) { im.style.opacity = (Number(im.dataset.i) === i) ? '1' : '0'; });
+    dots.forEach(function (d) {
+      var on = Number(d.dataset.i) === i;
+      d.style.width = on ? '22px' : '8px';
+      d.style.background = on ? 'rgba(245,245,247,0.95)' : 'rgba(245,245,247,0.3)';
+    });
+    idx = i;
+  }
+  setInterval(function () { showCover((idx + 1) % imgs.length); }, 5000);
+  dots.forEach(function (d) { d.addEventListener('click', function () { showCover(Number(d.dataset.i)); }); });
+
+  var n = 0, cd = document.getElementById('lj4Cd');
+  if (cd) {
+    var iv = setInterval(function () {
+      n += 1;
+      if (n > 5) { cd.textContent = '005'; clearInterval(iv); return; }
+      cd.textContent = String(n).padStart(3, '0');
+    }, 90);
+  }
+
+  if (window.Motion && window.Motion.animate) {
+    var M = window.Motion;
+    M.animate('#lj4Hero > *',  { opacity: [0, 1], transform: ['translateY(14px)', 'translateY(0)'] }, { duration: 1.0, delay: M.stagger ? M.stagger(0.1, { start: 0.25 }) : 0.25, easing: [0.2, 0.7, 0.2, 1] });
+    M.animate('.lj4 .team',    { opacity: [0, 1], transform: ['translateY(8px)', 'translateY(0)'] }, { duration: 0.7, delay: M.stagger ? M.stagger(0.04, { start: 0.5 }) : 0.5, easing: [0.2, 0.7, 0.2, 1] });
+    M.animate('.lj4 .streamer',{ opacity: [0, 1], transform: ['translateY(6px)', 'translateY(0)'] }, { duration: 0.7, delay: M.stagger ? M.stagger(0.06, { start: 0.4 }) : 0.4, easing: [0.2, 0.7, 0.2, 1] });
+  }
+})();
+</script>
+</body>
+</html>

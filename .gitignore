@@ -53,3 +53,5 @@ backend/uploads-test/
 
 # 战队数据批量导入模板文件
 backend/templates/
+
+.claude/

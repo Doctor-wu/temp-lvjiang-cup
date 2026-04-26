@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#050508" />
+<title>驴酱杯 · v4 移动端设计稿</title>
+<style>
+  :root {
+    --color-background-primary: #FFFFFF;
+    --color-background-secondary: #15151B;
+    --color-background-tertiary: #0E0E14;
+    --color-text-primary: #F5F5F7;
+    --color-text-secondary: rgba(245,245,247,0.7);
+    --color-text-tertiary: rgba(245,245,247,0.5);
+    --color-border-tertiary: rgba(255,255,255,0.10);
+    --color-border-secondary: rgba(255,255,255,0.20);
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+  }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(80,90,140,0.10), transparent 55%),
+      radial-gradient(ellipse 60% 50% at 100% 100%, rgba(150,90,160,0.06), transparent 60%),
+      #08080C;
+    min-height: 100vh;
+    padding: 28px 16px 64px;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Helvetica Neue", system-ui, sans-serif;
+    color: var(--color-text-primary);
+    -webkit-font-smoothing: antialiased;
+  }
+  .preview-host { width: 100%; max-width: 460px; margin: 0 auto; }
+  .preview-meta { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11px; color: var(--color-text-tertiary); text-align: center; margin-bottom: 18px; letter-spacing: 0.04em; }
+
+  .ljm * { box-sizing: border-box; }
+  .ljm { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Helvetica Neue", system-ui, sans-serif; -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; color: #F5F5F7; }
+  .ljm .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-feature-settings: "tnum"; letter-spacing: 0; }
+  .ljm .hair { background: rgba(255,255,255,0.07); height: 0.5px; width: 100%; }
+  .ljm .pulse { animation: ljmPulse 2.4s ease-in-out infinite; }
+  .ljm .marquee-track { animation: ljmMarquee 60s linear infinite; }
+  @keyframes ljmPulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .55; transform: scale(.85); } }
+  @keyframes ljmMarquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+  .ljm .link { color: rgba(245,245,247,0.55); }
+  .ljm .pill { border: 0.5px solid rgba(255,255,255,0.18); border-radius: 999px; }
+  .ljm .seg-on { background: rgba(245,245,247,0.95); color: #08080B; }
+  .ljm .seg-off { color: rgba(245,245,247,0.55); }
+  .ljm .row-link { transition: background .25s ease; }
+  .ljm .row-link:hover { background: rgba(255,255,255,0.04); }
+  .ljm .scroll-x { overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
+  .ljm .scroll-x::-webkit-scrollbar { display: none; }
+  .ljm .acc-item { transition: background .3s ease; }
+  .ljm .acc-item.open { background: rgba(255,255,255,0.025); }
+</style>
+</head>
+<body>
+<div class="preview-host">
+<div class="preview-meta">驴酱杯 · v4 redesign · mobile · 直接用浏览器打开预览</div>
+
+<div class="ljm" style="background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 14px;">
+
+  <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 6px 14px; font-size: 11px; color: var(--color-text-tertiary);">
+    <span>驴酱杯 · v4 移动端</span>
+    <span class="mono">iPhone · 380 × full flow</span>
+  </div>
+
+  <div style="position: relative; max-width: 380px; margin: 0 auto;">
+
+    <div style="position: relative; padding: 10px; border: 1px solid rgba(0,0,0,0.45); border-radius: 44px; background: #050508; box-shadow: inset 0 0 0 0.5px rgba(255,255,255,0.06);">
+
+      <div style="position: relative; border-radius: 34px; overflow: hidden; background: #050508;">
+
+        <div style="position: relative; height: 36px; background: #050508; display: flex; align-items: center; justify-content: space-between; padding: 12px 24px 0; z-index: 30;">
+          <span class="mono" style="font-size: 13px; font-weight: 500;">9:41</span>
+          <div style="position: absolute; left: 50%; top: 7px; transform: translateX(-50%); width: 96px; height: 24px; background: #000000; border-radius: 999px;"></div>
+          <div style="display: flex; align-items: center; gap: 5px;">
+            <svg width="16" height="11" viewBox="0 0 16 11" fill="rgba(245,245,247,0.95)"><rect x="0" y="6" width="3" height="5" rx="0.5"/><rect x="4" y="4" width="3" height="7" rx="0.5"/><rect x="8" y="2" width="3" height="9" rx="0.5"/><rect x="12" y="0" width="3" height="11" rx="0.5"/></svg>
+            <svg width="14" height="11" viewBox="0 0 14 11" fill="none" stroke="rgba(245,245,247,0.95)" stroke-width="0.8"><path d="M1 6 a8 8 0 0 1 12 0"/><path d="M3.5 8 a4 4 0 0 1 7 0"/><circle cx="7" cy="10" r="0.6" fill="rgba(245,245,247,0.95)"/></svg>
+            <svg width="22" height="11" viewBox="0 0 22 11" fill="none"><rect x="0.5" y="0.5" width="18" height="10" rx="2.2" stroke="rgba(245,245,247,0.6)" stroke-width="0.8"/><rect x="2" y="2" width="14" height="7" rx="1" fill="rgba(245,245,247,0.95)"/><rect x="19.5" y="3.5" width="1.5" height="4" rx="0.5" fill="rgba(245,245,247,0.5)"/></svg>
+          </div>
+        </div>
+
+        <div style="position: relative;">
+
+          <div style="position: relative; height: 540px; overflow: hidden;">
+            <img src="https://cdn.jsdelivr.net/gh/forzenfox/lvjiang-cup@main/frontend/public/assets/mobile_cover_01.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;" />
+            <svg viewBox="0 0 360 540" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;">
+              <defs>
+                <linearGradient id="ljmTop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(5,5,8,0.55)"/><stop offset="35%" stop-color="rgba(5,5,8,0)"/></linearGradient>
+                <linearGradient id="ljmBtm" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(5,5,8,0)"/><stop offset="60%" stop-color="rgba(5,5,8,0.7)"/><stop offset="100%" stop-color="rgba(5,5,8,1)"/></linearGradient>
+              </defs>
+              <rect width="360" height="120" fill="url(#ljmTop)"/>
+              <rect y="240" width="360" height="300" fill="url(#ljmBtm)"/>
+            </svg>
+
+            <div style="position: absolute; top: 0; left: 0; right: 0; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; z-index: 10;">
+              <div style="display: flex; align-items: baseline; gap: 7px;">
+                <span style="font-size: 15px; font-weight: 500; letter-spacing: -0.02em;">驴酱杯</span>
+                <span class="mono" style="font-size: 9px; color: rgba(245,245,247,0.45);">S2</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div class="pill" style="display: flex; align-items: center; gap: 5px; padding: 4px 9px; border-color: rgba(255,59,48,0.5); background: rgba(255,59,48,0.08);">
+                  <span class="pulse" style="display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: #FF3B30;"></span>
+                  <span style="font-size: 10px;">直播中</span>
+                </div>
+                <button style="background: rgba(0,0,0,0.4); border: 0.5px solid rgba(255,255,255,0.18); padding: 7px; border-radius: 8px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; cursor: pointer;" id="ljmMenuBtn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(245,245,247,0.95)" stroke-width="1.6"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="13" x2="20" y2="13"/><line x1="4" y1="19" x2="14" y2="19"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div style="position: absolute; left: 20px; right: 20px; bottom: 28px; z-index: 5;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+                <span style="width: 18px; height: 0.5px; background: rgba(245,245,247,0.4);"></span>
+                <span class="mono" style="font-size: 9px; color: rgba(245,245,247,0.7); letter-spacing: 0.18em;">SEASON 02</span>
+              </div>
+              <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px;">
+                <h1 style="font-size: 48px; line-height: 0.95; font-weight: 500; letter-spacing: -0.04em; margin: 0;">驴酱杯</h1>
+                <span class="mono" style="font-size: 10px; color: rgba(245,245,247,0.5); padding-bottom: 5px;">/ ULTIMATE</span>
+              </div>
+              <p style="font-size: 13px; color: rgba(245,245,247,0.78); margin: 0 0 6px; line-height: 1.45;">十六支战队 · 五轮瑞士 · 一夜决出归属</p>
+              <p class="mono" style="font-size: 10px; color: rgba(245,245,247,0.5); margin: 0 0 18px; letter-spacing: 0.04em;">May 1, 2026 · powered by 斗鱼</p>
+              <div style="display: flex; gap: 8px;">
+                <button class="pill" style="background: rgba(245,245,247,0.95); color: #08080B; border: none; padding: 11px 18px; font-size: 12.5px; font-weight: 500; display: inline-flex; align-items: center; gap: 7px; flex: 1; justify-content: center; font-family: inherit;">
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="#08080B"><polygon points="6 4 20 12 6 20"/></svg>
+                  观看直播
+                </button>
+                <button class="pill" style="background: rgba(0,0,0,0.3); color: rgba(245,245,247,0.85); padding: 11px 18px; font-size: 12.5px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); flex: 1; font-family: inherit;">查看赛程</button>
+              </div>
+            </div>
+
+            <div style="position: absolute; left: 20px; bottom: 12px; z-index: 5; display: flex; gap: 5px;">
+              <span style="width: 20px; height: 2px; border-radius: 2px; background: rgba(245,245,247,0.95);"></span>
+              <span style="width: 6px; height: 2px; border-radius: 2px; background: rgba(245,245,247,0.3);"></span>
+              <span style="width: 6px; height: 2px; border-radius: 2px; background: rgba(245,245,247,0.3);"></span>
+              <span style="width: 6px; height: 2px; border-radius: 2px; background: rgba(245,245,247,0.3);"></span>
+            </div>
+          </div>
+
+          <div style="position: relative; padding: 22px 20px;">
+            <svg viewBox="0 0 360 110" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;">
+              <defs><radialGradient id="ljmG1" cx="50%" cy="0%" r="60%"><stop offset="0%" stop-color="rgba(80,90,140,0.18)"/><stop offset="100%" stop-color="rgba(80,90,140,0)"/></radialGradient></defs>
+              <rect width="360" height="110" fill="url(#ljmG1)"/>
+            </svg>
+            <div style="position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 0; row-gap: 16px;">
+              <div style="border-right: 0.5px solid rgba(255,255,255,0.07); padding-right: 14px;">
+                <div class="mono" style="font-size: 9px; color: rgba(245,245,247,0.45); letter-spacing: 0.16em; margin-bottom: 6px;">TEAMS</div>
+                <div class="mono" style="font-size: 24px; font-weight: 500; letter-spacing: -0.04em;">16</div>
+              </div>
+              <div style="padding-left: 14px;">
+                <div class="mono" style="font-size: 9px; color: rgba(245,245,247,0.45); letter-spacing: 0.16em; margin-bottom: 6px;">PRIZE POOL</div>
+                <div class="mono" style="font-size: 24px; font-weight: 500; letter-spacing: -0.04em;">¥13<span style="font-size: 13px; color: rgba(245,245,247,0.45); margin-left: 3px;">万+</span></div>
+              </div>
+              <div style="border-right: 0.5px solid rgba(255,255,255,0.07); padding-right: 14px; padding-top: 12px; border-top: 0.5px solid rgba(255,255,255,0.07);">
+                <div class="mono" style="font-size: 9px; color: rgba(245,245,247,0.45); letter-spacing: 0.16em; margin-bottom: 6px;">STREAMERS</div>
+                <div class="mono" style="font-size: 24px; font-weight: 500; letter-spacing: -0.04em;">8<span style="font-size: 13px; color: rgba(245,245,247,0.45); margin-left: 3px;">+ 嘉宾</span></div>
+              </div>
+              <div style="padding-left: 14px; padding-top: 12px; border-top: 0.5px solid rgba(255,255,255,0.07);">
+                <div class="mono" style="font-size: 9px; color: rgba(245,245,247,0.45); letter-spacing: 0.16em; margin-bottom: 6px;">COUNTDOWN</div>
+                <div class="mono" style="font-size: 24px; font-weight: 500; letter-spacing: -0.04em;">005<span style="font-size: 13px; color: rgba(245,245,247,0.45); margin-left: 3px;">天</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="hair"></div>
+
+          <div style="position: relative; padding: 32px 20px 24px;">
+            <svg viewBox="0 0 360 80" preserveAspectRatio="none" style="position: absolute; left: 0; right: 0; top: 0; width: 100%; height: 80px; pointer-events: none;">
+              <defs><radialGradient id="ljmG2" cx="50%" cy="0%" r="60%"><stop offset="0%" stop-color="rgba(70,140,180,0.13)"/><stop offset="100%" stop-color="rgba(70,140,180,0)"/></radialGradient></defs>
+              <rect width="360" height="80" fill="url(#ljmG2)"/>
+            </svg>
+            <div style="position: relative; display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px;">
+              <div>
+                <div class="mono" style="font-size: 9px; color: rgba(245,245,247,0.4); letter-spacing: 0.32em; margin-bottom: 6px;">— 02 / VIDEOS</div>
+                <h2 style="font-size: 19px; font-weight: 500; letter-spacing: -0.02em; margin: 0;">赛事视频</h2>
+              </div>
+              <span class="link" style="font-size: 11px; display: inline-flex; align-items: center; gap: 4px;">前往 B 站
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+              </span>
+            </div>
+
+            <div style="position: relative; border-radius: 10px; overflow: hidden; border: 0.5px solid rgba(255,255,255,0.09); aspect-ratio: 16/9; margin-bottom: 12px; background: #181820;">
+              <img src="https://cdn.jsdelivr.net/gh/forzenfox/lvjiang-cup@main/frontend/public/assets/驴酱双人组.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.55;" onerror="this.style.display='none'" />
+              <svg viewBox="0 0 360 200" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%;">
+                <defs><linearGradient id="ljmVid" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(5,5,8,0.2)"/><stop offset="100%" stop-color="rgba(5,5,8,0.85)"/></linearGradient></defs>
+                <rect width="360" height="200" fill="url(#ljmVid)"/>
+              </svg>
+              <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;">
+                <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(245,245,247,0.18); border: 0.5px solid rgba(255,255,255,0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="rgba(245,245,247,0.95)"><polygon points="6 4 20 12 6 20"/></svg>
+                </div>
+              </div>
+              <div class="mono" style="position: absolute; bottom: 10px; right: 10px; font-size: 10px; padding: 2px 7px; background: rgba(0,0,0,0.55); border-radius: 3px;">10:42</div>
+              <div style="position: absolute; left: 12px; right: 12px; bottom: 12px;">
+                <div style="font-size: 13px; font-weight: 500; line-height: 1.3; margin-bottom: 4px;">驴酱杯 S2 战火重燃！16 位队长谁能加冕为王？</div>
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 10px; color: rgba(245,245,247,0.65);">
+                  <span>胡凯利_洞主</span>
+                  <span style="width: 2px; height: 2px; border-radius: 50%; background: rgba(245,245,247,0.4);"></span>
+                  <span class="mono">5,490 赞</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="scroll-x" style="display: flex; gap: 8px; margin: 0 -20px; padding: 0 20px 4px;">
+              <div style="flex: 0 0 200px; aspect-ratio: 16/10; border-radius: 8px; border: 0.5px solid rgba(255,255,255,0.08); background: #1a1a26; position: relative; overflow: hidden;">
+                <svg viewBox="0 0 200 125" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%;"><defs><linearGradient id="ljmTh1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(5,5,8,0.3)"/><stop offset="100%" stop-color="rgba(5,5,8,0.92)"/></linearGradient></defs><rect width="200" height="125" fill="url(#ljmTh1)"/></svg>
+                <div class="mono" style="position: absolute; top: 7px; right: 7px; font-size: 9px; padding: 1px 6px; background: rgba(0,0,0,0.55); border-radius: 3px;">10:05</div>
+                <div style="position: absolute; left: 9px; right: 9px; bottom: 9px; font-size: 10.5px; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">辰林队濒临解散，一众主播水友前来围观吃瓜！</div>
+              </div>
+              <div style="flex: 0 0 200px; aspect-ratio: 16/10; border-radius: 8px; border: 0.5px solid rgba(255,255,255,0.08); background: #22202a; position: relative; overflow: hidden;">
+                <svg viewBox="0 0 200 125" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%;"><defs><linearGradient id="ljmTh2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(5,5,8,0.3)"/><stop offset="100%" stop-color="rgba(5,5,8,0.92)"/></linearGradient></defs><rect width="200" height="125" fill="url(#ljmTh2)"/></svg>
+                <div class="mono" style="position: absolute; top: 7px; right: 7px; font-size: 9px; padding: 1px 6px; background: rgba(0,0,0,0.55); border-radius: 3px;">05:47</div>
+                <div style="position: absolute; left: 9px; right: 9px; bottom: 9px; font-size: 10.5px; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">余小C阿亮看《驴酱杯宣传片》：剑君 Faker 既视感</div>
+              </div>
+              <div style="flex: 0 0 200px; aspect-ratio: 16/10; border-radius: 8px; border: 0.5px solid rgba(255,255,255,0.08); background: #1f242c; position: relative; overflow: hidden;">
+                <svg viewBox="0 0 200 125" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%;"><defs><linearGradient id="ljmTh3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(5,5,8,0.3)"/><stop offset="100%" stop-color="rgba(5,5,8,0.92)"/></linearGradient></defs><rect width="200" height="125" fill="url(#ljmTh3)"/></svg>
+                <div class="mono" style="position: absolute; top: 7px; right: 7px; font-size: 9px; padding: 1px 6px; background: rgba(0,0,0,0.55); border-radius: 3px;">02:45</div>
+                <div style="position: absolute; left: 9px; right: 9px; bottom: 9px; font-size: 10.5px; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">银剑君看《驴酱杯宣传片》：给鼻哥搞这么帅！</div>
+              </div>
+              <div style="flex: 0 0 200px; aspect-ratio: 16/10; border-radius: 8px; border: 0.5px solid rgba(255,255,255,0.08); background: #241e22; position: relative; overflow: hidden;">
+                <svg viewBox="0 0 200 125" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%;"><defs><linearGradient id="ljmTh4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(5,5,8,0.3)"/><stop offset="100%" stop-color="rgba(5,5,8,0.92)"/></linearGradient></defs><rect width="200" height="125" fill="url(#ljmTh4)"/></svg>
+                <div class="mono" style="position: absolute; top: 7px; right: 7px; font-size: 9px; padding: 1px 6px; background: rgba(0,0,0,0.55); border-radius: 3px;">01:34</div>
+                <div style="position: absolute; left: 9px; right: 9px; bottom: 9px; font-size: 10.5px; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">《YMCA驴酱版》：洞主凯哥驴酱杯皇帝应援曲</div>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 10px; font-size: 10px; color: rgba(245,245,247,0.4);">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m9 18 6-6-6-6"/></svg>
+              <span>横向滑动查看更多</span>
+            </div>
+          </div>
+          <div class="hair"></div>
+
+          <div style="position: relative; padding: 32px 20px 24px;">
+            <svg viewBox="0 0 360 80" preserveAspectRatio="none" style="position: absolute; left: 0; right: 0; top: 0; width: 100%; height: 80px; pointer-events: none;">
+              <defs><radialGradient id="ljmG3" cx="50%" cy="0%" r="60%"><stop offset="0%" stop-color="rgba(150,90,160,0.14)"/><stop offset="100%" stop-color="rgba(150,90,160,0)"/></radialGradient></defs>
+              <rect width="360" height="80" fill="url(#ljmG3)"/>
+            </svg>
+            <div style="position: relative; display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px;">
+              <div>
+                <div class="mono" style="font-size: 9px; color: rgba(245,245,247,0.4); letter-spacing: 0.32em; margin-bottom: 6px;">— 03 / STREAMERS</div>
+                <h2 style="font-size: 19px; font-weight: 500; letter-spacing: -0.02em; margin: 0;">参赛主播</h2>
+              </div>
+              <div style="display: flex; gap: 3px; padding: 2px; background: rgba(255,255,255,0.04); border-radius: 999px;">
+                <span class="seg-on mono" style="padding: 4px 10px; font-size: 10px; border-radius: 999px;">驴酱 · 5</span>
+                <span class="seg-off" style="padding: 4px 10px; font-size: 10px;">嘉宾 · 3</span>
+              </div>
+            </div>
+
+            <div class="scroll-x" style="display: flex; gap: 8px; margin: 0 -20px; padding: 0 20px 4px;" id="ljmStreamers"></div>
+          </div>
+          <div class="hair"></div>
+
+          <div style="position: relative; padding: 32px 20px 12px;">
+            <svg viewBox="0 0 360 80" preserveAspectRatio="none" style="position: absolute; left: 0; right: 0; top: 0; width: 100%; height: 80px; pointer-events: none;">
+              <defs><radialGradient id="ljmG4" cx="50%" cy="0%" r="60%"><stop offset="0%" stop-color="rgba(120,90,180,0.13)"/><stop offset="100%" stop-color="rgba(120,90,180,0)"/></radialGradient></defs>
+              <rect width="360" height="80" fill="url(#ljmG4)"/>
+            </svg>
+            <div style="position: relative; margin-bottom: 14px;">
+              <div class="mono" style="font-size: 9px; color: rgba(245,245,247,0.4); letter-spacing: 0.32em; margin-bottom: 6px;">— 04 / TEAMS</div>
+              <h2 style="font-size: 19px; font-weight: 500; letter-spacing: -0.02em; margin: 0 0 4px;">十六支战队</h2>
+              <p style="font-size: 11px; color: rgba(245,245,247,0.5); margin: 0;">点击展开查看队员个人评级与直播间</p>
+            </div>
+          </div>
+          <div id="ljmTeams" style="position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 20px 28px;"></div>
+          <div class="hair"></div>
+
+          <div style="position: relative; padding: 32px 20px 24px;">
+            <svg viewBox="0 0 360 80" preserveAspectRatio="none" style="position: absolute; left: 0; right: 0; top: 0; width: 100%; height: 80px; pointer-events: none;">
+              <defs><radialGradient id="ljmG5" cx="50%" cy="0%" r="60%"><stop offset="0%" stop-color="rgba(80,160,140,0.13)"/><stop offset="100%" stop-color="rgba(80,160,140,0)"/></radialGradient></defs>
+              <rect width="360" height="80" fill="url(#ljmG5)"/>
+            </svg>
+            <div style="position: relative; display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px;">
+              <div>
+                <div class="mono" style="font-size: 9px; color: rgba(245,245,247,0.4); letter-spacing: 0.32em; margin-bottom: 6px;">— 05 / SCHEDULE</div>
+                <h2 style="font-size: 19px; font-weight: 500; letter-spacing: -0.02em; margin: 0;">赛程</h2>
+              </div>
+              <div style="display: flex; gap: 3px; padding: 2px; background: rgba(255,255,255,0.04); border-radius: 999px;">
+                <span class="seg-on mono" style="padding: 4px 10px; font-size: 10px; border-radius: 999px;">瑞士轮</span>
+                <span class="seg-off" style="padding: 4px 10px; font-size: 10px;">淘汰赛</span>
+              </div>
+            </div>
+            <div id="ljmSchedule" style="position: relative; display: flex; flex-direction: column; gap: 6px;"></div>
+          </div>
+          <div class="hair"></div>
+
+          <div style="position: relative; padding: 32px 20px 24px;">
+            <svg viewBox="0 0 360 80" preserveAspectRatio="none" style="position: absolute; left: 0; right: 0; top: 0; width: 100%; height: 80px; pointer-events: none;">
+              <defs><radialGradient id="ljmG6" cx="50%" cy="0%" r="60%"><stop offset="0%" stop-color="rgba(220,180,90,0.12)"/><stop offset="100%" stop-color="rgba(220,180,90,0)"/></radialGradient></defs>
+              <rect width="360" height="80" fill="url(#ljmG6)"/>
+            </svg>
+            <div style="position: relative; margin-bottom: 14px;">
+              <div class="mono" style="font-size: 9px; color: rgba(245,245,247,0.4); letter-spacing: 0.32em; margin-bottom: 6px;">— 06 / THANKS</div>
+              <h2 style="font-size: 19px; font-weight: 500; letter-spacing: -0.02em; margin: 0 0 4px;">特别鸣谢</h2>
+              <p style="font-size: 11px; color: rgba(245,245,247,0.5); margin: 0;">感谢每一位支持者的信任与陪伴</p>
+            </div>
+
+            <div style="position: relative; height: 32px; overflow: hidden; border: 0.5px solid rgba(255,255,255,0.08); border-radius: 999px; margin-bottom: 16px; background: rgba(255,255,255,0.015);">
+              <svg viewBox="0 0 360 32" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2;">
+                <defs>
+                  <linearGradient id="ljmMqL" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#050508"/><stop offset="100%" stop-color="rgba(5,5,8,0)"/></linearGradient>
+                  <linearGradient id="ljmMqR" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="rgba(5,5,8,0)"/><stop offset="100%" stop-color="#050508"/></linearGradient>
+                </defs>
+                <rect width="40" height="32" fill="url(#ljmMqL)"/>
+                <rect x="320" width="40" height="32" fill="url(#ljmMqR)"/>
+              </svg>
+              <div class="marquee-track" id="ljmMarquee" style="position: absolute; top: 0; left: 0; height: 32px; display: flex; align-items: center; white-space: nowrap; gap: 22px; padding: 0 14px; z-index: 1;"></div>
+            </div>
+
+            <div style="border: 0.5px solid rgba(255,255,255,0.09); border-radius: 10px; padding: 14px; background: linear-gradient(180deg, rgba(220,180,90,0.045) 0%, rgba(220,180,90,0) 100%); margin-bottom: 8px;">
+              <div style="display: flex; align-items: center; gap: 7px; margin-bottom: 10px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,213,106,0.95)" stroke-width="1.6"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+                <span style="font-size: 12px; font-weight: 500;">特殊奖项</span>
+                <span class="mono" style="margin-left: auto; font-size: 9px; color: rgba(245,245,247,0.4);">11 项</span>
+              </div>
+              <div id="ljmAwards" style="display: flex; flex-direction: column;"></div>
+            </div>
+
+            <div style="border: 0.5px solid rgba(255,255,255,0.09); border-radius: 10px; padding: 14px; background: linear-gradient(180deg, rgba(120,140,200,0.04) 0%, rgba(120,140,200,0) 100%);">
+              <div style="display: flex; align-items: center; gap: 7px; margin-bottom: 10px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(168,224,255,0.95)" stroke-width="1.6"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
+                <span style="font-size: 12px; font-weight: 500;">幕后工作人员</span>
+                <span class="mono" style="margin-left: auto; font-size: 9px; color: rgba(245,245,247,0.4);">名单待补</span>
+              </div>
+              <div id="ljmStaff" style="display: flex; flex-direction: column; gap: 3px;"></div>
+            </div>
+
+            <div style="margin-top: 18px; display: flex; justify-content: center;">
+              <div class="pill" style="display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px; font-size: 11px; color: rgba(245,245,247,0.85); background: rgba(255,255,255,0.025);">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="rgba(255,124,168,0.95)"><path d="M12 21s-7-4.35-7-10a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 5.65-7 10-7 10z"/></svg>
+                再次感谢所有支持
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="rgba(255,213,106,0.95)"><path d="M12 21s-7-4.35-7-10a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 5.65-7 10-7 10z"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="hair"></div>
+
+          <div style="padding: 18px 20px; background: #030305;">
+            <div style="display: flex; flex-direction: column; gap: 6px; font-size: 10.5px; color: rgba(245,245,247,0.5);">
+              <span class="mono" style="letter-spacing: 0.18em; color: rgba(245,245,247,0.4);">© 2026 LVJIANG.ICU</span>
+              <span class="link">合作邮箱 · lvjiangshangwu@163.com</span>
+              <div style="display: flex; gap: 14px;">
+                <span class="link">B 站 · 胡凯利_洞主</span>
+                <span class="link">公众号 · 驴驴电竞</span>
+              </div>
+              <span class="mono" style="font-size: 9.5px; color: rgba(245,245,247,0.3); margin-top: 4px;">鄂 ICP 备 2026017374 号-1</span>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: center; padding: 8px 0 6px; background: #030305;">
+            <div style="width: 120px; height: 4px; border-radius: 999px; background: rgba(245,245,247,0.85);"></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 18px; padding: 14px 16px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); background: var(--color-background-tertiary);">
+      <div style="font-size: 12px; color: var(--color-text-secondary); line-height: 1.6;">
+        <span style="color: var(--color-text-primary); font-weight: 500;">移动端关键改造</span> · 顶部 hamburger 触发抽屉式 nav
+        · stats 折成 2×2 格 · 战队 4 列改 2 列大卡 · 视频 / 主播缩略图改为横向滑动 (右滑提示)
+        · 赛程 5 列改为可折叠的 5 行 accordion (默认展开当前轮) · 鸣谢区双卡纵向堆叠 · footer 多行展开
+        · hero 用 mobile_cover_01.webp 真人海报 · 键盘 / 抽屉用同款 hairline + 玻璃质感
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/motion@10.18.0/dist/motion.umd.js"></script>
+<script>
+(function () {
+  var POS_ICONS = {
+    TOP:     'https://cdn.jsdelivr.net/gh/forzenfox/lvjiang-cup@main/frontend/public/top.png',
+    JUNGLE:  'https://cdn.jsdelivr.net/gh/forzenfox/lvjiang-cup@main/frontend/public/jungle.png',
+    MID:     'https://cdn.jsdelivr.net/gh/forzenfox/lvjiang-cup@main/frontend/public/mid.png',
+    ADC:     'https://cdn.jsdelivr.net/gh/forzenfox/lvjiang-cup@main/frontend/public/bot.png',
+    SUPPORT: 'https://cdn.jsdelivr.net/gh/forzenfox/lvjiang-cup@main/frontend/public/support.png'
+  };
+  var LV = { S: '#FFD56A', A: '#A8E0FF', B: '#9DD5B1', C: '#C8B8E0', D: '#9C9C9C' };
+
+  var streamers = [
+    { name: '咬人鹅', bio: 'S1 荣誉选手', tone: ['#3a2a4a','#5a3a6a'] },
+    { name: 'BBBB 脸', bio: 'S2 队长',    tone: ['#1f3a5a','#2a4a6a'] },
+    { name: '年年酱牛肉', bio: 'S2 主持', tone: ['#4a2a2a','#6a3a3a'] },
+    { name: '驴酱·辰林', bio: 'S2 队长',  tone: ['#2a3a4a','#3a4a5a'] },
+    { name: '澈心',     bio: 'S2 解说',  tone: ['#3a3a2a','#5a4a2a'] }
+  ];
+  var sEl = document.getElementById('ljmStreamers');
+  streamers.forEach(function (s, i) {
+    var el = document.createElement('div');
+    el.style.cssText = 'flex: 0 0 130px; aspect-ratio: 3/4; border: 0.5px solid rgba(255,255,255,0.09); border-radius: 9px; overflow: hidden; position: relative; background: linear-gradient(160deg, ' + s.tone[0] + ' 0%, ' + s.tone[1] + ' 100%);';
+    el.innerHTML =
+      '<svg viewBox="0 0 100 134" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;">' +
+        '<defs><linearGradient id="ljmSt' + i + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(0,0,0,0.05)"/><stop offset="100%" stop-color="rgba(0,0,0,0.85)"/></linearGradient></defs>' +
+        '<circle cx="50" cy="46" r="20" fill="rgba(255,255,255,0.1)"/>' +
+        '<path d="M 22 132 C 22 100, 78 100, 78 132 Z" fill="rgba(255,255,255,0.08)"/>' +
+        '<rect width="100" height="134" fill="url(#ljmSt' + i + ')"/>' +
+      '</svg>' +
+      '<div class="pill mono" style="position:absolute;top:7px;left:7px;font-size:8px;padding:1px 6px;background:rgba(0,0,0,0.4);border-color:rgba(255,255,255,0.25);letter-spacing:0.06em;">驴酱</div>' +
+      '<div style="position:absolute;left:9px;right:9px;bottom:9px;">' +
+        '<div style="font-size:11px;font-weight:500;line-height:1.2;margin-bottom:2px;">' + s.name + '</div>' +
+        '<div style="font-size:9.5px;color:rgba(245,245,247,0.6);">' + s.bio + '</div>' +
+      '</div>';
+    sEl.appendChild(el);
+  });
+
+  var teams = [
+    { n: '驴酱队', r: '3-0', cap: '洞主',  lvs: ['S','A','S','A','A'] },
+    { n: 'IC 队',  r: '3-1', cap: '余小C', lvs: ['A','B','A','S','A'] },
+    { n: '小熊队', r: '3-1', cap: '小达',  lvs: ['A','A','A','B','B'] },
+    { n: '星辰队', r: '3-0', cap: '星河',  lvs: ['A','B','A','B','B'] },
+    { n: '搓搓鸟队', r: '2-2', cap: '法环',  lvs: ['A','B','B','B','B'] },
+    { n: 'PLG 队', r: '2-3', cap: '泰妍',  lvs: ['B','B','B','B','C'] },
+    { n: '雨酱队', r: '2-3', cap: '想和哥俩玩', lvs: ['C','C','C','C','C'] },
+    { n: '深海队', r: '2-3', cap: '海浪',  lvs: ['A','B','B','B','C'] },
+    { n: '100J 队', r: '1-3', cap: '十六夜', lvs: ['B','C','C','C','C'] },
+    { n: '雷霆队', r: '1-3', cap: '闪电',  lvs: ['B','B','B','B','C'] },
+    { n: '暗影队', r: '1-3', cap: '影子',  lvs: ['B','B','B','B','C'] },
+    { n: '疾风队', r: '1-3', cap: '风暴',  lvs: ['A','B','B','B','C'] },
+    { n: '寒冰队', r: '0-3', cap: '冰霜',  lvs: ['B','C','B','B','B'] },
+    { n: '69 队',   r: '0-3', cap: '尊师HKL', lvs: ['C','D','D','D','D'] },
+    { n: '巨石队', r: '0-3', cap: '岩石',  lvs: ['C','C','C','C','D'] },
+    { n: '烈焰队', r: '0-3', cap: '火焰',  lvs: ['A','B','B','B','C'] }
+  ];
+  var tEl = document.getElementById('ljmTeams');
+  teams.forEach(function (t) {
+    var card = document.createElement('div');
+    card.style.cssText = 'border: 0.5px solid rgba(255,255,255,0.09); border-radius: 8px; padding: 11px; background: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, rgba(255,255,255,0.005) 100%); display: flex; flex-direction: column; gap: 8px;';
+    var dots = t.lvs.map(function (l) {
+      return '<span style="width:6px;height:6px;border-radius:50%;background:' + LV[l] + ';opacity:0.85;"></span>';
+    }).join('');
+    card.innerHTML =
+      '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+        '<div style="font-size:12.5px;font-weight:500;letter-spacing:-0.01em;">' + t.n + '</div>' +
+        '<span class="mono" style="font-size:10px;color:rgba(245,245,247,0.5);">' + t.r + '</span>' +
+      '</div>' +
+      '<div style="font-size:10px;color:rgba(245,245,247,0.45);">队长 · ' + t.cap + '</div>' +
+      '<div style="display:flex;gap:4px;align-items:center;">' + dots + '<span style="margin-left:auto;font-size:9.5px;color:rgba(245,245,247,0.4);">展开 →</span></div>';
+    tEl.appendChild(card);
+  });
+
+  var sched = [
+    { title: '第一轮', meta: 'BO1 · 完赛', open: false, summary: '驴酱 / 小熊 / 搓搓鸟 / 雨酱 / 星辰 / 雷霆 / 暗影 / 深海 胜出', stat: '8 场结束' },
+    { title: '第二轮', meta: 'BO1 · 完赛', open: false, summary: '1-0 组 4 场, 0-1 组 4 场', stat: '8 场结束' },
+    { title: '第三轮', meta: 'BO1 · 进行中', open: true,
+      groups: [
+        { rec: '2-0', adv: false, list: [
+          { a: '驴酱', b: '小熊', sa: 1, sb: 0, w: 'a' },
+          { a: '星辰', b: '雷霆', sa: 0, sb: 0, live: true }
+        ]},
+        { rec: '1-1', list: [
+          { a: '搓搓鸟', b: '雨酱', sa: 0, sb: 0 },
+          { a: 'IC',   b: 'PLG',  sa: 0, sb: 0 },
+          { a: '暗影', b: '深海', sa: 0, sb: 0 },
+          { a: '疾风', b: '巨石', sa: 0, sb: 0 }
+        ]},
+        { rec: '0-2', list: [
+          { a: '100J', b: '69',   sa: 0, sb: 0 },
+          { a: '烈焰', b: '寒冰', sa: 0, sb: 0 }
+        ]}
+      ], stat: '8 场, 1 场直播中' },
+    { title: '第四轮', meta: 'BO3 · 待赛', open: false, summary: '2-1 组 (晋级线) + 1-2 组 (淘汰线)', stat: '6 场待开' },
+    { title: '第五轮', meta: 'BO3 · 待赛', open: false, summary: '2-2 组生死战 · 决出最后 2 个晋级名额', stat: '3 场待开' }
+  ];
+  var schEl = document.getElementById('ljmSchedule');
+  sched.forEach(function (r) {
+    var item = document.createElement('div');
+    item.className = 'acc-item' + (r.open ? ' open' : '');
+    item.style.cssText = 'border: 0.5px solid rgba(255,255,255,0.08); border-radius: 9px; overflow: hidden;';
+    var head =
+      '<div style="display:flex;align-items:center;gap:8px;padding:11px 12px;cursor:pointer;">' +
+        '<div style="display:flex;align-items:center;gap:8px;flex:1;">' +
+          '<span style="font-size:12px;font-weight:500;">' + r.title + '</span>' +
+          '<span class="mono" style="font-size:9px;color:rgba(245,245,247,0.4);letter-spacing:0.06em;">' + r.meta + '</span>' +
+        '</div>' +
+        '<span class="mono" style="font-size:9.5px;color:rgba(245,245,247,0.5);">' + r.stat + '</span>' +
+        '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(245,245,247,0.5)" stroke-width="1.5" style="transition:transform .3s ease;transform:rotate(' + (r.open ? '180deg' : '0deg') + ');"><path d="m6 9 6 6 6-6"/></svg>' +
+      '</div>';
+    var body = '';
+    if (r.open && r.groups) {
+      body = '<div style="padding:0 12px 12px;display:flex;flex-direction:column;gap:10px;border-top:0.5px solid rgba(255,255,255,0.05);">';
+      r.groups.forEach(function (g) {
+        body += '<div>' +
+                  '<div style="display:flex;justify-content:space-between;padding:8px 0 6px;">' +
+                    '<span class="mono" style="font-size:9.5px;color:rgba(245,245,247,0.55);letter-spacing:0.06em;">' + g.rec + ' 组</span>' +
+                    '<span class="mono" style="font-size:9px;color:rgba(245,245,247,0.4);">' + g.list.length + ' 场</span>' +
+                  '</div>';
+        g.list.forEach(function (m) {
+          var aColor = m.live ? '#F5F5F7' : (m.w === 'a' ? '#F5F5F7' : 'rgba(245,245,247,0.55)');
+          var bColor = m.live ? '#F5F5F7' : (m.w === 'b' ? '#F5F5F7' : 'rgba(245,245,247,0.55)');
+          var live = m.live ? '<span class="pulse" style="display:inline-block;width:5px;height:5px;border-radius:50%;background:#FF3B30;margin-right:4px;"></span>' : '';
+          body += '<div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;padding:6px 0;font-size:11px;">' +
+                    '<div style="text-align:right;color:' + aColor + ';font-weight:' + (m.w === 'a' ? '500' : '400') + ';">' + m.a + '</div>' +
+                    '<div class="mono" style="display:inline-flex;align-items:center;justify-content:center;min-width:46px;font-size:10.5px;background:rgba(255,255,255,0.05);border-radius:3px;padding:2px 0;">' + live + m.sa + ' : ' + m.sb + '</div>' +
+                    '<div style="color:' + bColor + ';font-weight:' + (m.w === 'b' ? '500' : '400') + ';">' + m.b + '</div>' +
+                  '</div>';
+        });
+        body += '</div>';
+      });
+      body += '</div>';
+    } else if (r.summary) {
+      body = '<div style="padding:0 12px 12px;font-size:11px;color:rgba(245,245,247,0.55);line-height:1.5;border-top:0.5px solid rgba(255,255,255,0.05);padding-top:10px;">' + r.summary + '</div>';
+    }
+    item.innerHTML = head + body;
+    schEl.appendChild(item);
+    var headEl = item.querySelector('div');
+    headEl.addEventListener('click', function () {
+      item.classList.toggle('open');
+      var arrow = headEl.querySelector('svg:last-child');
+      if (arrow) arrow.style.transform = item.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+    });
+  });
+
+  var sponsors = ['斗鱼官方 ¥7W','秀木 ¥2W','为何如此衰 ¥8K','神秘老板 ¥5K','洞庭湖里的平头老板 ¥3K','尊师 hkl ¥2K','深红 ¥2K','MT ¥2K','热心市民小曹 ¥2K','玩一下鼓励员 ¥2K','董 B 登 ¥1K','SteveD ¥1K','直播间最漂亮的寡妇 ¥1K','斗驴启动 ¥1K','苏唐 ¥1K','人生梦想 ¥1K'];
+  var mqEl = document.getElementById('ljmMarquee');
+  function buildMqNode(s) {
+    var n = document.createElement('div');
+    n.style.cssText = 'display:inline-flex;align-items:center;gap:6px;font-size:10.5px;color:rgba(245,245,247,0.7);';
+    n.innerHTML = '<svg width="8" height="8" viewBox="0 0 24 24" fill="rgba(255,213,106,0.85)"><polygon points="12 2 14.5 9 22 9 16 13.5 18 21 12 16.5 6 21 8 13.5 2 9 9.5 9"/></svg><span>' + s + '</span>';
+    return n;
+  }
+  sponsors.forEach(function (s) { mqEl.appendChild(buildMqNode(s)); });
+  sponsors.forEach(function (s) { mqEl.appendChild(buildMqNode(s)); });
+
+  var awards = [
+    { who: '为何如此衰',          what: '8 强每个队伍 1K' },
+    { who: '董 B 登',              what: '冠军每人 750g 蓝莓果干 + 250g 参片' },
+    { who: 'MT',                  what: '4 强每人一份贡菜千层肚' },
+    { who: '不减到 75kg 不改名',   what: '最佳 C/D 级（参赛选手评）' },
+    { who: '你真的是厉害',         what: '爆种奖' },
+    { who: '直播间最漂亮的寡妇',   what: '最拉辅助 + 最强辅助' },
+    { who: '斗驴启动',            what: '亚军 SVP' },
+    { who: '苏唐',                what: '瑞士轮第一个淘汰队伍 5 人平分' },
+    { who: 'c 酱的骚刚',           what: '弹幕票选最差 A/S · 300R/人' },
+    { who: '人生梦想',            what: '冠军打野' },
+    { who: '小金拉黑属实不行',     what: '爆种奖' }
+  ];
+  var aEl = document.getElementById('ljmAwards');
+  awards.forEach(function (a) {
+    var row = document.createElement('div');
+    row.className = 'row-link';
+    row.style.cssText = 'display:grid;grid-template-columns:1fr auto;align-items:start;gap:8px;padding:6px 4px;border-bottom:0.5px solid rgba(255,255,255,0.04);';
+    row.innerHTML = '<div style="font-size:11px;line-height:1.4;color:rgba(245,245,247,0.85);">' + a.what + '</div>' +
+                    '<div class="mono" style="font-size:9px;color:rgba(255,213,106,0.85);white-space:nowrap;letter-spacing:0.04em;text-align:right;">— ' + a.who + '</div>';
+    aEl.appendChild(row);
+  });
+
+  var staff = [
+    { role: '赛事策划', name: '名单待补' },
+    { role: '导播 / 技术', name: '名单待补' },
+    { role: '运营 / 推广', name: '名单待补' },
+    { role: '数据统计', name: '名单待补' },
+    { role: '弹幕主持', name: '名单待补' }
+  ];
+  var stEl = document.getElementById('ljmStaff');
+  staff.forEach(function (s) {
+    var row = document.createElement('div');
+    row.style.cssText = 'display:grid;grid-template-columns:auto 1fr;align-items:center;gap:10px;padding:6px 4px;border-bottom:0.5px solid rgba(255,255,255,0.04);';
+    row.innerHTML = '<span class="mono" style="font-size:9px;color:rgba(168,224,255,0.85);letter-spacing:0.06em;min-width:62px;">' + s.role + '</span>' +
+                    '<span style="font-size:11px;color:rgba(245,245,247,0.5);">' + s.name + '</span>';
+    stEl.appendChild(row);
+  });
+
+  if (window.Motion && window.Motion.animate) {
+    var M = window.Motion;
+    M.animate('.ljm h1', { opacity: [0, 1], transform: ['translateY(10px)', 'translateY(0)'] }, { duration: 1.0, delay: 0.3, easing: [0.2, 0.7, 0.2, 1] });
+  }
+})();
+</script>
+</body>
+</html>
