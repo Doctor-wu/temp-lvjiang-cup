@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useCallback, useMemo } from 'react';
 import type { Stream, Team as ApiTeam } from '@/api/types';
 import type { VideoItem } from '@/components/video-carousel';
 
@@ -48,24 +48,21 @@ export const HomeDataProvider: React.FC<HomeDataProviderProps> = ({
   isLoading,
   onRefresh,
 }) => {
-  const [data] = useState(initialData);
-
   const refresh = useCallback((module: string) => onRefresh(module), [onRefresh]);
 
-  return (
-    <HomeDataContext.Provider
-      value={{
-        stream: data.stream,
-        teams: data.teams,
-        matches: data.matches,
-        videos: data.videos,
-        isLoading,
-        refresh,
-      }}
-    >
-      {children}
-    </HomeDataContext.Provider>
+  const value = useMemo(
+    () => ({
+      stream: initialData.stream,
+      teams: initialData.teams,
+      matches: initialData.matches,
+      videos: initialData.videos,
+      isLoading,
+      refresh,
+    }),
+    [initialData, isLoading, refresh]
   );
+
+  return <HomeDataContext.Provider value={value}>{children}</HomeDataContext.Provider>;
 };
 
 export default HomeDataContext;

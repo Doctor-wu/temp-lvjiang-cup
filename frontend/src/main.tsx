@@ -6,6 +6,7 @@ import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { SpriteProvider } from '@/components/icons/PositionIcons';
 import { reportWebVitals } from '@/utils/performance';
 import './index.css';
+import './styles/v4-theme.css';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
