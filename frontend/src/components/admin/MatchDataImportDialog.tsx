@@ -253,10 +253,7 @@ const MatchDataImportDialog: React.FC<MatchDataImportDialogProps> = ({
   /**
    * 执行实际导入（带 confirmWarnings）
    */
-  const executeImport = async (
-    options?: { dryRun?: boolean; confirmWarnings?: boolean },
-    onSuccessCallback?: (result: ImportMatchDataResponse | MultiGameImportResponse) => void,
-  ) => {
+  const executeImport = async (options?: { dryRun?: boolean; confirmWarnings?: boolean }) => {
     if (!file) return;
 
     // 跟踪导入开始事件
@@ -297,13 +294,6 @@ const MatchDataImportDialog: React.FC<MatchDataImportDialogProps> = ({
 
       // 导入成功后清除文件
       setFile(null);
-
-      // 调用成功回调（用于 handleConfirm 场景）
-      if (onSuccessCallback) {
-        setTimeout(() => {
-          onSuccessCallback(result);
-        }, 100); // 给 React 状态更新留一点时间
-      }
     } catch (err: any) {
       // 校验失败时清除文件
       clearFileState();
@@ -399,37 +389,27 @@ const MatchDataImportDialog: React.FC<MatchDataImportDialogProps> = ({
     if (dryRunSuccess) {
       setDryRunSuccess(false);
       setIsDryRunPreview(false); // 清除预检标记
-      // 传递 onSuccess 作为回调，导入成功后自动关闭对话框
-      await executeImport(undefined, (result) => {
-        if (isMultiGameResponse(result)) {
-          const finalResult: ImportMatchDataResponse = {
-            imported: result.results.every(r => r.imported),
-            gameNumber: result.results[0]?.gameNumber || 1,
-            playerCount: result.results.reduce((sum, r) => sum + r.playerCount, 0),
-          };
-          onSuccess(finalResult);
-          handleClose();
-        } else {
-          onSuccess(result);
-          handleClose();
-        }
-      });
+      await executeImport(); // 不传回调，导入后不自动关闭
       return;
     }
 
-    // 兼容旧格式：单局导入直接确认
+    // 兼容旧格式：单局导入直接确认并关闭
     if (preview) {
       onSuccess(preview);
       handleClose();
     } else if (multiGameResults) {
-      // 多局导入完成，构造一个符合 ImportMatchDataResponse 的结果
-      const result: ImportMatchDataResponse = {
-        imported: true,
-        gameNumber: multiGameResults[0]?.gameNumber || 1,
-        playerCount: multiGameResults.reduce((sum, r) => sum + r.playerCount, 0),
-      };
-      onSuccess(result);
-      handleClose();
+      // 多局导入完成后不自动关闭，让用户查看导入结果
+      // 用户再次点击"完成"时才关闭
+      if (multiGameResults.every(r => r.imported) || multiGameResults.some(r => r.imported)) {
+        // 已有导入结果，用户点击"完成"才关闭
+        const result: ImportMatchDataResponse = {
+          imported: multiGameResults.every(r => r.imported),
+          gameNumber: multiGameResults[0]?.gameNumber || 1,
+          playerCount: multiGameResults.reduce((sum, r) => sum + r.playerCount, 0),
+        };
+        onSuccess(result);
+        handleClose();
+      }
     }
   };
 
@@ -739,6 +719,13 @@ const MatchDataImportDialog: React.FC<MatchDataImportDialogProps> = ({
                 className="bg-gradient-to-r from-green-500 to-green-600 text-white"
               >
                 确认导入
+              </Button>
+            ) : isDryRunPreview ? (
+              <Button
+                onClick={handleConfirm}
+                className="bg-gradient-to-r from-green-500 to-green-600 text-white"
+              >
+                继续导入
               </Button>
             ) : multiGameResults ? (
               <Button

@@ -188,11 +188,37 @@ const MatchDataList: React.FC = () => {
     setImportDialogOpen(true);
   };
 
-  const handleImportSuccess = () => {
+  const handleImportSuccess = async () => {
     toast.success('数据导入成功');
     setImportDialogOpen(false);
+
+    const importedMatchId = currentMatchId;
     setCurrentMatchId(null);
-    loadData();
+
+    if (importedMatchId) {
+      setMatches(prev =>
+        prev.map(m =>
+          m.id === importedMatchId ? { ...m, checkingMatchData: true } : m
+        )
+      );
+
+      try {
+        const result = await checkMatchDataExists(importedMatchId);
+        setMatches(prev =>
+          prev.map(m =>
+            m.id === importedMatchId
+              ? { ...m, hasMatchData: result.hasData, checkingMatchData: false }
+              : m
+          )
+        );
+      } catch {
+        setMatches(prev =>
+          prev.map(m =>
+            m.id === importedMatchId ? { ...m, hasMatchData: false, checkingMatchData: false } : m
+          )
+        );
+      }
+    }
   };
 
   if (loading) {
