@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import React from 'react';
 import Home from '@/pages/Home';
 
@@ -10,125 +10,100 @@ const mockFetchVideos = vi.fn().mockResolvedValue(undefined);
 const mockFetchStreamers = vi.fn().mockResolvedValue(undefined);
 const mockRefresh = vi.fn().mockResolvedValue(undefined);
 
-let mockHomeData = {
-  stream: null,
-  teams: [] as unknown[],
-  matches: [] as unknown[],
-  videos: [] as unknown[],
-  streamers: [] as unknown[],
-  isLoading: { stream: false, teams: false, matches: false, videos: false, streamers: false },
-  fetchStream: mockFetchStream,
-  fetchTeams: mockFetchTeams,
-  fetchMatches: mockFetchMatches,
-  fetchVideos: mockFetchVideos,
-  fetchStreamers: mockFetchStreamers,
-  refresh: mockRefresh,
-};
+let mockHomeData = baseData();
 
 vi.mock('@/context/HomeDataContext', () => ({
   useHomeData: () => mockHomeData,
   HomeDataProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
-vi.mock('@/components/layout/Layout', () => ({
-  default: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="layout">{children}</div>
-  ),
+// Stub each v4 section so we can assert layout composition without their internals.
+vi.mock('@/components/features/v4/HeroV4', () => ({
+  default: () => <div data-testid="hero-v4">HeroV4</div>,
+}));
+vi.mock('@/components/features/v4/StatsBarV4', () => ({
+  default: () => <div data-testid="stats-v4">StatsBarV4</div>,
+}));
+vi.mock('@/components/features/v4/VideosV4', () => ({
+  default: () => <div data-testid="videos-v4">VideosV4</div>,
+}));
+vi.mock('@/components/features/v4/StreamersV4', () => ({
+  default: () => <div data-testid="streamers-v4">StreamersV4</div>,
+}));
+vi.mock('@/components/features/v4/TeamsV4', () => ({
+  default: () => <div data-testid="teams-v4">TeamsV4</div>,
+}));
+vi.mock('@/components/features/v4/ScheduleV4', () => ({
+  default: () => <div data-testid="schedule-v4">ScheduleV4</div>,
+}));
+vi.mock('@/components/features/v4/ThanksV4', () => ({
+  default: () => <div data-testid="thanks-v4">ThanksV4</div>,
+}));
+vi.mock('@/components/features/v4/FooterV4', () => ({
+  default: () => <div data-testid="footer-v4">FooterV4</div>,
 }));
 
-vi.mock('@/components/features/StartBox', () => ({
-  StartBox: () => <div data-testid="start-box">StartBox</div>,
-}));
+function baseData() {
+  return {
+    stream: null,
+    teams: [] as unknown[],
+    matches: [] as unknown[],
+    videos: [] as unknown[],
+    streamers: [] as unknown[],
+    isLoading: { stream: false, teams: false, matches: false, videos: false, streamers: false },
+    fetchStream: mockFetchStream,
+    fetchTeams: mockFetchTeams,
+    fetchMatches: mockFetchMatches,
+    fetchVideos: mockFetchVideos,
+    fetchStreamers: mockFetchStreamers,
+    refresh: mockRefresh,
+  };
+}
 
-vi.mock('@/components/features/HeroSection', () => ({
-  default: () => <div data-testid="hero-section">HeroSection</div>,
-}));
-
-vi.mock('@/components/features/ScheduleSection', () => ({
-  default: () => <div data-testid="schedule-section">ScheduleSection</div>,
-}));
-
-vi.mock('@/components/features/TeamSection', () => ({
-  default: () => <div data-testid="team-section">TeamSection</div>,
-}));
-
-vi.mock('@/components/features/StreamerSection', () => ({
-  default: () => <div data-testid="streamer-section">StreamerSection</div>,
-}));
-
-vi.mock('@/components/features/ThanksSection', () => ({
-  ThanksSection: () => <div data-testid="thanks-section">ThanksSection</div>,
-}));
-
-vi.mock('@/components/video-carousel', () => ({
-  VideoCarousel: ({ videos }: { videos: unknown[] }) => (
-    <div data-testid="video-carousel">Videos: {videos.length}</div>
-  ),
-}));
-
-vi.mock('@/services/streamService', () => ({
-  streamService: { get: vi.fn() },
-}));
-vi.mock('@/services/teamService', () => ({
-  teamService: { getAll: vi.fn() },
-}));
-vi.mock('@/services/matchService', () => ({
-  matchService: { getAll: vi.fn() },
-}));
-
-describe('Home', () => {
+describe('Home (v4)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockHomeData = {
-      stream: null,
-      teams: [],
-      matches: [],
-      videos: [],
-      streamers: [],
-      isLoading: { stream: false, teams: false, matches: false, videos: false, streamers: false },
-      fetchStream: mockFetchStream,
-      fetchTeams: mockFetchTeams,
-      fetchMatches: mockFetchMatches,
-      fetchVideos: mockFetchVideos,
-      fetchStreamers: mockFetchStreamers,
-      refresh: mockRefresh,
-    };
+    mockHomeData = baseData();
   });
 
-  it('渲染 HomeDataProvider 包裹所有子组件', () => {
+  it('渲染所有 v4 section', () => {
     render(<Home />);
-    expect(screen.getByTestId('layout')).toBeInTheDocument();
+    expect(screen.getByTestId('hero-v4')).toBeInTheDocument();
+    expect(screen.getByTestId('stats-v4')).toBeInTheDocument();
+    expect(screen.getByTestId('videos-v4')).toBeInTheDocument();
+    expect(screen.getByTestId('streamers-v4')).toBeInTheDocument();
+    expect(screen.getByTestId('teams-v4')).toBeInTheDocument();
+    expect(screen.getByTestId('schedule-v4')).toBeInTheDocument();
+    expect(screen.getByTestId('thanks-v4')).toBeInTheDocument();
+    expect(screen.getByTestId('footer-v4')).toBeInTheDocument();
   });
 
-  it('渲染 StartBox 组件', () => {
+  it('挂载时一次性触发 5 个数据源的 fetch', () => {
     render(<Home />);
-    expect(screen.getByTestId('start-box')).toBeInTheDocument();
-  });
-
-  it('渲染 HeroSection 组件', () => {
-    render(<Home />);
-    expect(screen.getByTestId('hero-section')).toBeInTheDocument();
-  });
-
-  it('渲染视频区域并调用 fetchVideos', () => {
-    render(<Home />);
+    expect(mockFetchStream).toHaveBeenCalledTimes(1);
+    expect(mockFetchTeams).toHaveBeenCalledTimes(1);
+    expect(mockFetchMatches).toHaveBeenCalledTimes(1);
     expect(mockFetchVideos).toHaveBeenCalledTimes(1);
+    expect(mockFetchStreamers).toHaveBeenCalledTimes(1);
   });
 
-  it('视频数据为空时显示"暂无视频"', () => {
-    mockHomeData.videos = [];
-    mockHomeData.isLoading.videos = false;
+  it('section 渲染顺序符合 v4 设计 (hero → stats → videos → streamers → teams → schedule → thanks → footer)', () => {
     render(<Home />);
-    expect(screen.getByText('暂无视频')).toBeInTheDocument();
-  });
-
-  it('视频数据存在时显示视频轮播', async () => {
-    mockHomeData.videos = [{ bvid: 'BV1xx', title: '视频1', page: 1 }];
-    mockHomeData.isLoading.videos = false;
-    render(<Home />);
-
-    await waitFor(() => {
-      expect(screen.getByTestId('video-carousel')).toBeInTheDocument();
+    const order = [
+      'hero-v4',
+      'stats-v4',
+      'videos-v4',
+      'streamers-v4',
+      'teams-v4',
+      'schedule-v4',
+      'thanks-v4',
+      'footer-v4',
+    ];
+    const positions = order.map(id => {
+      const el = screen.getByTestId(id);
+      return Array.from(el.parentElement?.parentElement?.querySelectorAll('[data-testid]') ?? [])
+        .findIndex(n => (n as HTMLElement).dataset.testid === id);
     });
+    expect(positions).toEqual([...positions].sort((a, b) => a - b));
   });
 });

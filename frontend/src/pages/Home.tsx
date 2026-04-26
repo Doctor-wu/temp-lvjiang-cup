@@ -1,94 +1,58 @@
-import React, { lazy, Suspense, useEffect } from 'react';
-import { Loader2 } from 'lucide-react';
-import Layout from '../components/layout/Layout';
-import { StartBox } from '../components/features/StartBox';
-import HeroSection from '../components/features/HeroSection';
+import React, { useEffect } from 'react';
 import { HomeDataProvider, useHomeData } from '../context/HomeDataContext';
+import HeroV4 from '../components/features/v4/HeroV4';
+import StatsBarV4 from '../components/features/v4/StatsBarV4';
+import VideosV4 from '../components/features/v4/VideosV4';
+import StreamersV4 from '../components/features/v4/StreamersV4';
+import TeamsV4 from '../components/features/v4/TeamsV4';
+import ScheduleV4 from '../components/features/v4/ScheduleV4';
+import ThanksV4 from '../components/features/v4/ThanksV4';
+import FooterV4 from '../components/features/v4/FooterV4';
+import Hairline from '../components/common/v4/Hairline';
 
-const ScheduleSection = lazy(() => import('../components/features/ScheduleSection'));
-const TeamSection = lazy(() => import('../components/features/TeamSection'));
-const StreamerSection = lazy(() => import('../components/features/StreamerSection'));
-const ThanksSection = lazy(() =>
-  import('../components/features/ThanksSection').then(m => ({ default: m.ThanksSection }))
-);
-const LazyVideoCarousel = lazy(() =>
-  import('../components/video-carousel').then(m => ({ default: m.VideoCarousel }))
-);
-
-const SectionSkeleton: React.FC = () => (
-  <div className="h-[calc(100vh-96px)] flex items-center justify-center bg-black">
-    <Loader2 className="w-8 h-8 text-yellow-400 animate-spin" />
-  </div>
-);
-
-const VideoSection: React.FC = () => {
-  const { videos, fetchVideos, isLoading } = useHomeData();
+/**
+ * v4 首页装配。
+ * 数据来自 HomeDataProvider (按需加载, 同一数据只请求一次)。
+ * Hero / Teams / Schedule 使用 stream + teams + matches; Videos 用 videos;
+ * Streamers 用 streamers。本组件只负责触发对应的 fetch, 各 section 自己消费 context。
+ */
+const HomeBody: React.FC = () => {
+  const { fetchStream, fetchTeams, fetchMatches, fetchVideos, fetchStreamers } = useHomeData();
 
   useEffect(() => {
+    fetchStream();
+    fetchTeams();
+    fetchMatches();
     fetchVideos();
-  }, [fetchVideos]);
-
-  const videoItems = videos.map(video => ({
-    bvid: video.bvid,
-    title: video.title,
-    cover: video.coverUrl || undefined,
-  }));
-
-  if (isLoading.videos && videos.length === 0) {
-    return (
-      <section
-        id="videos"
-        className="h-[calc(100vh-96px)] bg-gradient-to-b from-[#0a0a0a] to-[#1a1a2e] flex items-center justify-center"
-      >
-        <SectionSkeleton />
-      </section>
-    );
-  }
+    fetchStreamers();
+  }, [fetchStream, fetchTeams, fetchMatches, fetchVideos, fetchStreamers]);
 
   return (
-    <section
-      id="videos"
-      className="h-[calc(100vh-96px)] bg-gradient-to-b from-[#0a0a0a] to-[#1a1a2e] flex items-center justify-center"
-    >
-      <div className="container mx-auto px-4 w-full h-full flex flex-col justify-center">
-        {videoItems.length > 0 ? (
-          <div className="flex-1 flex items-center justify-center min-h-0">
-            <Suspense fallback={<SectionSkeleton />}>
-              <LazyVideoCarousel videos={videoItems} />
-            </Suspense>
-          </div>
-        ) : (
-          <div className="text-center text-gray-500 py-12">
-            <p className="text-lg">暂无视频</p>
-          </div>
-        )}
-      </div>
-    </section>
+    <div className="v4-root min-h-screen w-full" style={{ background: '#050508' }}>
+      <main className="w-full">
+        <HeroV4 />
+        <StatsBarV4 />
+        <Hairline />
+        <VideosV4 />
+        <Hairline />
+        <StreamersV4 />
+        <Hairline />
+        <TeamsV4 />
+        <Hairline />
+        <ScheduleV4 />
+        <Hairline />
+        <ThanksV4 />
+        <Hairline />
+        <FooterV4 />
+      </main>
+    </div>
   );
 };
 
-const Home: React.FC = () => {
-  return (
-    <HomeDataProvider>
-      <Layout>
-        <StartBox />
-        <HeroSection />
-        <VideoSection />
-        <Suspense fallback={<SectionSkeleton />}>
-          <StreamerSection />
-        </Suspense>
-        <Suspense fallback={<SectionSkeleton />}>
-          <TeamSection />
-        </Suspense>
-        <Suspense fallback={<SectionSkeleton />}>
-          <ScheduleSection />
-        </Suspense>
-        <Suspense fallback={<SectionSkeleton />}>
-          <ThanksSection />
-        </Suspense>
-      </Layout>
-    </HomeDataProvider>
-  );
-};
+const Home: React.FC = () => (
+  <HomeDataProvider>
+    <HomeBody />
+  </HomeDataProvider>
+);
 
 export default Home;
